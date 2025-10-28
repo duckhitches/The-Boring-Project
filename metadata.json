@@ -1,0 +1,7 @@
+{
+  "name": "The Boring Project",
+  "description": "A creative web app for developers to create and share visually appealing 'project cards' that showcase their coding projects, with AI-powered features for summarization, code explanation, and design.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

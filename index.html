@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF--8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Boring Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/react-image-crop@11.0.5/dist/ReactCrop.css" />
+    <style>
+      /* For Webkit-based browsers (Chrome, Safari) */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #1e293b; /* slate-800 */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #475569; /* slate-600 */
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #64748b; /* slate-500 */
+      }
+      
+      /* For react-simple-code-editor */
+      .code-editor-wrapper .npm__react-simple-code-editor__textarea {
+        outline: none !important;
+        background-color: transparent !important;
+        -webkit-text-fill-color: transparent !important;
+        caret-color: white !important;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.27.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-simple-code-editor": "https://aistudiocdn.com/react-simple-code-editor@^0.13.1",
+    "prismjs/": "https://aistudiocdn.com/prismjs@^1.29.0/",
+    "@supabase/supabase-js": "https://aistudiocdn.com/@supabase/supabase-js@^2.44.4",
+    "react-image-crop": "https://cdn.jsdelivr.net/npm/react-image-crop@11.0.5/+esm",
+    "next": "https://aistudiocdn.com/next@^16.0.0",
+    "next/": "https://aistudiocdn.com/next@^16.0.0/",
+    "prismjs": "https://aistudiocdn.com/prismjs@^1.30.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-slate-900 text-slate-100">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
