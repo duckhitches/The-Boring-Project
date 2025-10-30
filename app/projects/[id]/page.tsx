@@ -87,7 +87,7 @@ export default function PublicProjectPage() {
     return (
       <div
         className="min-h-screen py-8 px-4 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/bg.png')" }}
+        style={{ backgroundImage: "url('/bg-2.png')" }}
       >
         <div className="text-center">
           <Loading />
@@ -121,21 +121,21 @@ export default function PublicProjectPage() {
   return (
     <div
       className="min-h-screen py-8 px-4 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/bg.png')" }}
+      style={{ backgroundImage: "url('/bg-2.png')" }}
     >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-4xl font-bold text-black mb-2">
             {project.projectName}
           </h1>
-          <p className="text-slate-300 text-lg">{project.timeline}</p>
+          <p className="text-black text-lg">{project.timeline}</p>
         </div>
 
         {/* Project Card with 3D tilt */}
         <CardContainer containerClassName="py-0">
           <CardBody className="h-auto w-full">
-            <div className="bg-black/80 rounded-2xl overflow-hidden shadow-lg max-w-xs sm:max-w-sm md:max-w-lg mx-auto">
+            <div className="bg-black/90 rounded-2xl overflow-hidden shadow-lg max-w-xs sm:max-w-sm md:max-w-lg mx-auto">
               <div className="relative h-36 sm:h-40 md:h-48 w-full">
                 {project.backgroundImage ? (
                   <Image
@@ -240,23 +240,29 @@ export default function PublicProjectPage() {
         </CardContainer>
 
         {/* Footer */}
-        <div className="flex items-center justify-between mt-8">
-          <a
-            href="/"
-            className="text-slate-400 hover:text-white transition-colors"
-          >
-            ← Back to The Boring Project
-          </a>
-          <div className="w-12 h-12 rounded-full overflow-hidden border border-neutral-700">
-            <Image
-              src="/images/brand-logo.png"
-              alt="User Avatar"
-              className="w-full h-full object-cover"
-              width={48}
-              height={48}
-              quality={100}
-              priority
-            />
+        <div className="mt-10">
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="flex flex-col items-center gap-3 pt-6 text-center">
+            <div className="text-xs text-slate-900">
+              <span className="font-semibold tracking-wide text-slate-900">The Boring Project</span>
+              <sup className="ml-0.5 text-[10px] align-super">™</sup>
+              <span className="mx-2">·</span>
+              <span>Est. 2025</span>
+            </div>
+            <a href="/" aria-label="Go to The Boring Project home" className="group">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden ring-1 ring-black/10 shadow-[0_0_20px_-8px] shadow-black/40 transition-transform duration-200 group-hover:scale-[1.03]">
+                <Image
+                  src="/images/brand-logo.png"
+                  alt="Brand Logo"
+                  className="w-full h-full object-cover bg-black w-auto h-auto"
+                  width={48}
+                  height={48}
+                  quality={100}
+                  priority
+                />
+                <span className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-indigo-400/20" />
+              </div>
+            </a>
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ interface MapProps {
 
 export default function WorldMap({
   dots = [],
-  lineColor = "#0ea5e9",
+  lineColor = "#DD7BDF",
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const map = new DottedMap({ height: 100, grid: "diagonal" });

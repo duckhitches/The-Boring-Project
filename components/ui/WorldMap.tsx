@@ -6,9 +6,9 @@ export function WorldMapDemo() {
   return (
     <div className="py-20 w-full flex flex-col items-center justify-center bg-black">
       <div className="max-w-7xl mx-auto text-center flex flex-col items-center justify-center">
-        <p className="font-bold text-xl md:text-4xl text-white">
+        <p className="font-bold text-xl md:text-6xl text-indigo-300">
           Remote{" "}
-          <span className="text-neutral-400">
+          <span className="bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent">
             {"Shareability".split("").map((word, idx) => (
               <motion.span
                 key={idx}

@@ -1,32 +1,47 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useEffect, useCallback, useRef } from "react"
-import ReactMarkdown from "react-markdown"
-import rehypeHighlight from "rehype-highlight"
-import type { Note } from "../types"
-import { supabaseService } from "../services/supabaseService"
-import { PlusIcon, TrashIcon, DocumentTextIcon, SearchIcon } from "./IconComponents"
-import { LoaderOne } from "./ui/loader"
+import type React from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import type { Note } from "../types";
+import { supabaseService } from "../services/supabaseService";
+import {
+  PlusIcon,
+  TrashIcon,
+  DocumentTextIcon,
+  SearchIcon,
+} from "./IconComponents";
+import { LoaderOne } from "./ui/loader";
 
-const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => {
-  const [notes, setNotes] = useState<Note[]>([])
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">("saved")
-  const [currentContent, setCurrentContent] = useState("")
-  const [currentTitle, setCurrentTitle] = useState("")
-  const [autoSaveCountdown, setAutoSaveCountdown] = useState<number | null>(null)
-  const [mobileView, setMobileView] = useState<"list" | "editor">("list")
+const AUTO_SAVE_MS = 10000
 
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null)
-  const lastSavedContentRef = useRef<string>("")
-  const lastSavedTitleRef = useRef<string>("")
+const NotesView: React.FC<{ searchQuery?: string }> = ({
+  searchQuery = "",
+}) => {
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">(
+    "saved"
+  );
+  const [currentContent, setCurrentContent] = useState("");
+  const [currentTitle, setCurrentTitle] = useState("");
+  const [autoSaveCountdown, setAutoSaveCountdown] = useState<number | null>(
+    null
+  );
+  const [mobileView, setMobileView] = useState<"list" | "editor">("list");
+
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSavedContentRef = useRef<string>("");
+  const lastSavedTitleRef = useRef<string>("");
+  const currentContentRef = useRef<string>("")
+  const currentTitleRef = useRef<string>("")
 
   useEffect(() => {
-    loadNotes()
-  }, [])
+    loadNotes();
+  }, []);
 
   useEffect(() => {
     if (selectedNote) {
@@ -34,65 +49,70 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
       setCurrentTitle(selectedNote.title)
       lastSavedContentRef.current = selectedNote.content
       lastSavedTitleRef.current = selectedNote.title
+      currentContentRef.current = selectedNote.content
+      currentTitleRef.current = selectedNote.title
     }
   }, [selectedNote])
 
   const loadNotes = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const supabaseNotes = await supabaseService.getNotes()
-      setNotes(supabaseNotes)
+      const supabaseNotes = await supabaseService.getNotes();
+      setNotes(supabaseNotes);
 
       if (supabaseNotes.length > 0 && !selectedNote) {
-        setSelectedNote(supabaseNotes[0])
+        setSelectedNote(supabaseNotes[0]);
       }
     } catch (error) {
-      console.error("Error loading notes:", error)
+      console.error("Error loading notes:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const createNewNote = async () => {
     try {
       const newNote = await supabaseService.createNote({
         title: "Untitled Note",
         content: "",
-      })
+      });
 
       if (newNote) {
-        setNotes((prev) => [newNote, ...prev])
-        setSelectedNote(newNote)
-        setCurrentTitle("Untitled Note")
-        setCurrentContent("")
-        lastSavedContentRef.current = ""
-        lastSavedTitleRef.current = "Untitled Note"
-        setMobileView("editor")
+        setNotes((prev) => [newNote, ...prev]);
+        setSelectedNote(newNote);
+        setCurrentTitle("Untitled Note");
+        setCurrentContent("");
+        lastSavedContentRef.current = "";
+        lastSavedTitleRef.current = "Untitled Note";
+        setMobileView("editor");
       }
     } catch (error) {
-      console.error("Error creating note:", error)
+      console.error("Error creating note:", error);
     }
-  }
+  };
 
   const deleteNote = async (noteId: string) => {
     try {
-      const success = await supabaseService.deleteNote(noteId)
+      const success = await supabaseService.deleteNote(noteId);
       if (success) {
-        setNotes((prev) => prev.filter((note) => note.id !== noteId))
+        setNotes((prev) => prev.filter((note) => note.id !== noteId));
         if (selectedNote?.id === noteId) {
-          const remainingNotes = notes.filter((note) => note.id !== noteId)
-          setSelectedNote(remainingNotes.length > 0 ? remainingNotes[0] : null)
+          const remainingNotes = notes.filter((note) => note.id !== noteId);
+          setSelectedNote(remainingNotes.length > 0 ? remainingNotes[0] : null);
         }
       }
     } catch (error) {
-      console.error("Error deleting note:", error)
+      console.error("Error deleting note:", error);
     }
-  }
+  };
 
   const autoSave = useCallback(async () => {
     if (!selectedNote) return
 
-    const hasChanges = currentContent !== lastSavedContentRef.current || currentTitle !== lastSavedTitleRef.current
+    const latestContent = currentContentRef.current
+    const latestTitle = currentTitleRef.current
+
+    const hasChanges = latestContent !== lastSavedContentRef.current || latestTitle !== lastSavedTitleRef.current
 
     if (!hasChanges) return
 
@@ -100,16 +120,14 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
 
     try {
       const updatedNote = await supabaseService.updateNote(selectedNote.id, {
-        title: currentTitle,
-        content: currentContent,
+        title: latestTitle,
+        content: latestContent,
       })
 
       if (updatedNote) {
         setNotes((prev) => prev.map((note) => (note.id === selectedNote.id ? updatedNote : note)))
-        // Don't update selectedNote during autosave to prevent input field reset
-        // setSelectedNote(updatedNote)
-        lastSavedContentRef.current = currentContent
-        lastSavedTitleRef.current = currentTitle
+        lastSavedContentRef.current = latestContent
+        lastSavedTitleRef.current = latestTitle
         setSaveStatus("saved")
       } else {
         setSaveStatus("error")
@@ -118,97 +136,106 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
       console.error("Error auto-saving note:", error)
       setSaveStatus("error")
     }
-  }, [selectedNote, currentContent, currentTitle])
+  }, [selectedNote])
 
   const debouncedAutoSave = useCallback(() => {
     if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current)
+      clearTimeout(autoSaveTimeoutRef.current);
     }
     if (countdownIntervalRef.current) {
-      clearInterval(countdownIntervalRef.current)
+      clearInterval(countdownIntervalRef.current);
     }
 
-    setAutoSaveCountdown(2)
+    setAutoSaveCountdown(AUTO_SAVE_MS / 1000);
 
     countdownIntervalRef.current = setInterval(() => {
       setAutoSaveCountdown((prev) => {
         if (prev === null || prev <= 1) {
-          return null
+          return null;
         }
-        return prev - 1
-      })
-    }, 1000)
+        return prev - 1;
+      });
+    }, 1000);
 
     autoSaveTimeoutRef.current = setTimeout(() => {
-      autoSave()
-      setAutoSaveCountdown(null)
+      autoSave();
+      setAutoSaveCountdown(null);
       if (countdownIntervalRef.current) {
-        clearInterval(countdownIntervalRef.current)
+        clearInterval(countdownIntervalRef.current);
       }
-    }, 10000)
-  }, [autoSave])
+    }, AUTO_SAVE_MS);
+  }, [autoSave]);
 
   useEffect(() => {
     return () => {
       if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current)
+        clearTimeout(autoSaveTimeoutRef.current);
       }
       if (countdownIntervalRef.current) {
-        clearInterval(countdownIntervalRef.current)
+        clearInterval(countdownIntervalRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   const handleTitleChange = (newTitle: string) => {
     setCurrentTitle(newTitle)
+    currentTitleRef.current = newTitle
     debouncedAutoSave()
   }
 
   const handleContentChange = (newContent: string) => {
     setCurrentContent(newContent)
+    currentContentRef.current = newContent
     debouncedAutoSave()
   }
 
   const handleSaveNow = () => {
     if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current)
+      clearTimeout(autoSaveTimeoutRef.current);
     }
     if (countdownIntervalRef.current) {
-      clearInterval(countdownIntervalRef.current)
+      clearInterval(countdownIntervalRef.current);
     }
-    setAutoSaveCountdown(null)
-    autoSave()
-  }
+    setAutoSaveCountdown(null);
+    autoSave();
+  };
 
   const getStats = () => {
     const words = currentContent
       .trim()
       .split(/\s+/)
-      .filter((w) => w.length > 0).length
-    const chars = currentContent.length
-    return { words, chars }
-  }
+      .filter((w) => w.length > 0).length;
+    const chars = currentContent.length;
+    return { words, chars };
+  };
 
-  const stats = getStats()
+  const stats = getStats();
 
   // Filter notes based on search query
   const filteredNotes = notes.filter((note) => {
-    if (!searchQuery.trim()) return true
+    if (!searchQuery.trim()) return true;
 
-    const query = searchQuery.toLowerCase()
-    return note.title.toLowerCase().includes(query) || note.content.toLowerCase().includes(query)
-  })
+    const query = searchQuery.toLowerCase();
+    return (
+      note.title.toLowerCase().includes(query) ||
+      note.content.toLowerCase().includes(query)
+    );
+  });
 
   // Update selected note if current selection is filtered out
   useEffect(() => {
-    if (searchQuery.trim() && selectedNote && !filteredNotes.find((note) => note.id === selectedNote.id)) {
+    if (
+      searchQuery.trim() &&
+      selectedNote &&
+      !filteredNotes.find((note) => note.id === selectedNote.id)
+    ) {
       if (filteredNotes.length > 0) {
-        setSelectedNote(filteredNotes[0])
+        setSelectedNote(filteredNotes[0]);
       } else {
-        setSelectedNote(null)
+        setSelectedNote(null);
       }
     }
-  }, [searchQuery, filteredNotes, selectedNote])
+  }, [searchQuery, filteredNotes, selectedNote]);
 
   if (isLoading) {
     return (
@@ -218,7 +245,7 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
           <p className="mt-4 text-muted-foreground">Loading notes...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -244,7 +271,9 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
             <div className="p-6 text-center text-muted-foreground">
               <DocumentTextIcon className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p className="font-medium text-sm">No notes yet</p>
-              <p className="text-xs text-muted-foreground mt-1">Create your first note!</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Create your first note!
+              </p>
             </div>
           ) : filteredNotes.length === 0 && searchQuery.trim() ? (
             <div className="p-6 text-center text-muted-foreground">
@@ -252,7 +281,9 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
                 <SearchIcon className="w-6 h-6" />
               </div>
               <p className="font-medium text-sm">No notes found</p>
-              <p className="text-xs text-muted-foreground mt-1">No notes match "{searchQuery}"</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                No notes match "{searchQuery}"
+              </p>
             </div>
           ) : (
             <div className="space-y-1 p-2">
@@ -260,8 +291,8 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
                 <div
                   key={note.id}
                   onClick={() => {
-                    setSelectedNote(note)
-                    setMobileView("editor")
+                    setSelectedNote(note);
+                    setMobileView("editor");
                   }}
                   className={`p-3 rounded-md cursor-pointer transition-colors duration-200 ${
                     selectedNote?.id === note.id
@@ -274,7 +305,9 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
                     {note.content.substring(0, 40)}
                     {note.content.length > 40 ? "..." : ""}
                   </p>
-                  <p className="text-xs opacity-60 mt-2">{new Date(note.updated_at).toLocaleDateString()}</p>
+                  <p className="text-xs opacity-60 mt-2">
+                    {new Date(note.updated_at).toLocaleDateString()}
+                  </p>
                 </div>
               ))}
             </div>
@@ -311,7 +344,11 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
                 )}
                 {saveStatus === "saved" && (
                   <div className="flex items-center text-xs gap-1 px-2 py-1 rounded bg-muted text-muted-foreground">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -323,7 +360,11 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
                 )}
                 {saveStatus === "error" && (
                   <div className="flex items-center text-xs gap-1 px-2 py-1 rounded bg-destructive/10 text-destructive">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -331,6 +372,15 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
                       />
                     </svg>
                     <span>Error</span>
+                  </div>
+                )}
+                {autoSaveCountdown !== null && saveStatus !== "saving" && (
+                  <div className="flex items-center text-xs gap-1 px-2 py-1 rounded bg-muted text-muted-foreground">
+                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 8v5l3 3"/>
+                      <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" fill="none" stroke="currentColor" strokeWidth="2"/>
+                    </svg>
+                    <span>Autosave in {autoSaveCountdown}s</span>
                   </div>
                 )}
                 <button
@@ -370,7 +420,16 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
                   value={currentContent}
                   onChange={(e) => handleContentChange(e.target.value)}
                   className="w-full h-full bg-background text-foreground placeholder-muted-foreground resize-none rounded-md p-3 outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm leading-relaxed border border-border"
-                  placeholder="Start writing your note... (supports markdown, code, and lists)"
+                  placeholder="Start writing your note... Supports Markdown, code blocks, and lists.  
+Example (code):  
+```js
+console.log('hello');
+
+Example (list):
+	•	Item one
+	•	Item two.
+  
+Live preview works best on desktop."
                 />
               </div>
 
@@ -388,8 +447,12 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
               <div className="w-16 h-16 mx-auto mb-4 rounded-lg bg-muted flex items-center justify-center">
                 <DocumentTextIcon className="w-8 h-8 opacity-50" />
               </div>
-              <h2 className="text-lg font-semibold mb-2 text-foreground">No note selected</h2>
-              <p className="text-sm">Choose a note from the sidebar or create a new one</p>
+              <h2 className="text-lg font-semibold mb-2 text-foreground">
+                No note selected
+              </h2>
+              <p className="text-sm">
+                Choose a note from the sidebar or create a new one
+              </p>
               <button
                 onClick={() => setMobileView("list")}
                 className="md:hidden px-2 py-1 hover:bg-muted rounded transition-colors"
@@ -401,7 +464,7 @@ const NotesView: React.FC<{ searchQuery?: string }> = ({ searchQuery = "" }) => 
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default NotesView
+export default NotesView;

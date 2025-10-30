@@ -233,7 +233,7 @@ export const VoiceCompanion: React.FC = () => {
                                     alt="Brand Logo"
                                     width={80}
                                     height={80}
-                                    className="w-30 h-30"
+                                    className="w-30 h-30 w-auto h-auto"
                                     quality={100}
                                     priority
                                 />

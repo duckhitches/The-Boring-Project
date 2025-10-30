@@ -23,6 +23,8 @@ import Loading from "./components/ui/loader";
 import { supabaseService } from "./services/supabaseService";
 import { motion } from "framer-motion";
 import { WorldMapDemo } from "./components/ui/WorldMap";
+import ProjectPreviewGrid from "./components/ProjectPreviewGrid";
+import FeatureShowcase from "./components/FeatureShowcase";
 
 export type View = "dashboard" | "notes" | "settings" | "profile";
 
@@ -244,10 +246,20 @@ const AppContent: React.FC = () => {
     }
   };
 
-  // Show landing page for unauthenticated users
-  if (!user && showLandingPage) {
+
+  {/* To implement: If user is authenticated, redirect to dashboard */}
+  if (authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-black via-slate-950 to-black text-white">
+      <div className="flex items-center justify-center min-h-screen">
+        <Loading />
+      </div>
+    );
+  }
+
+  // Show landing page for unauthenticated users only when NOT loading
+  if (!user && !authLoading && showLandingPage) {
+    return (
+      <div className="min-h-screen bg-black text-white">
         {/* HERO SECTION */}
         <section className="relative flex flex-col items-center text-center px-4 md:px-6 pt-16 md:pt-24 pb-20 md:pb-32">
           {/* Subtle glow effect */}
@@ -271,7 +283,7 @@ const AppContent: React.FC = () => {
                   alt="The Boring Project Logo"
                   width={90}
                   height={90}
-                  className="rounded-full shadow-lg"
+                  className="rounded-full shadow-lg w-auto h-auto"
                   priority
                   quality={100}
                 />
@@ -284,7 +296,7 @@ const AppContent: React.FC = () => {
               The Boring Project
             </h1>
             <p className="text-gray-400 text-base md:text-xl max-w-2xl mx-auto mb-8 md:mb-10 px-4">
-              A space for developers to craft, showcase, and share their projects — beautifully.
+            The least boring place for devs.
             </p>
 
             {/* Buttons */}
@@ -332,7 +344,8 @@ const AppContent: React.FC = () => {
         </section>
 
         {/* FEATURES SECTION */}
-        <section className="max-w-7xl mx-auto px-6 pb-24">
+        <FeatureShowcase />
+        {/* <section className="max-w-7xl mx-auto px-6 pb-24">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-14">
             Why Choose <span className="text-indigo-400">The Boring Project?</span>
           </h2>
@@ -368,7 +381,7 @@ const AppContent: React.FC = () => {
               </motion.div>
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* WORLD MAP SECTION */}
         <section className="max-w-7xl mx-auto px-6 pb-24">
@@ -397,16 +410,19 @@ const AppContent: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h3 className="text-3xl font-bold mb-4 text-indigo-300">Know the Dev</h3>
+              <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent">Know the Dev</h3>
               <p className="text-gray-300 mb-6 leading-relaxed">
-                Hi there! I'm the creator of The Boring Project — built for developers who
-                want to express their creativity and share their hard work with the world.
+              "Hola Amigo! I’m the creator of The Boring Project — and a big fan of One Piece, by the way. 
+              I built this platform for developers who want to express their creativity and share their hard work with the world. 
+              Every part of the UI was personally designed by me, with the help of AI for development and enhancement.
+               And yes, those background visuals are my own original designs too. Kindly check your News letter for upcoming/latest updates." - <i>Eshan Shettennavar</i>
               </p>
               <button className="bg-indigo-500 hover:bg-indigo-600 px-6 py-3 rounded-lg font-semibold transition-transform hover:scale-105">
                 Connect with Me
               </button>
             </motion.div>
           </div>
+          <ProjectPreviewGrid />
         </section>
 
         {/* FOOTER */}
