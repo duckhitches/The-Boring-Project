@@ -6,21 +6,21 @@ import Link from "next/link";
 export default function ProjectPreviewGrid() {
   const projects = [
     {
-      title: "Next.js Portfolio",
-      desc: "A sleek portfolio site built with animations and SSR magic.",
-      img: "/bg-2.png",
-      link: "#",
-    },
-    {
       title: "AI Interview Bot",
-      desc: "Your personal AI interviewer using ElevenLabs and OpenAI.",
-      img: "/bg-2.png",
+      desc: "Your personal AI interviewer using ElevenLabs and OpenAI API.",
+      img: "/images/projects/ai-interview.png",
       link: "#",
     },
     {
-      title: "MangoMart",
-      desc: "E-commerce platform for farm-fresh mangoes 🍋",
-      img: "/bg-2.png",
+      title: "Children's Rights Awareness Website",
+      desc: "A website for children's rights awareness using NextJS, Supabase and Marketjs. It's a responsive and interactive child friendly UI and contains informative content including Videos, Quizzes, and Games.",
+      img: "/images/projects/childrens-rights.png",
+      link: "#",
+    },
+    {
+      title: "Personal Portfolio",
+      desc: "My personal portfolio website built with NextJS, TailwindCSS and Framer Motion.",
+      img: "/images/projects/personal-portfolio.png",
       link: "#",
     },
   ];
@@ -36,19 +36,20 @@ export default function ProjectPreviewGrid() {
           <Link
             key={i}
             href={proj.link}
-            className="group block bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300"
+            className="group block bg-white/10 backdrop-blur-sm shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300"
           >
-            <div className="relative w-full h-52">
+            <div className="relative w-full h-56 md:h-64 bg-black">
               <Image
                 src={proj.img}
                 alt={proj.title}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain group-hover:scale-[1.02] transition-transform duration-300"
               />
             </div>
             <div className="p-5">
               <h3 className="font-semibold text-lg mb-2">{proj.title}</h3>
-              <p className="text-gray-600 text-sm">{proj.desc}</p>
+              <p className="text-white/80 text-sm">{proj.desc}</p>
             </div>
           </Link>
         ))}

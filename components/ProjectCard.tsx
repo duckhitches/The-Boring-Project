@@ -138,7 +138,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = React.memo(({ project, on
           <button 
             onClick={handleShareClick}
             disabled={shareText === 'Copied!'}
-            className="px-4 py-2 w-20 text-center text-sm bg-indigo-600 text-white rounded-full hover:bg-indigo-500 transition-colors font-semibold disabled:bg-green-500 disabled:cursor-not-allowed"
+            className="px-4 py-2 w-20 text-sm bg-indigo-600 text-white rounded-full hover:bg-indigo-500 transition-colors font-semibold disabled:bg-green-500 disabled:cursor-not-allowed flex items-center justify-center disabled:flex disabled:items-center disabled:justify-center"
           >
             {shareText}
           </button>

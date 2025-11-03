@@ -24,7 +24,7 @@ const newsItems: NewsItem[] = [
     id: '1',
     title: 'New Search Functionality',
     content: 'Global search across projects and notes is now live! Find anything instantly.',
-    date: '2024-01-15',
+    date: '2025-10-24',
     type: 'feature',
     isNew: true
   },
@@ -32,7 +32,7 @@ const newsItems: NewsItem[] = [
     id: '2',
     title: 'Mobile Sidebar Redesign',
     content: 'Completely redesigned mobile navigation with better UX and animations.',
-    date: '2024-01-14',
+    date: '2025-10-22',
     type: 'update',
     isNew: true
   },
@@ -40,15 +40,15 @@ const newsItems: NewsItem[] = [
     id: '3',
     title: 'Auto-save Notes Feature',
     content: 'Notes now auto-save every minute with visual countdown indicator.',
-    date: '2024-01-13',
+    date: '2025-10-20',
     type: 'feature',
     isNew: false
   },
   {
     id: '4',
     title: 'Theme Engine Update',
-    content: 'Added Light, Dark, and Image themes with real-time switching.',
-    date: '2024-01-12',
+    content: 'Added Light, Dark, and Image themes with real-time switching Coming Soon.',
+    date: '2025-10-25',
     type: 'update',
     isNew: false
   },
@@ -56,7 +56,7 @@ const newsItems: NewsItem[] = [
     id: '5',
     title: 'Supabase Integration Complete',
     content: 'Full authentication and database integration is now working perfectly.',
-    date: '2024-01-11',
+    date: '2025-10-18',
     type: 'announcement',
     isNew: false
   }

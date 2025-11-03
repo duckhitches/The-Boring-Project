@@ -50,7 +50,7 @@ export default function FeatureShowcase() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: true }}
           >
-            <div className="relative w-full md:w-1/2 h-64 md:h-96 rounded-3xl overflow-hidden shadow-2xl bg-black">
+            <div className="relative w-full md:w-1/2 h-64 md:h-96 overflow-hidden shadow-2xl bg-black">
               <Image
                 src={feature.img}
                 alt={feature.title}

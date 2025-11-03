@@ -16,7 +16,7 @@ import SettingsView from "./components/SettingsView";
 import { ProfileSettings } from "./components/ProfileSettings";
 import { AuthProvider, useAuth } from "./components/AuthProvider";
 import { ThemeProvider } from "./components/ThemeProvider";
-import type { Project } from "./types";
+import type { Project, Note } from "./types";
 import { PlusIcon } from "./components/IconComponents";
 import { ArrowRight, Axe, Code, Rocket, Sparkles } from "lucide-react";
 import Loading from "./components/ui/loader";
@@ -32,6 +32,7 @@ const AppContent: React.FC = () => {
   const { user, loading: authLoading, signOut } = useAuth();
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [projectToEdit, setProjectToEdit] = useState<Project | null>(null);
@@ -41,19 +42,35 @@ const AppContent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
+  const [notesLoaded, setNotesLoaded] = useState(false);
   const [showLandingPage, setShowLandingPage] = useState(true);
 
   useEffect(() => {
-    if (user && !projectsLoaded) {
-      loadProjects();
+    if (user) {
+      if (!projectsLoaded) {
+        loadProjects();
+      }
+      if (!notesLoaded) {
+        loadNotes();
+      }
       setShowLandingPage(false); // Hide landing page when user is authenticated
     } else if (!user) {
       setProjects([]);
+      setNotes([]);
       setProjectsLoaded(false);
+      setNotesLoaded(false);
       setIsLoading(false);
       setShowLandingPage(true); // Show landing page when user is not authenticated
     }
-  }, [user, projectsLoaded]);
+  }, [user, projectsLoaded, notesLoaded]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('active-view', currentView);
+      } catch {}
+    }
+  }, [currentView]);
 
   const loadProjects = async () => {
     setIsLoading(true);
@@ -68,6 +85,17 @@ const AppContent: React.FC = () => {
       setProjectsLoaded(true);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadNotes = async () => {
+    try {
+      const supabaseNotes = await supabaseService.getNotes();
+      setNotes(supabaseNotes);
+      setNotesLoaded(true);
+    } catch (error) {
+      console.error("Error loading notes:", error);
+      setNotesLoaded(true);
     }
   };
 
@@ -170,6 +198,17 @@ const AppContent: React.FC = () => {
           .includes(searchQuery.toLowerCase())
       ),
     [projects, searchQuery]
+  );
+
+  const filteredNotes = useMemo(
+    () =>
+      notes.filter((n) =>
+        [n.title, n.content]
+          .join(" ")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      ),
+    [notes, searchQuery]
   );
 
   const handleGetStarted = () => {
@@ -417,9 +456,11 @@ const AppContent: React.FC = () => {
               Every part of the UI was personally designed by me, with the help of AI for development and enhancement.
                And yes, those background visuals are my own original designs too. Kindly check your News letter for upcoming/latest updates." - <i>Eshan Shettennavar</i>
               </p>
+              <a href="https://portfolio-eshan-2z6t.vercel.app/" target="_blank" rel="noopener noreferrer">
               <button className="bg-indigo-500 hover:bg-indigo-600 px-6 py-3 rounded-lg font-semibold transition-transform hover:scale-105">
-                Connect with Me
+                  Connect with Me
               </button>
+              </a>
             </motion.div>
           </div>
           <ProjectPreviewGrid />
@@ -457,6 +498,38 @@ const AppContent: React.FC = () => {
         )}
 
         <main className="flex-1 overflow-y-auto bg-neutral-900">
+          {user && searchQuery.trim() && (
+            <div className="px-4 sm:px-6 py-3 border-b border-neutral-800 bg-neutral-900/80 sticky top-0 z-40">
+              <div className="max-w-7xl mx-auto grid gap-4 md:grid-cols-2">
+                <div>
+                  <h4 className="text-sm text-neutral-400 mb-2">Projects ({filteredProjects.length})</h4>
+                  <ul className="space-y-1">
+                    {filteredProjects.slice(0, 5).map((p) => (
+                      <li key={p.id} className="text-sm text-neutral-200 truncate">
+                        {p.projectName}
+                      </li>
+                    ))}
+                    {filteredProjects.length === 0 && (
+                      <li className="text-sm text-neutral-500">No matches</li>
+                    )}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-sm text-neutral-400 mb-2">Notes ({filteredNotes.length})</h4>
+                  <ul className="space-y-1">
+                    {filteredNotes.slice(0, 5).map((n) => (
+                      <li key={n.id} className="text-sm text-neutral-200 truncate">
+                        {n.title || n.content.substring(0, 48)}
+                      </li>
+                    ))}
+                    {filteredNotes.length === 0 && (
+                      <li className="text-sm text-neutral-500">No matches</li>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
           {renderView()}
         </main>
       </div>

@@ -120,7 +120,7 @@ export default function PublicProjectPage() {
 
   return (
     <div
-      className="min-h-screen py-8 px-4 bg-cover bg-center bg-no-repeat"
+      className="min-h-screen py-8 px-4 bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{ backgroundImage: "url('/bg-2.png')" }}
     >
       <div className="max-w-4xl mx-auto">
@@ -241,7 +241,6 @@ export default function PublicProjectPage() {
 
         {/* Footer */}
         <div className="mt-10">
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           <div className="flex flex-col items-center gap-3 pt-6 text-center">
             <div className="text-xs text-slate-900">
               <span className="font-semibold tracking-wide text-slate-900">The Boring Project</span>

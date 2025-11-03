@@ -216,9 +216,19 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
                       desc: "Better UX and animations",
                     },
                     {
+                      color: "bg-green-500",
+                      title: "Auto-save Notes Feature",
+                      desc: "Notes now auto-save every minute with visual countdown indicator.",
+                    },
+                    {
                       color: "bg-purple-500",
                       title: "Theme Engine Update",
-                      desc: "Light, Dark, and Image themes",
+                      desc: "Light, Dark, and Image themes Coming Soon.",
+                    },
+                    {
+                      color: "bg-orange-500",
+                      title: "Supabase Integration Complete",
+                      desc: "Full authentication and database integration is now working perfectly.",
                     },
                   ].map((news, i) => (
                     <div

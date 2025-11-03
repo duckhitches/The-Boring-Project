@@ -154,7 +154,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
         </div>
 
         {/* News Section */}
-        <div className="px-4 pb-4">
+        {/* <div className="px-4 pb-4">
           <h3 className="text-sm font-semibold text-neutral-200 mb-3">
             Updates from Developer-Eshan
           </h3>
@@ -191,7 +191,8 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
             ))}
           </div>
 
-        </div>
+        </div> */}
+        
 
         {/* Upgrade Section */}
         <div className="px-4 pb-6">

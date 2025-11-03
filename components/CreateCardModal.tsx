@@ -497,8 +497,8 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
         )}
       </AnimatePresence>
       
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-gray-800 rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+      <div className="fixed inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-black/80 rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
         {/* Cropper Modal */}
         {isCropping && localImageSrc && (
           <div className="fixed inset-0 z-[70] flex items-center justify-center">
@@ -747,11 +747,11 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                         {uploadError}
                     </div>
                   )}
-                <div className="flex items-start gap-4">
-                    <div className="flex-grow">
+                <div className="flex flex-col md:flex-row md:items-start gap-4">
+                    <div className="flex-grow w-full md:w-auto">
                         {formData.backgroundImage ? (
-                            <div className="relative group w-full h-32">
-                                <Image src={formData.backgroundImage} alt="Background Preview" className="object-cover rounded-lg" fill sizes="400px"/>
+                            <div className="relative group w-full h-32 md:h-40">
+                                <Image src={formData.backgroundImage} alt="Background Preview" className="object-cover rounded-lg" fill sizes="(max-width: 768px) 100vw, 50vw"/>
                                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
                                     <button type="button" onClick={() => setFormData(p => ({...p, backgroundImage: ''}))} className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">Remove</button>
                                 </div>
@@ -761,7 +761,7 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                                 onDrop={handleDrop} 
                                 onDragOver={handleDragOver} 
                                 onDragLeave={handleDragLeave}
-                                className={`relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700/50 transition-colors ${isDragging ? 'bg-slate-700/50 border-indigo-500' : ''}`}
+                                className={`relative flex flex-col items-center justify-center w-full h-32 md:h-40 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700/50 transition-colors ${isDragging ? 'bg-slate-700/50 border-indigo-500' : ''}`}
                             >
                                 {loadingStates.imageUpload ? (
                                     <>
@@ -771,8 +771,8 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                                 ) : (
                                     <>
                                         <UploadCloudIcon className="w-8 h-8 text-slate-500 mb-2"/>
-                                        <p className="text-sm text-slate-400"><span className="font-semibold text-indigo-400">Click to upload</span> or drag and drop</p>
-                                        <p className="text-xs text-slate-500">PNG, JPG, GIF (Max 10MB)</p>
+                                        <p className="text-sm text-slate-400 text-center px-2"><span className="font-semibold text-indigo-400">Click to upload</span> or drag and drop</p>
+                                        <p className="text-xs text-slate-500 mt-1">PNG, JPG, GIF (Max 10MB)</p>
                                     </>
                                 )}
                                 <input 
@@ -785,14 +785,15 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                             </div>
                         )}
                     </div>
-                    <div className="relative group flex-shrink-0 self-center flex flex-col items-center gap-2 w-32 text-center">
-                        <span className="text-sm text-slate-500">OR</span>
-                        <Button type="button" onClick={handleGenerateBgImage} className="w-full flex items-center justify-center px-3 py-2 bg-purple-600 text-white rounded-md text-sm hover:bg-purple-700">
+                    <div className="relative group flex flex-row md:flex-col items-center md:self-center gap-3 md:gap-2 w-full md:w-32 md:text-center">
+                        <span className="text-sm text-slate-500 whitespace-nowrap">OR</span>
+                        <Button type="button" onClick={handleGenerateBgImage} disabled={loadingStates.image || !formData.projectName} className="flex-1 md:w-full flex items-center justify-center px-4 py-2.5 bg-purple-600 text-white rounded-md text-sm hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed">
                             <FriendsIcon className="w-4 h-4 mr-1.5" />
-                            AI Generate
+                            <span className="hidden sm:inline">AI Generate</span>
+                            <span className="sm:hidden">Generate</span>
                         </Button>
                         { !formData.projectName && !formData.backgroundImage && (
-                            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-max px-3 py-1.5 bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none whitespace-nowrap">
+                            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-max px-3 py-1.5 bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none whitespace-nowrap hidden md:block">
                                 Enter a project name first
                             </div>
                         )}

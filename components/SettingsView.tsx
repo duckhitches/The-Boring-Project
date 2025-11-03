@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthProvider';
-import { SettingsIcon, SunIcon, MoonIcon, PhotoIcon, ClockIcon, EnvelopeIcon, CreditCardIcon } from './IconComponents';
+import { SettingsIcon, SunIcon, MoonIcon, ClockIcon, EnvelopeIcon, CreditCardIcon } from './IconComponents';
 
-type Theme = 'light' | 'dark' | 'image';
+type Theme = 'light' | 'dark' | 'boring-kitty';
 
 interface SettingsProps {
   onThemeChange?: (theme: Theme) => void;
@@ -11,48 +11,19 @@ interface SettingsProps {
 const SettingsView: React.FC<SettingsProps> = ({ onThemeChange }) => {
   const { user, loginTime } = useAuth();
   const [selectedTheme, setSelectedTheme] = useState<Theme>('dark');
-  const [selectedScenicImage, setSelectedScenicImage] = useState<string>('');
   const [sessionDuration, setSessionDuration] = useState<string>('00:00:00');
-
-  // Pre-uploaded scenic images - Replace these URLs with your actual image paths
-  const scenicImages = [
-    {
-      id: 'mountain-lake',
-      name: 'Mountain Lake',
-      url: '/images/scenic/mountain-lake.jpg', // Replace with your image path
-      preview: 'https://picsum.photos/400/300?random=1' // Temporary placeholder
-    },
-    {
-      id: 'forest-path',
-      name: 'Forest Path',
-      url: '/images/scenic/forest-path.jpg', // Replace with your image path
-      preview: 'https://picsum.photos/400/300?random=2' // Temporary placeholder
-    },
-    {
-      id: 'ocean-sunset',
-      name: 'Ocean Sunset',
-      url: '/images/scenic/ocean-sunset.jpg', // Replace with your image path
-      preview: 'https://picsum.photos/400/300?random=3' // Temporary placeholder
-    },
-    {
-      id: 'city-skyline',
-      name: 'City Skyline',
-      url: '/images/scenic/city-skyline.jpg', // Replace with your image path
-      preview: 'https://picsum.photos/400/300?random=4' // Temporary placeholder
-    }
-  ];
 
   // Load saved theme from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem('app-theme') as Theme;
-    const savedScenicImage = localStorage.getItem('app-scenic-image');
-    
     if (savedTheme) {
       setSelectedTheme(savedTheme);
-    }
-    
-    if (savedScenicImage) {
-      setSelectedScenicImage(savedScenicImage);
+      if (savedTheme === 'boring-kitty') {
+        document.body.style.backgroundImage = "url('/bg-2.png')";
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundPosition = 'center';
+      }
     }
   }, []);
 
@@ -82,25 +53,30 @@ const SettingsView: React.FC<SettingsProps> = ({ onThemeChange }) => {
   const handleThemeChange = (theme: Theme) => {
     setSelectedTheme(theme);
     localStorage.setItem('app-theme', theme);
+    // Apply or clear global background
+    if (theme === 'boring-kitty') {
+      document.body.style.backgroundImage = "url('/bg-2.png')";
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundPosition = 'center';
+    } else {
+      document.body.style.backgroundImage = '';
+      document.body.style.backgroundSize = '';
+      document.body.style.backgroundRepeat = '';
+      document.body.style.backgroundPosition = '';
+    }
     onThemeChange?.(theme);
   };
 
-  const handleScenicImageSelect = (imageId: string) => {
-    setSelectedScenicImage(imageId);
-    localStorage.setItem('app-scenic-image', imageId);
-    // Also set theme to image if not already
-    if (selectedTheme !== 'image') {
-      handleThemeChange('image');
-    }
-  };
+  // Removed scenic image selection feature
 
   const handleContactSupport = () => {
-    window.open('https://github.com/your-repo/support', '_blank');
+    window.open('https://portfolio-eshan-2z6t.vercel.app/', '_blank');
   };
 
   const handleUpgradePlan = () => {
     // In a real app, this would redirect to a payment page
-    alert('Upgrade functionality would be implemented here!');
+    alert('Bruh, just enjoy the free plan for now!');
   };
 
   return (
@@ -128,7 +104,7 @@ const SettingsView: React.FC<SettingsProps> = ({ onThemeChange }) => {
           >
             <div className="flex items-center space-x-3 mb-3">
               <SunIcon className="w-6 h-6 text-yellow-500" />
-              <h3 className="font-medium text-white">Light</h3>
+              <h3 className="font-medium text-white">Light(Coming Soon)</h3>
             </div>
             <p className="text-sm text-slate-400">Clean and bright interface</p>
             <div className="mt-3 h-16 bg-white rounded border border-gray-200 flex items-center justify-center">
@@ -155,22 +131,22 @@ const SettingsView: React.FC<SettingsProps> = ({ onThemeChange }) => {
             </div>
           </div>
 
-          {/* Image Theme */}
+          {/* Boring Kitty Theme */}
           <div
-            onClick={() => handleThemeChange('image')}
+            onClick={() => handleThemeChange('boring-kitty')}
             className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-              selectedTheme === 'image'
+              selectedTheme === 'boring-kitty'
                 ? 'border-indigo-500 bg-indigo-500/10'
                 : 'border-slate-600 hover:border-slate-500'
             }`}
           >
             <div className="flex items-center space-x-3 mb-3">
-              <PhotoIcon className="w-6 h-6 text-purple-500" />
-              <h3 className="font-medium text-white">Scenic</h3>
+              <span className="inline-block w-6 h-6 rounded-full bg-gradient-to-r from-pink-400 to-yellow-300" />
+              <h3 className="font-medium text-white">Boring Kitty(Coming Soon)</h3>
             </div>
-            <p className="text-sm text-slate-400">Beautiful background images</p>
-            <div className="mt-3 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded flex items-center justify-center">
-              <span className="text-white text-sm">Scenic Preview</span>
+            <p className="text-sm text-slate-400">Applies a playful gradient background</p>
+            <div className="mt-3 h-16 rounded flex items-center justify-center" style={{ backgroundImage: "url('/bg-2.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+              <span className="text-white text-sm bg-black/40 px-2 py-0.5 rounded">Preview</span>
             </div>
           </div>
         </div>
@@ -263,64 +239,13 @@ const SettingsView: React.FC<SettingsProps> = ({ onThemeChange }) => {
         </div>
       </div>
 
-      {/* Scenic Image Selection */}
-      {selectedTheme === 'image' && (
-        <div className="bg-black/40 rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Choose Scenic Background</h2>
-          <p className="text-slate-400 mb-6">Select one of the pre-uploaded scenic images for your background.</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {scenicImages.map((image) => (
-              <div
-                key={image.id}
-                onClick={() => handleScenicImageSelect(image.id)}
-                className={`relative rounded-lg overflow-hidden cursor-pointer transition-all border-2 ${
-                  selectedScenicImage === image.id
-                    ? 'border-indigo-500 bg-indigo-500/10'
-                    : 'border-slate-600 hover:border-slate-500'
-                }`}
-              >
-                <img
-                  src={image.preview}
-                  alt={image.name}
-                  className="w-full h-32 object-cover"
-                />
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                  <div className="text-center">
-                    <h3 className="text-white font-medium mb-1">{image.name}</h3>
-                    <p className="text-white/80 text-sm">Click to select</p>
-                  </div>
-                </div>
-                {selectedScenicImage === image.id && (
-                  <div className="absolute top-2 right-2 w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          
-          {/* Image Upload Instructions */}
-          <div className="mt-6 p-4 bg-slate-700/50 rounded-lg">
-            <h3 className="text-white font-medium mb-2">📁 To Add Your Own Images:</h3>
-            <div className="text-slate-300 text-sm space-y-1">
-              <p>1. Create a folder: <code className="bg-slate-600 px-2 py-1 rounded">public/images/scenic/</code></p>
-              <p>2. Add your images with these exact names:</p>
-              <ul className="ml-4 space-y-1">
-                <li>• <code className="bg-slate-600 px-1 rounded">mountain-lake.jpg</code></li>
-                <li>• <code className="bg-slate-600 px-1 rounded">forest-path.jpg</code></li>
-                <li>• <code className="bg-slate-600 px-1 rounded">ocean-sunset.jpg</code></li>
-                <li>• <code className="bg-slate-600 px-1 rounded">city-skyline.jpg</code></li>
-              </ul>
-              <p>3. Update the <code className="bg-slate-600 px-1 rounded">url</code> property in the <code className="bg-slate-600 px-1 rounded">scenicImages</code> array above</p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Removed Scenic Image Selection section for Boring Kitty theme */}
     </div>
   );
 };
 
 export default SettingsView;
+
+
+
+
