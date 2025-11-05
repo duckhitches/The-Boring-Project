@@ -33,8 +33,8 @@ export default function FeatureShowcase() {
   ];
 
   return (
-    <section className="w-full py-24 bg-black">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-20 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
+    <section id="features" className="w-full py-24 bg-black">
+      <h2 className="text-4xl md:text-5xl pb-4 font-bold text-center mb-20 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
         Why Choose The Boring Project? 
       </h2>
 

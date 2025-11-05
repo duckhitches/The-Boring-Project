@@ -9,19 +9,19 @@ export default function ProjectPreviewGrid() {
       title: "AI Interview Bot",
       desc: "Your personal AI interviewer using ElevenLabs and OpenAI API.",
       img: "/images/projects/ai-interview.png",
-      link: "#",
+      link: "https://project-ea.vercel.app/",
     },
     {
       title: "Children's Rights Awareness Website",
       desc: "A website for children's rights awareness using NextJS, Supabase and Marketjs. It's a responsive and interactive child friendly UI and contains informative content including Videos, Quizzes, and Games.",
       img: "/images/projects/childrens-rights.png",
-      link: "#",
+      link: "https://childrensrights-eshanvs-nu.vercel.app/",
     },
     {
       title: "Personal Portfolio",
       desc: "My personal portfolio website built with NextJS, TailwindCSS and Framer Motion.",
       img: "/images/projects/personal-portfolio.png",
-      link: "#",
+      link: "https://portfolio-eshan-2z6t.vercel.app/",
     },
   ];
 

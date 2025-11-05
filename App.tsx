@@ -65,9 +65,9 @@ const AppContent: React.FC = () => {
   }, [user, projectsLoaded, notesLoaded]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       try {
-        localStorage.setItem('active-view', currentView);
+        localStorage.setItem("active-view", currentView);
       } catch {}
     }
   }, [currentView]);
@@ -212,8 +212,8 @@ const AppContent: React.FC = () => {
   );
 
   const handleGetStarted = () => {
-    console.log('Get Started clicked!');
-    router.push('/auth');
+    console.log("Get Started clicked!");
+    router.push("/auth");
   };
 
   const renderView = () => {
@@ -285,8 +285,9 @@ const AppContent: React.FC = () => {
     }
   };
 
-
-  {/* To implement: If user is authenticated, redirect to dashboard */}
+  {
+    /* To implement: If user is authenticated, redirect to dashboard */
+  }
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -331,22 +332,31 @@ const AppContent: React.FC = () => {
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
+            <h1 className="text-3xl md:text-6xl font-bold mb-4 pb-4 bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
               The Boring Project
             </h1>
             <p className="text-gray-400 text-base md:text-xl max-w-2xl mx-auto mb-8 md:mb-10 px-4">
-            The least boring place for devs.
+              The least boring place for devs.
             </p>
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 px-4">
               <button
                 onClick={handleGetStarted}
-                className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 md:px-8 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-transform text-sm md:text-base"
+                className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 md:px-8 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-transform text-sm md:text-base"
               >
-                Get Started <ArrowRight className="inline w-4 h-4 md:w-5 md:h-5 ml-2" />
+                Get Started{" "}
+                <ArrowRight className="inline w-4 h-4 md:w-5 md:h-5 ml-2" />
               </button>
-              <button className="border border-slate-600 hover:bg-slate-800 text-white px-6 md:px-8 py-3 rounded-lg font-semibold transition-all text-sm md:text-base">
+              <button
+                onClick={() => {
+                  const featuresSection = document.getElementById("features");
+                  if (featuresSection) {
+                    featuresSection.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="border border-slate-600 hover:bg-slate-800 text-white px-6 md:px-8 py-3 rounded-lg font-semibold transition-all text-sm md:text-base"
+              >
                 Learn More
               </button>
             </div>
@@ -428,7 +438,7 @@ const AppContent: React.FC = () => {
         </section>
 
         {/* DEV SECTION */}
-        <section className="max-w-6xl mx-auto px-6 pb-24">
+        <section id="about" className="max-w-6xl mx-auto px-6 pb-24">
           <div className="bg-black p-10 md:p-16 rounded-2xl border border-slate-800 grid md:grid-cols-2 items-center gap-10">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -443,23 +453,34 @@ const AppContent: React.FC = () => {
                 className="object-cover"
               />
             </motion.div>
-
+            
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
+              
             >
-              <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent">Know the Dev</h3>
+              <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent">
+                Know the Dev
+              </h3>
               <p className="text-gray-300 mb-6 leading-relaxed">
-              "Hola Amigo! I’m the creator of The Boring Project — and a big fan of One Piece, by the way. 
-              I built this platform for developers who want to express their creativity and share their hard work with the world. 
-              Every part of the UI was personally designed by me, with the help of AI for development and enhancement.
-               And yes, those background visuals are my own original designs too. Kindly check your News letter for upcoming/latest updates." - <i>Eshan Shettennavar</i>
+                "Hola Amigo! I’m the creator of The Boring Project — and a big
+                fan of One Piece, by the way. I built this platform for
+                developers who want to express their creativity and share their
+                hard work with the world. Every part of the UI was personally
+                designed by me, with the help of AI for development and
+                enhancement. And yes, those background visuals are my own
+                original designs too. Kindly check your News letter for
+                upcoming/latest updates." - <i>Eshan Shettennavar</i>
               </p>
-              <a href="https://portfolio-eshan-2z6t.vercel.app/" target="_blank" rel="noopener noreferrer">
-              <button className="bg-indigo-500 hover:bg-indigo-600 px-6 py-3 rounded-lg font-semibold transition-transform hover:scale-105">
+              <a
+                href="https://portfolio-eshan-2z6t.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="bg-indigo-500 hover:bg-indigo-600 px-6 py-3 rounded-lg font-semibold transition-transform hover:scale-105">
                   Connect with Me
-              </button>
+                </button>
               </a>
             </motion.div>
           </div>
@@ -467,8 +488,84 @@ const AppContent: React.FC = () => {
         </section>
 
         {/* FOOTER */}
-        <footer className="border-t border-slate-800 py-8 text-center text-gray-500 text-sm">
-          © 2025 The Boring Project. Crafted with 💜 for developers.
+        <footer className="border-t border-slate-800 bg-slate-950/50 backdrop-blur-sm py-10 mt-10">
+          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-4">
+            {/* Left Section */}
+            <p className="text-gray-400 text-sm">
+              © {new Date().getFullYear()}{" "}
+              <span className="text-white font-semibold">
+                The Boring Project
+              </span>
+              . Crafted with <span className="text-indigo-400">💜</span> for
+              developers.
+            </p>
+
+            {/* Middle Section - Links */}
+            <div className="flex gap-6 text-sm text-gray-400">
+              <a
+                onClick={() => {
+                  const aboutSection = document.getElementById("about");
+                  if (aboutSection) {
+                    aboutSection.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="hover:text-white transition-colors duration-200"
+              >
+                About
+              </a>
+              <a
+                onClick={() => {
+                  const featuresSection = document.getElementById("features");
+                  if (featuresSection) {
+                    featuresSection.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="hover:text-white transition-colors duration-200"
+              >
+                Features
+              </a>
+              <a
+                href="https://form.jotform.com/251774331221449"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors duration-200"
+              >
+                Contact
+              </a>
+            </div>
+
+            {/* Right Section - Socials */}
+            <div className="flex gap-4">
+              <a
+                href="https://github.com/duckhitches"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors duration-200"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 .297a12 12 0 00-3.79 23.412c.6.112.82-.26.82-.578 0-.285-.011-1.04-.017-2.04-3.338.724-4.042-1.61-4.042-1.61a3.184 3.184 0 00-1.335-1.757c-1.09-.745.083-.73.083-.73a2.522 2.522 0 011.84 1.237 2.554 2.554 0 003.488.997 2.558 2.558 0 01.762-1.61c-2.665-.305-5.466-1.333-5.466-5.931A4.64 4.64 0 015.9 7.372a4.302 4.302 0 01.117-3.181s1.006-.322 3.3 1.23a11.37 11.37 0 016.003 0c2.29-1.552 3.296-1.23 3.296-1.23a4.3 4.3 0 01.117 3.18 4.64 4.64 0 011.236 3.213c0 4.61-2.805 5.624-5.476 5.922a2.868 2.868 0 01.815 2.223c0 1.606-.014 2.902-.014 3.296 0 .322.217.698.825.579A12 12 0 0012 .297z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/eshan-shettennavar/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors duration-200"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75S5.534 4.232 6.5 4.232 8.25 5.016 8.25 5.982s-.784 1.75-1.75 1.75zM20 19h-3v-5.5c0-1.379-.028-3.151-1.92-3.151-1.922 0-2.217 1.501-2.217 3.049V19h-3v-10h2.879v1.367h.041c.402-.761 1.386-1.562 2.854-1.562 3.053 0 3.615 2.01 3.615 4.627V19z" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </footer>
       </div>
     );
@@ -502,10 +599,15 @@ const AppContent: React.FC = () => {
             <div className="px-4 sm:px-6 py-3 border-b border-neutral-800 bg-neutral-900/80 sticky top-0 z-40">
               <div className="max-w-7xl mx-auto grid gap-4 md:grid-cols-2">
                 <div>
-                  <h4 className="text-sm text-neutral-400 mb-2">Projects ({filteredProjects.length})</h4>
+                  <h4 className="text-sm text-neutral-400 mb-2">
+                    Projects ({filteredProjects.length})
+                  </h4>
                   <ul className="space-y-1">
                     {filteredProjects.slice(0, 5).map((p) => (
-                      <li key={p.id} className="text-sm text-neutral-200 truncate">
+                      <li
+                        key={p.id}
+                        className="text-sm text-neutral-200 truncate"
+                      >
                         {p.projectName}
                       </li>
                     ))}
@@ -515,10 +617,15 @@ const AppContent: React.FC = () => {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="text-sm text-neutral-400 mb-2">Notes ({filteredNotes.length})</h4>
+                  <h4 className="text-sm text-neutral-400 mb-2">
+                    Notes ({filteredNotes.length})
+                  </h4>
                   <ul className="space-y-1">
                     {filteredNotes.slice(0, 5).map((n) => (
-                      <li key={n.id} className="text-sm text-neutral-200 truncate">
+                      <li
+                        key={n.id}
+                        className="text-sm text-neutral-200 truncate"
+                      >
                         {n.title || n.content.substring(0, 48)}
                       </li>
                     ))}
@@ -568,11 +675,11 @@ const AppContent: React.FC = () => {
         <AuthModal
           isOpen={isAuthModalOpen}
           onClose={() => {
-            console.log('Closing auth modal');
+            console.log("Closing auth modal");
             setIsAuthModalOpen(false);
           }}
           onAuthSuccess={() => {
-            console.log('Auth successful, closing modal');
+            console.log("Auth successful, closing modal");
             setIsAuthModalOpen(false);
           }}
         />
