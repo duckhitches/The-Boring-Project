@@ -14,6 +14,8 @@ import { LoaderOne } from './ui/loader';
 import { Button } from './ui/stateful-button';
 import Editor from 'react-simple-code-editor';
 import Prism from 'prismjs';
+import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
@@ -721,8 +723,29 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                                     {isExplanationVisible ? <ChevronUpIcon className="w-5 h-5 text-slate-400" /> : <ChevronDownIcon className="w-5 h-5 text-slate-400" />}
                                 </button>
                                 {isExplanationVisible && (
-                                    <div className="p-4 border-t border-slate-700 text-slate-300 text-sm whitespace-pre-wrap">
-                                        {codeExplanation}
+                                    <div className="p-4 border-t border-slate-700 text-slate-300 text-sm prose prose-invert prose-sm max-w-none dark:prose-invert">
+                                        <ReactMarkdown 
+                                            rehypePlugins={[rehypeHighlight]}
+                                            components={{
+                                                code: ({ className, children, ...props }: any) => {
+                                                    const match = /language-(\w+)/.exec(className || '');
+                                                    const isBlockCode = match && className;
+                                                    return isBlockCode ? (
+                                                        <pre className="bg-slate-900 rounded-lg p-4 overflow-x-auto border border-slate-700 my-2">
+                                                            <code className={className} {...props}>
+                                                                {children}
+                                                            </code>
+                                                        </pre>
+                                                    ) : (
+                                                        <code className="bg-slate-800 px-1.5 py-0.5 rounded text-indigo-300" {...props}>
+                                                            {children}
+                                                        </code>
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            {codeExplanation}
+                                        </ReactMarkdown>
                                     </div>
                                 )}
                             </>

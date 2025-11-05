@@ -70,7 +70,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
     <>
       <Banner 
         show={showVerificationBanner}
-        message="Please verify your email via an email received from Supabase."
+        message="Please verify your email via an email received from Supabase And Do Not Forget Your Password"
         onClose={() => setShowVerificationBanner(false)}
         autoHide={true}
         duration={5000}

@@ -1141,6 +1141,26 @@ body{
 .prose-sm :where(.prose-sm > :last-child):not(:where([class~="not-prose"],[class~="not-prose"] *)){
   margin-bottom: 0;
 }
+.prose-invert{
+  --tw-prose-body: var(--tw-prose-invert-body);
+  --tw-prose-headings: var(--tw-prose-invert-headings);
+  --tw-prose-lead: var(--tw-prose-invert-lead);
+  --tw-prose-links: var(--tw-prose-invert-links);
+  --tw-prose-bold: var(--tw-prose-invert-bold);
+  --tw-prose-counters: var(--tw-prose-invert-counters);
+  --tw-prose-bullets: var(--tw-prose-invert-bullets);
+  --tw-prose-hr: var(--tw-prose-invert-hr);
+  --tw-prose-quotes: var(--tw-prose-invert-quotes);
+  --tw-prose-quote-borders: var(--tw-prose-invert-quote-borders);
+  --tw-prose-captions: var(--tw-prose-invert-captions);
+  --tw-prose-kbd: var(--tw-prose-invert-kbd);
+  --tw-prose-kbd-shadows: var(--tw-prose-invert-kbd-shadows);
+  --tw-prose-code: var(--tw-prose-invert-code);
+  --tw-prose-pre-code: var(--tw-prose-invert-pre-code);
+  --tw-prose-pre-bg: var(--tw-prose-invert-pre-bg);
+  --tw-prose-th-borders: var(--tw-prose-invert-th-borders);
+  --tw-prose-td-borders: var(--tw-prose-invert-td-borders);
+}
 .pointer-events-none{
   pointer-events: none;
 }
@@ -1273,6 +1293,10 @@ body{
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
 }
+.my-2{
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
 .-mr-1{
   margin-right: -0.25rem;
 }
@@ -1371,6 +1395,9 @@ body{
 }
 .inline{
   display: inline;
+}
+.\!inline{
+  display: inline !important;
 }
 .flex{
   display: flex;
@@ -1753,6 +1780,9 @@ body{
 .overflow-hidden{
   overflow: hidden;
 }
+.overflow-x-auto{
+  overflow-x: auto;
+}
 .overflow-y-auto{
   overflow-y: auto;
 }
@@ -2117,6 +2147,10 @@ body{
 .bg-slate-950\/50{
   background-color: rgb(2 6 23 / 0.5);
 }
+.bg-pink-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(236 72 153 / var(--tw-bg-opacity, 1));
+}
 .bg-opacity-50{
   --tw-bg-opacity: 0.5;
 }
@@ -2323,6 +2357,10 @@ body{
 .py-10{
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
+}
+.px-1\.5{
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
 }
 .pb-20{
   padding-bottom: 5rem;
@@ -3096,6 +3134,11 @@ body{
 .hover\:ring-green-500:hover{
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(34 197 94 / var(--tw-ring-opacity, 1));
+}
+
+.hover\:ring-pink-500:hover{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(236 72 153 / var(--tw-ring-opacity, 1));
 }
 
 .focus\:border-indigo-500:focus{
