@@ -7,7 +7,7 @@ export default function ProjectPreviewGrid() {
   const projects = [
     {
       title: "AI Interview Bot",
-      desc: "Your personal AI interviewer using ElevenLabs and OpenAI API.",
+      desc: "Your personal AI interviewer using Gemini API and NextJS.",
       img: "/images/projects/ai-interview.png",
       link: "https://project-ea.vercel.app/",
     },
