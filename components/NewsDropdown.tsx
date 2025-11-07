@@ -22,6 +22,14 @@ interface NewsDropdownProps {
 const newsItems: NewsItem[] = [
   {
     id: '1',
+    title: 'AI Image Generator Now Available',
+    content: 'Generate images with AI using Gemini API and NextJS is not available since its for billed users(Im still poor dawg). Just upload a prompt and let the AI generate images for you.',
+    date: '2025-11-07',
+    type: 'feature',
+    isNew: true
+  },
+  {
+    id: '2',
     title: 'New Search Functionality',
     content: 'Global search across projects and notes is now live! Find anything instantly.',
     date: '2025-10-24',
@@ -29,7 +37,7 @@ const newsItems: NewsItem[] = [
     isNew: true
   },
   {
-    id: '2',
+    id: '3',
     title: 'Mobile Sidebar Redesign',
     content: 'Completely redesigned mobile navigation with better UX and animations.',
     date: '2025-10-22',
@@ -37,7 +45,7 @@ const newsItems: NewsItem[] = [
     isNew: true
   },
   {
-    id: '3',
+    id: '4',
     title: 'Auto-save Notes Feature',
     content: 'Notes now auto-save every minute with visual countdown indicator.',
     date: '2025-10-20',
@@ -45,7 +53,7 @@ const newsItems: NewsItem[] = [
     isNew: false
   },
   {
-    id: '4',
+    id: '5',
     title: 'Theme Engine Update',
     content: 'Added Light, Dark, and Image themes with real-time switching Coming Soon.',
     date: '2025-10-25',
@@ -53,7 +61,7 @@ const newsItems: NewsItem[] = [
     isNew: false
   },
   {
-    id: '5',
+    id: '6',
     title: 'Supabase Integration Complete',
     content: 'Full authentication and database integration is now working perfectly.',
     date: '2025-10-18',
