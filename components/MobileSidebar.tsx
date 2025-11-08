@@ -207,6 +207,11 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({
                   {[
                     {
                       color: "bg-green-500",
+                      title: "AI Image Generator Not Available",
+                      desc: "AI Image Generator is not available for free users. It's only available for billed users. Im still poor dawg.",
+                    },
+                    {
+                      color: "bg-green-500",
                       title: "New Search Functionality",
                       desc: "Global search across projects and notes",
                     },
