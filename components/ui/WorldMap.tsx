@@ -8,11 +8,25 @@ export function WorldMapDemo() {
       <div className="max-w-7xl mx-auto text-center flex flex-col items-center justify-center">
         <p className="font-bold text-xl md:text-6xl text-indigo-300">
           Remote{" "}
-          <span className="bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent">
+          <span 
+            className="inline-block"
+            style={{
+              background: 'linear-gradient(to right, #ec4899, #06b6d4)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}
+          >
             {"Shareability".split("").map((word, idx) => (
               <motion.span
                 key={idx}
                 className="inline-block"
+                style={{
+                  background: 'linear-gradient(to right, #ec4899, #06b6d4)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
                 initial={{ x: -10, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: idx * 0.04 }}
