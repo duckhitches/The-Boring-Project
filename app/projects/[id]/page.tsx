@@ -19,6 +19,7 @@ import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-typescript";
 import Loading from "../../../components/ui/loader";
 import { CardContainer, CardBody } from "../../../components/ui/3d-card";
+import { generateProjectStructuredData } from "../../../lib/seo";
 
 export default function PublicProjectPage() {
   const params = useParams();
@@ -48,6 +49,19 @@ export default function PublicProjectPage() {
 
         const projectData = await response.json();
         setProject(projectData);
+        
+        // Add structured data for SEO
+        const structuredData = generateProjectStructuredData(projectData, projectId);
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.text = JSON.stringify(structuredData);
+        script.id = 'project-structured-data';
+        // Remove existing script if present
+        const existingScript = document.getElementById('project-structured-data');
+        if (existingScript) {
+          existingScript.remove();
+        }
+        document.head.appendChild(script);
       } catch (err) {
         console.error("Error fetching project:", err);
         setError("Failed to load project");
@@ -125,12 +139,19 @@ export default function PublicProjectPage() {
     >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
+        <header className="text-center mb-8">
           <h1 className="text-4xl font-bold text-black mb-2">
             {project.projectName}
           </h1>
-          <p className="text-black text-lg">{project.timeline}</p>
-        </div>
+          <p className="text-black text-lg" itemProp="duration">{project.timeline}</p>
+          {project.userInfo && (
+            <p className="text-black text-sm mt-2" itemProp="author">
+              by {project.userInfo.firstName && project.userInfo.lastName
+                ? `${project.userInfo.firstName} ${project.userInfo.lastName}`
+                : project.userInfo.email?.split("@")[0] || "Anonymous User"}
+            </p>
+          )}
+        </header>
 
         {/* Project Card with 3D tilt */}
         <CardContainer containerClassName="py-0">
@@ -140,13 +161,14 @@ export default function PublicProjectPage() {
                 {project.backgroundImage ? (
                   <Image
                     src={project.backgroundImage}
-                    alt={`${project.projectName} background`}
+                    alt={`${project.projectName} project card background image showcasing ${project.description?.substring(0, 50) || 'the project'}`}
                     className="object-cover"
                     fill
-                    sizes="(max-width: 640px) 320px, 400px"
+                    sizes="(max-width: 640px) 320px, (max-width: 768px) 400px, 600px"
+                    priority
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600"></div>
+                  <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600" aria-label={`${project.projectName} default background`}></div>
                 )}
                 <div className="absolute inset-0 bg-black/50"></div>
                 <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
@@ -184,9 +206,9 @@ export default function PublicProjectPage() {
                 )}
 
                 {/* Description */}
-                <p className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed">
+                <article className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed" itemProp="description">
                   {project.description}
-                </p>
+                </article>
 
                 {/* Code Snippet */}
                 {project.codeSnippet && (

@@ -1,4 +1,4 @@
-// File: /Users/eshanshettennavar/Downloads/the-boring-project 8.05.04 PM/app/layout.tsx
+// File: /Users/eshanshettennavar/Documents/From_ROG/the-boring-project 8.05.04 PM/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

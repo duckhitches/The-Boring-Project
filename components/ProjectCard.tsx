@@ -65,9 +65,15 @@ export const ProjectCard: React.FC<ProjectCardProps> = React.memo(({ project, on
     <div className="bg-black/40 rounded-2xl overflow-hidden shadow-lg transform hover:-translate-y-2 transition-transform duration-300 flex flex-col group">
       <div className="relative h-48 w-full">
         {project.backgroundImage ? (
-           <Image src={project.backgroundImage} alt={`${project.projectName} background`} className="object-cover" fill sizes="400px"/>
+           <Image 
+             src={project.backgroundImage} 
+             alt={`${project.projectName} project card background${project.tags && project.tags.length > 0 ? ` - ${project.tags.slice(0, 3).join(', ')}` : ''}`} 
+             className="object-cover" 
+             fill 
+             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+           />
         ) : (
-            <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600"></div>
+            <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600" aria-label={`${project.projectName} default background`}></div>
         )}
         <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors duration-300"></div>
         <div className="absolute bottom-4 left-4">

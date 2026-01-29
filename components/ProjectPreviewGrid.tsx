@@ -20,7 +20,7 @@ export default function ProjectPreviewGrid() {
     {
       title: "Personal Portfolio",
       desc: "My personal portfolio website built with NextJS, TailwindCSS and Framer Motion.",
-      img: "/images/projects/personal-portfolio.png",
+      img: "/images/projects/personal-portfolio.jpg",
       link: "https://portfolio-eshan-2z6t.vercel.app/",
     },
   ];

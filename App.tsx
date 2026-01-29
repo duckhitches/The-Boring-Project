@@ -312,12 +312,7 @@ const AppContent: React.FC = () => {
           >
             {/* Logo */}
             <div className="flex justify-center mb-6 md:mb-8">
-              <motion.div
-                initial={{ rotate: 0 }}
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                className="relative"
-              >
+              
                 <Image
                   src="/images/brand-logo.png"
                   alt="The Boring Project Logo"
@@ -327,8 +322,7 @@ const AppContent: React.FC = () => {
                   priority
                   quality={100}
                 />
-                <Axe className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 text-indigo-400" />
-              </motion.div>
+                {/* <Axe className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 text-indigo-400" /> */}
             </div>
 
             {/* Title */}
@@ -525,7 +519,7 @@ const AppContent: React.FC = () => {
                 Features
               </a>
               <a
-                href="https://form.jotform.com/251774331221449"
+                href="https://forms.cloud.microsoft/r/ZYJbUAuLFA?origin=lprLink"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors duration-200"

@@ -1,0 +1,14 @@
+# robots.txt for The Boring Project
+
+User-agent: *
+Allow: /
+Allow: /projects/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /_next/
+
+# Sitemap location
+Sitemap: https://the-boring-project.vercel.app/sitemap.xml
+
+# Crawl delay (optional, adjust as needed)
+Crawl-delay: 1

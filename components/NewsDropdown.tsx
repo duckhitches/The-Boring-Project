@@ -22,7 +22,7 @@ interface NewsDropdownProps {
 const newsItems: NewsItem[] = [
   {
     id: '1',
-    title: 'AI Image Generator Now Available',
+    title: 'AI Image Generator Currently Not Available',
     content: 'Generate images with AI using Gemini API and NextJS is not available since its for billed users(Im still poor dawg). Just upload a prompt and let the AI generate images for you.',
     date: '2025-11-07',
     type: 'feature',
