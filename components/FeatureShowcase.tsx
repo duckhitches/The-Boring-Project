@@ -9,31 +9,31 @@ export default function FeatureShowcase() {
       title: "Dashboard",
       subtitle: "Your Command Center",
       desc: "Everything you need to manage your projects and share them with the world. Track progress, organize work, and stay productive.",
-      img: "/images/features/dashboard.png",
+      img: "/images/features/dashboard-new.png",
     },
     {
       title: "AI Companion",
       subtitle: "Echo Interface",
       desc: "Your personal AI companion who will accompany you on your coding journey. Voice-activated, always ready to help.",
-      img: "/images/features/ai-companion.png",
+      img: "/images/features/ai-companion-new.png",
     },
     {
       title: "Notes System",
       subtitle: "Capture Everything",
       desc: "Your personal notes to help you remember everything. Auto-save, organize, and never lose an idea.",
-      img: "/images/features/notes.png",
+      img: "/images/features/notes-new.png",
     },
     {
       title: "Project Cards",
       subtitle: "Showcase Your Work",
       desc: "Beautiful project cards to share with the world. Professional, customizable, ready to impress.",
-      img: "/images/features/card.png",
+      img: "/images/features/card-new.png",
     },
     {
       title: "Card Features",
       subtitle: "AI-Powered Customization",
       desc: "Advanced card features packed with AI to help you customize and enhance your project presentations.",
-      img: "/images/features/card-features.png",
+      img: "/images/features/card-features-new.png",
     },
   ];
 

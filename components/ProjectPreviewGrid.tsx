@@ -8,19 +8,19 @@ export default function ProjectPreviewGrid() {
     {
       title: "AI Interview Bot",
       desc: "Your personal AI interviewer using Gemini API and NextJS.",
-      img: "/images/projects/ai-interview.png",
+      img: "/images/projects/ai-interview-new.png",
       link: "https://project-ea.vercel.app/",
     },
     {
       title: "Children's Rights Awareness",
       desc: "A website for children's rights awareness using NextJS, Supabase and Marketjs.",
-      img: "/images/projects/childrens-rights.png",
+      img: "/images/projects/childrens-rights-new.png",
       link: "https://childrensrights-eshanvs-nu.vercel.app/",
     },
     {
       title: "Personal Portfolio",
       desc: "My personal portfolio website built with NextJS, TailwindCSS and Framer Motion.",
-      img: "/images/projects/personal-portfolio.png",
+      img: "/images/projects/personal-portfolio-new.png",
       link: "https://portfolio-eshan-2z6t.vercel.app/",
     },
   ];
