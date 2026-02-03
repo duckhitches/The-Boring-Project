@@ -14,19 +14,25 @@ type TranscriptEntry = {
 
 type CompanionStatus = 'idle' | 'connecting' | 'listening' | 'speaking' | 'thinking' | 'error';
 
-const API_KEY = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY;
+// Client-only: only NEXT_PUBLIC_* vars are available in the browser.
+const API_KEY =
+  process.env.NEXT_PUBLIC_GEMINI_VOICE_KEY ||
+  process.env.NEXT_PUBLIC_API_KEY ||
+  '';
 
 export const VoiceCompanion: React.FC = () => {
     const [isCompanionOpen, setIsCompanionOpen] = useState(false);
     const [isSessionActive, setIsSessionActive] = useState(false);
     const [status, setStatus] = useState<CompanionStatus>('idle');
     const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
+    const [connectionError, setConnectionError] = useState<string | null>(null);
 
     const sessionPromise = useRef<Promise<{ sendRealtimeInput: (input: { media: Blob; }) => void; close: () => void; }> | null>(null);
     const inputAudioContext = useRef<AudioContext | null>(null);
     const outputAudioContext = useRef<AudioContext | null>(null);
-    const scriptProcessor = useRef<ScriptProcessorNode | null>(null);
+    const workletNode = useRef<AudioWorkletNode | null>(null);
     const mediaStreamSource = useRef<MediaStreamAudioSourceNode | null>(null);
+    const gainNode = useRef<GainNode | null>(null);
     const nextStartTime = useRef(0);
     const audioSources = useRef(new Set<AudioBufferSourceNode>());
     const transcriptEndRef = useRef<HTMLDivElement>(null);
@@ -38,9 +44,14 @@ export const VoiceCompanion: React.FC = () => {
     }, [transcript]);
 
     const handleSessionClose = useCallback(() => {
-        if (scriptProcessor.current) {
-            scriptProcessor.current.disconnect();
-            scriptProcessor.current = null;
+        if (workletNode.current) {
+            workletNode.current.port.onmessage = null;
+            workletNode.current.disconnect();
+            workletNode.current = null;
+        }
+        if (gainNode.current) {
+            gainNode.current.disconnect();
+            gainNode.current = null;
         }
         if (mediaStreamSource.current) {
             mediaStreamSource.current.disconnect();
@@ -57,12 +68,14 @@ export const VoiceCompanion: React.FC = () => {
 
         setIsSessionActive(false);
         setStatus('idle');
+        setConnectionError(null);
     }, []);
 
     const startConversation = useCallback(async () => {
         if (!API_KEY) {
-            console.error("API_KEY is not set.");
+            console.error("Voice: set NEXT_PUBLIC_GEMINI_VOICE_KEY or NEXT_PUBLIC_API_KEY in .env.local");
             setStatus('error');
+            setConnectionError('Missing API key. Add NEXT_PUBLIC_GEMINI_VOICE_KEY to .env.local and restart.');
             return;
         }
 
@@ -72,37 +85,46 @@ export const VoiceCompanion: React.FC = () => {
 
         setStatus('connecting');
         setTranscript([]);
+        setConnectionError(null);
         setIsSessionActive(true);
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-            const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+            const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+            inputAudioContext.current = new AudioContextClass({ sampleRate: 16000 });
+            outputAudioContext.current = new AudioContextClass({ sampleRate: 24000 });
 
-            inputAudioContext.current = new AudioContext({ sampleRate: 16000 });
-            outputAudioContext.current = new AudioContext({ sampleRate: 24000 });
+            const ctx = inputAudioContext.current;
+            if (ctx.state === 'suspended') {
+                await ctx.resume();
+            }
+            await ctx.audioWorklet.addModule('/audio-worklet-processor.js');
+            mediaStreamSource.current = ctx.createMediaStreamSource(stream);
+            workletNode.current = new AudioWorkletNode(ctx, 'mic-processor');
+            gainNode.current = ctx.createGain();
+            gainNode.current.gain.value = 0;
 
-            sessionPromise.current = ai.current.live.connect({
+            workletNode.current.port.onmessage = (event: MessageEvent<{ type: string; buffer: ArrayBuffer }>) => {
+                if (event.data?.type !== 'pcm' || !event.data.buffer) return;
+                const pcmBlob: Blob = {
+                    data: encode(new Uint8Array(event.data.buffer)),
+                    mimeType: 'audio/pcm;rate=16000',
+                };
+                sessionPromise.current?.then((session) => {
+                    session.sendRealtimeInput({ media: pcmBlob });
+                });
+            };
+            mediaStreamSource.current.connect(workletNode.current);
+            workletNode.current.connect(gainNode.current);
+            gainNode.current.connect(ctx.destination);
+
+            const connectPromise = ai.current.live.connect({
                 model: 'gemini-2.5-flash-native-audio-preview-09-2025',
                 callbacks: {
                     onopen: () => {
                         setStatus('listening');
-                        mediaStreamSource.current = inputAudioContext.current!.createMediaStreamSource(stream);
-                        scriptProcessor.current = inputAudioContext.current!.createScriptProcessor(4096, 1, 1);
-
-                        scriptProcessor.current.onaudioprocess = (audioProcessingEvent) => {
-                            const inputData = audioProcessingEvent.inputBuffer.getChannelData(0);
-                            const int16 = Int16Array.from(inputData, v => v * 32768);
-                            const pcmBlob: Blob = {
-                                data: encode(new Uint8Array(int16.buffer)),
-                                mimeType: 'audio/pcm;rate=16000',
-                            };
-                            sessionPromise.current?.then((session) => {
-                                session.sendRealtimeInput({ media: pcmBlob });
-                            });
-                        };
-                        mediaStreamSource.current.connect(scriptProcessor.current);
-                        scriptProcessor.current.connect(inputAudioContext.current!.destination);
+                        setConnectionError(null);
                     },
                     onmessage: async (message: LiveServerMessage) => {
                         let currentInput = '';
@@ -162,8 +184,9 @@ export const VoiceCompanion: React.FC = () => {
                         }
                     },
                     onerror: (e: ErrorEvent) => {
-                        console.error('Session error:', e);
+                        console.error('Gemini Live session error:', e);
                         setStatus('error');
+                        setConnectionError('Connection failed. Check your API key and network.');
                         handleSessionClose();
                     },
                     onclose: (e: CloseEvent) => {
@@ -177,10 +200,21 @@ export const VoiceCompanion: React.FC = () => {
                     systemInstruction: `You are a friendly, empathetic, and knowledgeable AI companion for developers named 'Echo'. Your purpose is to be a supportive teammate. Listen to the user's ideas, coding problems, or even just their feelings about work. Offer helpful, constructive feedback, brainstorm solutions, explain complex concepts, and provide encouragement. Understand that coding can be a lonely and stressful activity, and aim to make the user feel heard, understood, and less alone. Keep your responses conversational and encouraging.`,
                 },
             });
+            sessionPromise.current = connectPromise;
+            connectPromise.catch((err: unknown) => {
+                console.error('Gemini Live connect failed:', err);
+                setStatus('error');
+                const msg = err instanceof Error ? err.message : String(err);
+                setConnectionError(msg.includes('API key') ? 'Invalid or missing API key.' : 'Could not connect. Check console.');
+                setIsSessionActive(false);
+                handleSessionClose();
+            });
         } catch (error) {
             console.error("Failed to start conversation:", error);
             setStatus('error');
+            setConnectionError(error instanceof Error ? error.message : 'Setup failed.');
             setIsSessionActive(false);
+            handleSessionClose();
         }
     }, [handleSessionClose]);
 
@@ -199,7 +233,7 @@ export const VoiceCompanion: React.FC = () => {
             case 'listening': return <><span className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span><span className="ml-2">Listening...</span></>;
             case 'speaking': return <><span className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></span><span className="ml-2">Speaking...</span></>;
             case 'thinking': return <><LoaderOne /><span className="ml-2">Thinking...</span></>;
-            case 'error': return <><span className="w-3 h-3 bg-red-500 rounded-full"></span><span className="ml-2">Connection Error</span></>;
+            case 'error': return <><span className="w-3 h-3 bg-red-500 rounded-full"></span><span className="ml-2">{API_KEY ? 'Connection Error' : 'Set API key'}</span></>;
             default: return <><span className="w-3 h-3 bg-slate-500 rounded-full"></span><span className="ml-2">Idle</span></>;
         }
     };
@@ -245,7 +279,21 @@ export const VoiceCompanion: React.FC = () => {
                         </header>
                         <main className="flex-grow p-4 overflow-y-auto">
                             <div className="space-y-4">
-                                {transcript.length === 0 && !isSessionActive && (
+                                {!API_KEY && (
+                                    <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 text-left text-sm text-amber-200/90 space-y-2">
+                                        <p className="font-semibold">Voice needs an API key</p>
+                                        <p>In <code className="bg-slate-800 px-1 rounded">.env.local</code> add:</p>
+                                        <pre className="bg-slate-900 rounded p-2 text-xs overflow-x-auto">NEXT_PUBLIC_GEMINI_VOICE_KEY=your_key</pre>
+                                        <p className="text-slate-400 text-xs">Use the same key as GEMINI_API_KEY, then restart the dev server.</p>
+                                    </div>
+                                )}
+                                {connectionError && (
+                                    <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-left text-sm text-red-200">
+                                        <p className="font-semibold">Connection failed</p>
+                                        <p>{connectionError}</p>
+                                    </div>
+                                )}
+                                {transcript.length === 0 && !isSessionActive && API_KEY && !connectionError && (
                                     <div className="text-center text-slate-400 pt-16">
                                         <p>Hello! I'm Echo, your AI teammate.</p>
                                         <p className="text-sm mt-2">Click the button below to start our conversation.</p>

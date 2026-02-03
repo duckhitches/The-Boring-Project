@@ -1,11 +1,9 @@
 import { GoogleGenAI } from "@google/genai";
 
-const API_KEY = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_GEMINI_VOICE_KEY;
 
 if (!API_KEY) {
-  // In a real app, you'd handle this more gracefully.
-  // For this environment, we'll log a warning.
-  console.warn("API_KEY environment variable not set. Gemini API calls will fail.");
+  console.warn("NEXT_PUBLIC_GEMINI_VOICE_KEY environment variable not set. Gemini API calls will fail.");
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY! });
@@ -26,7 +24,7 @@ export const generateSummary = async (prompt: string): Promise<string> => {
 export const explainCode = async (code: string, language: string): Promise<string> => {
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-pro',
+      model: 'gemini-2.5-flash',
       contents: `Explain the following ${language} code snippet in simple terms. What does it do and how does it work? \n\n\`\`\`${language}\n${code}\n\`\`\``,
     });
     return response.text;
@@ -57,13 +55,13 @@ export const detectLanguage = async (code: string): Promise<string> => {
 export const generateImage = async (prompt: string): Promise<string | null> => {
   try {
     const response = await ai.models.generateImages({
-        model: 'imagen-4.0-generate-001',
-        prompt: prompt,
-        config: {
-          numberOfImages: 1,
-          outputMimeType: 'image/jpeg',
-          aspectRatio: '16:9',
-        },
+      model: 'imagen-4.0-generate-001',
+      prompt: prompt,
+      config: {
+        numberOfImages: 1,
+        outputMimeType: 'image/jpeg',
+        aspectRatio: '16:9',
+      },
     });
 
     if (response.generatedImages && response.generatedImages.length > 0) {
