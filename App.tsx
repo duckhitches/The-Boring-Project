@@ -3,9 +3,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Header } from "./components/Header";
-import { MobileSidebar } from "./components/MobileSidebar";
-import { DesktopSidebar } from "./components/DesktopSidebar";
 import { ProjectCard } from "./components/ProjectCard";
 import { CreateCardModal } from "./components/CreateCardModal";
 import { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
@@ -25,11 +22,13 @@ import { motion } from "framer-motion";
 import { WorldMapDemo } from "./components/ui/WorldMap";
 import ProjectPreviewGrid from "./components/ProjectPreviewGrid";
 import FeatureShowcase from "./components/FeatureShowcase";
+import DashboardView from "./components/DashboardView";
+import AppShell from "./components/layout/AppShell";
 
 export type View = "dashboard" | "notes" | "settings" | "profile";
 
 const AppContent: React.FC = () => {
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, profile, loading: authLoading, signOut } = useAuth();
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -40,7 +39,6 @@ const AppContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
   const [notesLoaded, setNotesLoaded] = useState(false);
   const [showLandingPage, setShowLandingPage] = useState(true);
@@ -236,43 +234,33 @@ const AppContent: React.FC = () => {
     switch (currentView) {
       case "dashboard":
         return (
-          <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
-            <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-              {filteredProjects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  onEdit={(id) => {
-                    const proj = projects.find((p) => p.id === id);
-                    if (proj) {
-                      setProjectToEdit(proj);
-                      setIsModalOpen(true);
-                    }
-                  }}
-                  onDelete={(id) => {
-                    const proj = projects.find((p) => p.id === id);
-                    if (proj) setProjectToDelete(proj);
-                  }}
-                />
-              ))}
-              <div
-                onClick={() => setIsModalOpen(true)}
-                className="flex flex-col items-center justify-center min-h-[300px] border border-dashed border-neutral-700 rounded-xl cursor-pointer hover:bg-neutral-800 transition"
-              >
-                <div className="w-12 h-12 bg-neutral-700 rounded-full flex items-center justify-center mb-3">
-                  <PlusIcon className="w-6 h-6 text-neutral-300" />
-                </div>
-                <p className="text-neutral-400 text-sm">Create New Project</p>
-              </div>
-            </div>
-            {searchQuery && filteredProjects.length === 0 && (
-              <div className="flex flex-col items-center justify-center mt-12 text-center">
-                <p className="text-neutral-400">
-                  No results for “{searchQuery}”
-                </p>
-              </div>
-            )}
-          </div>
+          <DashboardView
+            projects={projects}
+            filteredProjects={filteredProjects}
+            notes={notes}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onCreateProject={() => setIsModalOpen(true)}
+            onEditProject={(id) => {
+              const proj = projects.find((p) => p.id === id);
+              if (proj) {
+                setProjectToEdit(proj);
+                setIsModalOpen(true);
+              }
+            }}
+            onDeleteProject={(id) => {
+              const proj = projects.find((p) => p.id === id);
+              if (proj) setProjectToDelete(proj);
+            }}
+            onNavigate={setCurrentView}
+            displayName={
+              profile?.full_name ||
+              profile?.first_name ||
+              user?.user_metadata?.full_name ||
+              user?.user_metadata?.first_name ||
+              undefined
+            }
+          />
         );
       case "notes":
         return <NotesView searchQuery={searchQuery} />;
@@ -290,7 +278,7 @@ const AppContent: React.FC = () => {
   }
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="min-h-screen bg-black">
         <Loading />
       </div>
     );
@@ -301,9 +289,13 @@ const AppContent: React.FC = () => {
     return (
       <div className="min-h-screen bg-black text-white">
         {/* HERO SECTION */}
-        <section className="relative flex flex-col items-center text-center px-4 md:px-6 pt-16 md:pt-24 pb-20 md:pb-32">
-          {/* Subtle glow effect */}
-          <div className="absolute -top-20 md:-top-40 left-1/2 -translate-x-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-indigo-600/20 blur-3xl rounded-full" />
+        <section className="relative flex flex-col items-center text-center px-4 md:px-6 pt-16 md:pt-24 pb-20 md:pb-32 bg-black overflow-hidden">
+          {/* Grid background */}
+          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-[length:40px_40px] opacity-20 pointer-events-none" />
+          
+          {/* Sharp geometric accent */}
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -311,36 +303,37 @@ const AppContent: React.FC = () => {
             className="relative z-10 max-w-4xl"
           >
             {/* Logo */}
-            <div className="flex justify-center mb-6 md:mb-8">
-              
+            <div className="flex justify-center mb-8 md:mb-10">
+              <div className="relative p-4 border border-white/20 bg-black">
                 <Image
                   src="/images/brand-logo.png"
                   alt="The Boring Project Logo"
-                  width={90}
-                  height={90}
-                  className="rounded-full shadow-lg w-auto h-auto"
+                  width={80}
+                  height={80}
+                  className="w-auto h-auto grayscale"
                   priority
                   quality={100}
                 />
-                {/* <Axe className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 text-indigo-400" /> */}
+              </div>
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl md:text-6xl font-bold mb-4 pb-4 bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
-              The Boring Project
+            <h1 className="text-4xl md:text-7xl font-boldonse uppercase text-white tracking-widest mb-4 leading-tight">
+              The Boring
+              <span className="block text-white/40">Project</span>
             </h1>
-            <p className="text-gray-400 text-base md:text-xl max-w-2xl mx-auto mb-8 md:mb-10 px-4">
-              The least boring place for devs.
+            <p className="font-mono text-xs md:text-sm uppercase tracking-[0.3em] text-white/50 mb-10 md:mb-12">
+              The least boring place for devs
             </p>
 
             {/* Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 px-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4 px-4">
               <button
                 onClick={handleGetStarted}
-                className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 md:px-8 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-transform text-sm md:text-base"
+                className="group bg-white hover:bg-white/90 text-black px-8 md:px-10 py-4 font-mono text-sm uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3"
               >
-                Get Started{" "}
-                <ArrowRight className="inline w-4 h-4 md:w-5 md:h-5 ml-2" />
+                <span>Get Started</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
                 onClick={() => {
@@ -349,41 +342,44 @@ const AppContent: React.FC = () => {
                     featuresSection.scrollIntoView({ behavior: "smooth" });
                   }
                 }}
-                className="border border-slate-600 hover:bg-slate-800 text-white px-6 md:px-8 py-3 rounded-lg font-semibold transition-all text-sm md:text-base"
+                className="border border-white/20 hover:bg-white hover:text-black text-white px-8 md:px-10 py-4 font-mono text-sm uppercase tracking-[0.2em] transition-all"
               >
                 Learn More
               </button>
             </div>
           </motion.div>
 
-          {/* Floating elements */}
+          {/* Floating elements - made geometric */}
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-            className="absolute top-20 left-4 md:left-10"
+            className="absolute top-24 left-4 md:left-16 border border-white/10 p-2 bg-black/50"
           >
             <Image
               src="/brand-love.png"
               alt="Floating Illustration"
-              width={120}
-              height={120}
-              className="opacity-50 md:opacity-70 md:w-[180px] md:h-[180px]"
+              width={80}
+              height={80}
+              className="opacity-40 md:opacity-60 md:w-[120px] md:h-[120px] grayscale"
             />
           </motion.div>
 
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }}
-            className="absolute bottom-10 right-4 md:right-10"
+            className="absolute bottom-16 right-4 md:right-16 border border-white/10 p-2 bg-black/50"
           >
             <Image
               src="/brand.png"
               alt="Floating Illustration"
-              width={120}
-              height={120}
-              className="opacity-50 md:opacity-70 md:w-[180px] md:h-[180px]"
+              width={80}
+              height={80}
+              className="opacity-40 md:opacity-60 md:w-[120px] md:h-[120px] grayscale"
             />
           </motion.div>
+          
+          {/* Bottom accent line */}
+          <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         </section>
 
         {/* FEATURES SECTION */}
@@ -427,137 +423,177 @@ const AppContent: React.FC = () => {
         </section> */}
 
         {/* WORLD MAP SECTION */}
-        <section className="max-w-7xl mx-auto px-6 pb-24">
-          <WorldMapDemo />
+        <section className="border-t border-b border-white/10 py-24">
+          <div className="max-w-7xl mx-auto px-6">
+            {/* <div className="text-center mb-12">
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-3">
+                Network Status
+              </p>
+              <h2 className="text-3xl md:text-4xl font-boldonse uppercase text-white tracking-widest">
+                Global Reach
+              </h2>
+            </div> */}
+            <WorldMapDemo />
+          </div>
         </section>
 
         {/* DEV SECTION */}
-        <section id="about" className="max-w-6xl mx-auto px-6 pb-24">
-          <div className="bg-black p-10 md:p-16 rounded-2xl border border-slate-800 grid md:grid-cols-2 items-center gap-10">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="relative h-72 rounded-xl overflow-hidden"
-            >
-              <Image
-                src="/luffy-ace.jpg"
-                alt="Developer"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              
-            >
-              <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent">
-                Know the Dev
-              </h3>
-              <p className="text-gray-300 mb-6 leading-relaxed">
-                "Hola Amigo! I’m the creator of The Boring Project — and a big
-                fan of One Piece, by the way. I built this platform for
-                developers who want to express their creativity and share their
-                hard work with the world. Every part of the UI was personally
-                designed by me, with the help of AI for development and
-                enhancement. And yes, those background visuals are my own
-                original designs too. Kindly check your News letter for
-                upcoming/latest updates." - <i>Eshan Shettennavar</i>
-              </p>
-              <a
-                href="https://portfolio-eshan-2z6t.vercel.app/"
-                target="_blank"
-                rel="noopener noreferrer"
+        <section id="about" className="py-24 bg-black">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="border border-white/10 bg-[#0a0a0a] grid md:grid-cols-2 items-stretch">
+              {/* Image */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                className="relative h-72 md:h-auto min-h-[300px] overflow-hidden border-b md:border-b-0 md:border-r border-white/10"
               >
-                <button className="bg-indigo-500 hover:bg-indigo-600 px-6 py-3 rounded-lg font-semibold transition-transform hover:scale-105">
-                  Connect with Me
-                </button>
-              </a>
-            </motion.div>
+                <Image
+                  src="/luffy-ace.jpg"
+                  alt="Developer"
+                  fill
+                  className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                />
+                {/* Corner accents */}
+                <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-white/30" />
+                <div className="absolute bottom-4 right-4 w-6 h-6 border-r border-b border-white/30" />
+              </motion.div>
+              
+              {/* Content */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                className="p-8 md:p-12 flex flex-col justify-center"
+              >
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-3">
+                  Creator Profile
+                </p>
+                <h3 className="text-2xl md:text-3xl font-boldonse uppercase text-white tracking-widest mb-6">
+                  Know the Dev
+                </h3>
+                <div className="border-l-2 border-white/20 pl-6 mb-8">
+                  <p className="font-mono text-sm text-white/60 leading-relaxed mb-4">
+                    "Hola Amigo! I'm the creator of The Boring Project — and a big
+                    fan of One Piece, by the way. I built this platform for
+                    developers who want to express their creativity and share their
+                    hard work with the world."
+                  </p>
+                  <p className="font-mono text-sm text-white/60 leading-relaxed mb-4">
+                    "Every part of the UI was personally designed by me, with the 
+                    help of AI for development and enhancement. Those background 
+                    visuals are my own original designs too."
+                  </p>
+                  <p className="font-mono text-xs text-white/30 uppercase tracking-widest">
+                    — Eshan Shettennavar
+                  </p>
+                </div>
+                <a
+                  href="https://portfolio-eshan-2z6t.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block"
+                >
+                  <button className="bg-white hover:bg-white/90 text-black px-8 py-4 font-mono text-sm uppercase tracking-[0.2em] transition-all">
+                    Connect
+                  </button>
+                </a>
+              </motion.div>
+            </div>
           </div>
           <ProjectPreviewGrid />
         </section>
 
         {/* FOOTER */}
-        <footer className="border-t border-slate-800 bg-slate-950/50 backdrop-blur-sm py-10 mt-10">
-          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-4">
-            {/* Left Section */}
-            <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()}{" "}
-              <span className="text-white font-semibold">
-                The Boring Project
-              </span>
-              . Crafted with <span className="text-indigo-400">💜</span> for
-              developers.
-            </p>
+        <footer className="border-t border-white/10 bg-black py-12">
+          <div className="max-w-7xl mx-auto px-6">
+            {/* Top row */}
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-10">
+              {/* Brand */}
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 border border-white/20 flex items-center justify-center">
+                  <Image src="/brand-logo.png" alt="Logo" width={24} height={24} className="grayscale" />
+                </div>
+                <div>
+                  <p className="font-boldonse text-sm uppercase tracking-widest text-white">
+                    The Boring Project
+                  </p>
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-white/30">
+                    Est. 2024
+                  </p>
+                </div>
+              </div>
 
-            {/* Middle Section - Links */}
-            <div className="flex gap-6 text-sm text-gray-400">
-              <a
-                onClick={() => {
-                  const aboutSection = document.getElementById("about");
-                  if (aboutSection) {
-                    aboutSection.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
-                className="hover:text-white transition-colors duration-200"
-              >
-                About
-              </a>
-              <a
-                onClick={() => {
-                  const featuresSection = document.getElementById("features");
-                  if (featuresSection) {
-                    featuresSection.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
-                className="hover:text-white transition-colors duration-200"
-              >
-                Features
-              </a>
-              <a
-                href="https://forms.cloud.microsoft/r/ZYJbUAuLFA?origin=lprLink"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors duration-200"
-              >
-                Contact
-              </a>
+              {/* Navigation */}
+              <div className="flex flex-wrap gap-6 font-mono text-xs uppercase tracking-widest">
+                <button
+                  onClick={() => {
+                    const aboutSection = document.getElementById("about");
+                    if (aboutSection) {
+                      aboutSection.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="text-white/40 hover:text-white transition-colors cursor-pointer"
+                >
+                  About
+                </button>
+                <button
+                  onClick={() => {
+                    const featuresSection = document.getElementById("features");
+                    if (featuresSection) {
+                      featuresSection.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="text-white/40 hover:text-white transition-colors cursor-pointer"
+                >
+                  Features
+                </button>
+                <a
+                  href="https://forms.cloud.microsoft/r/ZYJbUAuLFA?origin=lprLink"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/40 hover:text-white transition-colors"
+                >
+                  Contact
+                </a>
+              </div>
+
+              {/* Socials */}
+              <div className="flex gap-3">
+                <a
+                  href="https://github.com/duckhitches"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 border border-white/20 flex items-center justify-center text-white/40 hover:bg-white hover:text-black transition-all"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 .297a12 12 0 00-3.79 23.412c.6.112.82-.26.82-.578 0-.285-.011-1.04-.017-2.04-3.338.724-4.042-1.61-4.042-1.61a3.184 3.184 0 00-1.335-1.757c-1.09-.745.083-.73.083-.73a2.522 2.522 0 011.84 1.237 2.554 2.554 0 003.488.997 2.558 2.558 0 01.762-1.61c-2.665-.305-5.466-1.333-5.466-5.931A4.64 4.64 0 015.9 7.372a4.302 4.302 0 01.117-3.181s1.006-.322 3.3 1.23a11.37 11.37 0 016.003 0c2.29-1.552 3.296-1.23 3.296-1.23a4.3 4.3 0 01.117 3.18 4.64 4.64 0 011.236 3.213c0 4.61-2.805 5.624-5.476 5.922a2.868 2.868 0 01.815 2.223c0 1.606-.014 2.902-.014 3.296 0 .322.217.698.825.579A12 12 0 0012 .297z" />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/eshan-shettennavar/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 border border-white/20 flex items-center justify-center text-white/40 hover:bg-white hover:text-black transition-all"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75S5.534 4.232 6.5 4.232 8.25 5.016 8.25 5.982s-.784 1.75-1.75 1.75zM20 19h-3v-5.5c0-1.379-.028-3.151-1.92-3.151-1.922 0-2.217 1.501-2.217 3.049V19h-3v-10h2.879v1.367h.041c.402-.761 1.386-1.562 2.854-1.562 3.053 0 3.615 2.01 3.615 4.627V19z" />
+                  </svg>
+                </a>
+              </div>
             </div>
 
-            {/* Right Section - Socials */}
-            <div className="flex gap-4">
-              <a
-                href="https://github.com/duckhitches"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors duration-200"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 .297a12 12 0 00-3.79 23.412c.6.112.82-.26.82-.578 0-.285-.011-1.04-.017-2.04-3.338.724-4.042-1.61-4.042-1.61a3.184 3.184 0 00-1.335-1.757c-1.09-.745.083-.73.083-.73a2.522 2.522 0 011.84 1.237 2.554 2.554 0 003.488.997 2.558 2.558 0 01.762-1.61c-2.665-.305-5.466-1.333-5.466-5.931A4.64 4.64 0 015.9 7.372a4.302 4.302 0 01.117-3.181s1.006-.322 3.3 1.23a11.37 11.37 0 016.003 0c2.29-1.552 3.296-1.23 3.296-1.23a4.3 4.3 0 01.117 3.18 4.64 4.64 0 011.236 3.213c0 4.61-2.805 5.624-5.476 5.922a2.868 2.868 0 01.815 2.223c0 1.606-.014 2.902-.014 3.296 0 .322.217.698.825.579A12 12 0 0012 .297z" />
-                </svg>
-              </a>
-              <a
-                href="https://www.linkedin.com/in/eshan-shettennavar/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors duration-200"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75S5.534 4.232 6.5 4.232 8.25 5.016 8.25 5.982s-.784 1.75-1.75 1.75zM20 19h-3v-5.5c0-1.379-.028-3.151-1.92-3.151-1.922 0-2.217 1.501-2.217 3.049V19h-3v-10h2.879v1.367h.041c.402-.761 1.386-1.562 2.854-1.562 3.053 0 3.615 2.01 3.615 4.627V19z" />
-                </svg>
-              </a>
+            {/* Divider */}
+            <div className="w-full h-px bg-white/10 mb-6" />
+
+            {/* Bottom row */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-white/30">
+                © {new Date().getFullYear()} The Boring Project. All rights reserved.
+              </p>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-white/20">
+                Crafted with precision for developers
+              </p>
             </div>
           </div>
         </footer>
@@ -566,85 +602,14 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-neutral-900 text-neutral-100 font-zalando">
-      {/* Desktop Sidebar */}
-      {user && (
-        <DesktopSidebar
-          activeView={currentView}
-          onNavigate={setCurrentView}
-          onSignOut={signOut}
-        />
-      )}
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {user && (
-          <Header
-            onNewProjectClick={() => setIsModalOpen(true)}
-            onSignOut={signOut}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          />
-        )}
-
-        <main className="flex-1 overflow-y-auto bg-neutral-900">
-          {user && searchQuery.trim() && (
-            <div className="px-4 sm:px-6 py-3 border-b border-neutral-800 bg-neutral-900/80 sticky top-0 z-40">
-              <div className="max-w-7xl mx-auto grid gap-4 md:grid-cols-2">
-                <div>
-                  <h4 className="text-sm text-neutral-400 mb-2">
-                    Projects ({filteredProjects.length})
-                  </h4>
-                  <ul className="space-y-1">
-                    {filteredProjects.slice(0, 5).map((p) => (
-                      <li
-                        key={p.id}
-                        className="text-sm text-neutral-200 truncate"
-                      >
-                        {p.projectName}
-                      </li>
-                    ))}
-                    {filteredProjects.length === 0 && (
-                      <li className="text-sm text-neutral-500">No matches</li>
-                    )}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="text-sm text-neutral-400 mb-2">
-                    Notes ({filteredNotes.length})
-                  </h4>
-                  <ul className="space-y-1">
-                    {filteredNotes.slice(0, 5).map((n) => (
-                      <li
-                        key={n.id}
-                        className="text-sm text-neutral-200 truncate"
-                      >
-                        {n.title || n.content.substring(0, 48)}
-                      </li>
-                    ))}
-                    {filteredNotes.length === 0 && (
-                      <li className="text-sm text-neutral-500">No matches</li>
-                    )}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-          {renderView()}
-        </main>
-      </div>
-
-      {/* Mobile Sidebar */}
-      {user && (
-        <MobileSidebar
-          activeView={currentView}
-          onNavigate={setCurrentView}
-          onSignOut={signOut}
-          isOpen={isSidebarOpen}
-          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-        />
-      )}
+    <AppShell
+      currentView={currentView}
+      onNavigate={setCurrentView}
+      onNewProject={() => setIsModalOpen(true)}
+      onSignOut={signOut}
+      title="The Boring Project"
+    >
+      {renderView()}
 
       {/* Modals */}
       {isModalOpen && user && (
@@ -679,7 +644,7 @@ const AppContent: React.FC = () => {
         />
       )}
       {user && <VoiceCompanion />}
-    </div>
+    </AppShell>
   );
 };
 

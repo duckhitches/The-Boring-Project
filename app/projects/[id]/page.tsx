@@ -3,11 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import type { ProjectWithUserInfo } from "../../../types";
 import {
   GithubIcon,
   ExternalLinkIcon,
   MailIcon,
+  ChevronLeftIcon
 } from "../../../components/IconComponents";
 import Prism from "prismjs";
 import "prismjs/components/prism-clike";
@@ -18,7 +21,6 @@ import "prismjs/components/prism-css";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-typescript";
 import Loading from "../../../components/ui/loader";
-import { CardContainer, CardBody } from "../../../components/ui/3d-card";
 import { generateProjectStructuredData } from "../../../lib/seo";
 
 export default function PublicProjectPage() {
@@ -33,7 +35,6 @@ export default function PublicProjectPage() {
       try {
         setLoading(true);
 
-        // Add cache-busting parameter to ensure fresh data
         const response = await fetch(
           `/api/projects/${projectId}?t=${Date.now()}`
         );
@@ -50,13 +51,11 @@ export default function PublicProjectPage() {
         const projectData = await response.json();
         setProject(projectData);
         
-        // Add structured data for SEO
         const structuredData = generateProjectStructuredData(projectData, projectId);
         const script = document.createElement('script');
         script.type = 'application/ld+json';
         script.text = JSON.stringify(structuredData);
         script.id = 'project-structured-data';
-        // Remove existing script if present
         const existingScript = document.getElementById('project-structured-data');
         if (existingScript) {
           existingScript.remove();
@@ -99,194 +98,211 @@ export default function PublicProjectPage() {
 
   if (loading) {
     return (
-      <div
-        className="min-h-screen py-8 px-4 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/bg-2.png')" }}
-      >
-        <div className="text-center">
-          <Loading />
-          <p className="text-slate-300 text-lg mt-4">Loading Card...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-[#050505]">
+          <div className="flex flex-col items-center gap-4 text-white/50">
+             <Loading />
+             <span className="font-mono text-xs uppercase tracking-widest animate-pulse">Initializing...</span>
+          </div>
       </div>
     );
   }
 
   if (error || !project) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Project Not Found
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
+        <div className="text-center border border-white/10 p-12 bg-black max-w-md w-full">
+          <h1 className="text-3xl font-bold font-boldonse text-white mb-4 uppercase">
+            Not Found
           </h1>
-          <p className="text-slate-300 text-lg mb-8">
+          <p className="text-white/50 font-mono text-sm mb-8 leading-relaxed">
             {error || "The project you are looking for does not exist."}
           </p>
-          <a
+          <Link
             href="/"
-            className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors"
+            className="inline-block px-8 py-3 bg-white text-black font-mono text-xs font-bold uppercase tracking-widest hover:bg-white/90 transition-colors"
           >
-            Go Home
-          </a>
+            Return Home
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className="min-h-screen py-8 px-4 bg-cover bg-center bg-no-repeat overflow-hidden"
-      style={{ backgroundImage: "url('/bg-2.png')" }}
-    >
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-black mb-2">
-            {project.projectName}
-          </h1>
-          <p className="text-black text-lg" itemProp="duration">{project.timeline}</p>
-          {project.userInfo && (
-            <p className="text-black text-sm mt-2" itemProp="author">
-              by {project.userInfo.firstName && project.userInfo.lastName
-                ? `${project.userInfo.firstName} ${project.userInfo.lastName}`
-                : project.userInfo.email?.split("@")[0] || "Anonymous User"}
-            </p>
-          )}
-        </header>
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-indigo-500/30 selection:text-white pb-20">
+      {/* Navigation */}
+      <nav className="border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+           <Link href="/dashboard" className="flex items-center gap-2 text-white/50 hover:text-white transition-colors group">
+              <ChevronLeftIcon className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span className="font-mono text-xs uppercase tracking-widest">Back to Dashboard</span>
+           </Link>
+           <div className="flex items-center gap-3">
+              <span className="text-white/20 font-mono text-[10px] uppercase hidden sm:block">Project ID: {project.id.slice(0, 8)}</span>
+           </div>
+        </div>
+      </nav>
 
-        {/* Project Card with 3D tilt */}
-        <CardContainer containerClassName="py-0">
-          <CardBody className="h-auto w-full">
-            <div className="bg-black/90 rounded-2xl overflow-hidden shadow-lg max-w-xs sm:max-w-sm md:max-w-lg mx-auto">
-              <div className="relative h-36 sm:h-40 md:h-48 w-full">
-                {project.backgroundImage ? (
-                  <Image
-                    src={project.backgroundImage}
-                    alt={`${project.projectName} project card background image showcasing ${project.description?.substring(0, 50) || 'the project'}`}
-                    className="object-cover"
-                    fill
-                    sizes="(max-width: 640px) 320px, (max-width: 768px) 400px, 600px"
-                    priority
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600" aria-label={`${project.projectName} default background`}></div>
-                )}
-                <div className="absolute inset-0 bg-black/50"></div>
-                <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">
-                    {project.projectName}
-                  </h2>
-                  {project.userInfo && (
-                    <p className="text-xs text-slate-300 mt-1">
-                      by{" "}
-                      {project.userInfo.firstName && project.userInfo.lastName
-                        ? `${project.userInfo.firstName} ${project.userInfo.lastName}`
-                        : project.userInfo.email?.split("@")[0] ||
-                          "Anonymous User"}
-                    </p>
-                  )}
-                  <p className="text-[10px] sm:text-xs md:text-sm text-slate-300">
-                    {project.timeline}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-3 sm:p-4 md:p-5">
-                {/* Tags */}
-                {project.tags && project.tags.length > 0 && (
-                  <div className="mb-3 sm:mb-4 md:mb-6 flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="bg-slate-700 text-indigo-300 text-[10px] sm:text-xs md:text-sm font-medium px-2 py-1.5 rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+      <main className="max-w-5xl mx-auto px-6 py-12">
+        
+        {/* Header Section */}
+        <motion.header 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-12 border-b border-white/10 pb-8"
+        >
+           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div>
+                  <div className="flex items-center gap-3 mb-4">
+                     <span className="px-3 py-1 bg-white/5 border border-white/10 text-[10px] font-mono text-indigo-400 uppercase tracking-widest">
+                        {project.timeline || 'Ongoing'}
+                     </span>
+                     {project.userInfo && (
+                        <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
+                            BY {project.userInfo.firstName || 'ANON'}
+                        </span>
+                     )}
                   </div>
-                )}
+                  <h1 className="text-4xl md:text-6xl font-bold font-boldonse text-white uppercase tracking-tight leading-none mb-2">
+                    {project.projectName}
+                  </h1>
+                   {project.tags && (
+                      <div className="flex flex-wrap gap-x-4 gap-y-2 mt-4 text-xs font-mono text-white/50 uppercase">
+                          {project.tags.map(tag => (
+                             <span key={tag}>#{tag}</span>
+                          ))}
+                      </div>
+                   )}
+              </div>
+              
+              <div className="flex gap-3">
+                 {project.githubLink && (
+                    <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="p-3 border border-white/10 hover:bg-white hover:text-black transition-all group" title="View on GitHub">
+                       <GithubIcon className="w-5 h-5" />
+                    </a>
+                 )}
+                 {project.liveLink && (
+                    <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="p-3 border border-white/10 hover:bg-white hover:text-black transition-all group" title="View Live Demo">
+                       <ExternalLinkIcon className="w-5 h-5" />
+                    </a>
+                 )}
+                 <a href={`mailto:${project.contactEmail}`} className="p-3 border border-white/10 hover:bg-white hover:text-black transition-all group" title="Contact Developer">
+                     <MailIcon className="w-5 h-5" />
+                 </a>
+              </div>
+           </div>
+        </motion.header>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            
+            {/* Main Content Info */}
+            <motion.div 
+               className="lg:col-span-2 space-y-12"
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               transition={{ delay: 0.2 }}
+            >
+                {/* Hero Image */}
+                <div className="relative aspect-video w-full bg-[#0d0d0d] border border-white/10 overflow-hidden group">
+                     {project.backgroundImage ? (
+                        <Image
+                            src={project.backgroundImage}
+                            alt={project.projectName}
+                            fill
+                            className="object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                            priority
+                        />
+                     ) : (
+                        <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-[#050505] to-[#050505]">
+                           <span className="font-boldonse text-6xl text-white/5 uppercase select-none">{project.projectName.slice(0,2)}</span>
+                        </div>
+                     )}
+                     {/* Overlay Grid */}
+                     <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20 pointer-events-none"></div>
+                </div>
 
                 {/* Description */}
-                <article className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed" itemProp="description">
-                  {project.description}
-                </article>
+                <section>
+                    <h3 className="text-sm font-mono text-indigo-400 uppercase tracking-widest mb-6 border-l-2 border-indigo-500 pl-3">Project Overview</h3>
+                    <article className="font-mono text-sm text-white/70 leading-relaxed whitespace-pre-wrap">
+                        {project.description}
+                    </article>
+                </section>
 
                 {/* Code Snippet */}
                 {project.codeSnippet && (
-                  <div className="mb-6">
-                    <h3 className="text-white text-xl font-semibold mb-3">
-                      Code Snippet
-                    </h3>
-                    <div className="bg-slate-900/70 rounded-lg max-h-24 sm:max-h-28 overflow-auto border border-slate-700/50 font-mono text-[10px] sm:text-xs text-slate-300">
-                      <pre className="!m-0 !p-2 sm:!p-3 !bg-transparent">
-                        {codeElement}
-                      </pre>
-                    </div>
-                  </div>
+                   <section>
+                      <h3 className="text-sm font-mono text-indigo-400 uppercase tracking-widest mb-6 border-l-2 border-indigo-500 pl-3">Technical Highlight</h3>
+                      <div className="relative bg-[#0d0d0d] border border-white/10 overflow-hidden group/code">
+                           <div className="flex items-center justify-between px-4 py-2 border-b border-white/10 bg-black/50">
+                               <div className="flex gap-1.5">
+                                   <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                                   <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                                   <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                               </div>
+                               <span className="text-[10px] font-mono text-white/30 uppercase">{project.codeLanguage || 'CODE'}</span>
+                           </div>
+                           <div className="p-0 overflow-x-auto relative">
+                                <pre className="!bg-transparent !m-0 !p-6 text-xs font-mono leading-relaxed !text-indigo-100/80">
+                                   {codeElement}
+                                </pre>
+                                {/* Scanline overlay */}
+                                <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] pointer-events-none bg-[length:100%_2px,3px_100%] opacity-10"></div>
+                           </div>
+                      </div>
+                   </section>
                 )}
+            </motion.div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 justify-center">
-                  {project.githubLink && (
-                    <a
-                      href={project.githubLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm md:text-base bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors"
-                    >
-                      <GithubIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-green-400 " />
-                      View on GitHub
-                    </a>
-                  )}
-                  {project.liveLink && (
-                    <a
-                      href={project.liveLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm md:text-base bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors"
-                    >
-                      <ExternalLinkIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-orange-400 " />
-                      Live Demo
-                    </a>
-                  )}
-                  <a
-                    href={`mailto:${project.contactEmail}`}
-                    className="flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm md:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
-                  >
-                    <MailIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400 " />
-                    Contact The Dev
-                  </a>
-                </div>
-              </div>
-            </div>
-          </CardBody>
-        </CardContainer>
+            {/* Sidebar Details */}
+            <motion.aside 
+               className="lg:col-span-1"
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ delay: 0.4 }}
+            >
+               <div className="sticky top-24 space-y-8">
+                   <div className="bg-[#0d0d0d] border border-white/10 p-6">
+                       <h3 className="text-sm font-boldonse text-white uppercase mb-6 tracking-wide">Details</h3>
+                       
+                       <div className="space-y-6">
+                           <div>
+                               <label className="block text-[10px] font-mono text-white/30 uppercase tracking-widest mb-1">Timeline</label>
+                               <p className="font-mono text-xs text-white uppercase">{project.timeline || 'N/A'}</p>
+                           </div>
+                           <div>
+                               <label className="block text-[10px] font-mono text-white/30 uppercase tracking-widest mb-1">Status</label>
+                               <div className="flex items-center gap-2">
+                                   <span className="relative flex h-2 w-2">
+                                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                    </span>
+                                   <p className="font-mono text-xs text-white uppercase">Active</p>
+                               </div>
+                           </div>
+                            <div>
+                               <label className="block text-[10px] font-mono text-white/30 uppercase tracking-widest mb-1">Category</label>
+                               <p className="font-mono text-xs text-white uppercase">Development</p>
+                           </div>
+                       </div>
+                   </div>
 
-        {/* Footer */}
-        <div className="mt-10">
-          <div className="flex flex-col items-center gap-3 pt-6 text-center">
-            <div className="text-xs text-slate-900">
-              <span className="font-semibold tracking-wide text-slate-900">The Boring Project</span>
-              <sup className="ml-0.5 text-[10px] align-super">™</sup>
-              <span className="mx-2">·</span>
-              <span>Est. 2025</span>
-            </div>
-            <a href="/" aria-label="Go to The Boring Project home" className="group">
-              <div className="relative w-12 h-12 rounded-full overflow-hidden ring-1 ring-black/10 shadow-[0_0_20px_-8px] shadow-black/40 transition-transform duration-200 group-hover:scale-[1.03]">
-                <Image
-                  src="/images/brand-logo.png"
-                  alt="Brand Logo"
-                  className="w-full h-full object-cover bg-black w-auto h-auto"
-                  width={48}
-                  height={48}
-                  quality={100}
-                  priority
-                />
-                <span className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-indigo-400/20" />
-              </div>
-            </a>
-          </div>
+                   {/* Footer Brand */}
+                   <div className="flex items-center gap-3 opacity-30 grayscale hover:grayscale-0 transition-all hover:opacity-100 invert-0">
+                       <div className="w-10 h-10 bg-white rounded-full overflow-hidden p-0.5">
+                           <Image src="/images/brand-logo.png" alt="Logo" width={40} height={40} className="w-full h-full object-cover bg-black rounded-full" />
+                       </div>
+                       <div>
+                           <p className="font-boldonse text-sm text-white leading-none">THE BORING PROJECT</p>
+                           <p className="font-mono text-[10px] text-white/60">EST. 2025</p>
+                       </div>
+                   </div>
+               </div>
+            </motion.aside>
+
         </div>
-      </div>
+      </main>
     </div>
   );
 }

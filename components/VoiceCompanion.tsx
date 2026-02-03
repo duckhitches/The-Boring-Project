@@ -229,12 +229,12 @@ export const VoiceCompanion: React.FC = () => {
 
     const getStatusIndicator = () => {
         switch (status) {
-            case 'connecting': return <><LoaderOne /><span className="ml-2">Connecting...</span></>;
-            case 'listening': return <><span className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span><span className="ml-2">Listening...</span></>;
-            case 'speaking': return <><span className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></span><span className="ml-2">Speaking...</span></>;
-            case 'thinking': return <><LoaderOne /><span className="ml-2">Thinking...</span></>;
-            case 'error': return <><span className="w-3 h-3 bg-red-500 rounded-full"></span><span className="ml-2">{API_KEY ? 'Connection Error' : 'Set API key'}</span></>;
-            default: return <><span className="w-3 h-3 bg-slate-500 rounded-full"></span><span className="ml-2">Idle</span></>;
+            case 'connecting': return <span className="text-yellow-500 font-mono text-xs uppercase tracking-widest animate-pulse">Establishing Connection...</span>;
+            case 'listening': return <span className="text-green-500 font-mono text-xs uppercase tracking-widest animate-pulse">LISTENING ON CHANNEL_1</span>;
+            case 'speaking': return <span className="text-blue-500 font-mono text-xs uppercase tracking-widest animate-pulse">TRANSMITTING AUDIO_OUT...</span>;
+            case 'thinking': return <span className="text-purple-500 font-mono text-xs uppercase tracking-widest animate-pulse">PROCESSING DATA...</span>;
+            case 'error': return <span className="text-red-500 font-mono text-xs uppercase tracking-widest">{API_KEY ? 'CONNECTION_LOST' : 'MISSING_API_KEY'}</span>;
+            default: return <span className="text-white/30 font-mono text-xs uppercase tracking-widest">SYSTEM_IDLE</span>;
         }
     };
 
@@ -242,101 +242,109 @@ export const VoiceCompanion: React.FC = () => {
         <>
             <button
                 onClick={() => setIsCompanionOpen(true)}
-                className="fixed bottom-6 right-6 w-16 h-16 bg-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-700 transition-all transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 z-40"
+                className="fixed bottom-6 right-6 w-16 h-16 bg-white border border-white hover:bg-black hover:text-white hover:border-white transition-colors flex items-center justify-center z-40 group"
                 aria-label="Open AI Voice Companion"
             >
-                <Image
-                    src="/brand.png"
-                    alt="Brand Icon"
-                    width={64}
-                    height={64}
-                    className="w-16 h-16"
-                    quality={100}
-                    priority
-                    
-                />
+               <div className="relative w-8 h-8">
+                   <Image
+                       src="/brand.png"
+                       alt="Voice"
+                       fill
+                       className="object-contain grayscale group-hover:invert transition-all"
+                   />
+               </div>
             </button>
 
             {isCompanionOpen && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-black/50 rounded-3xl backdrop-blur-sm w-full max-w-lg h-[70vh] flex flex-col">
-                        <header className="flex items-center justify-between p-4 flex-shrink-0">
-                            <div className="flex items-center">
-                                <Image
-                                    src="/images/brand-logo.png"
-                                    alt="Brand Logo"
-                                    width={80}
-                                    height={80}
-                                    className="w-30 h-30 w-auto h-auto"
-                                    quality={100}
-                                    priority
-                                />
-                                <h2 className="ml-2 text-lg font-bold">Not So Scary AI Companion</h2>
+                <div className="fixed inset-x-0 top-16 bottom-0 md:inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-0 md:p-8">
+                    <div className="w-full max-w-2xl h-full md:h-[80vh] md:max-h-[700px] bg-black border border-white/20 flex flex-col relative overflow-hidden shadow-[0_0_50px_rgba(255,255,255,0.05)]">
+                        {/* Header */}
+                        <div className="p-6 border-b border-white/10 flex items-center justify-between bg-[#0d0d0d]">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 relative">
+                                    <Image
+                                        src="/brand.png"
+                                        alt="Logo"
+                                        fill
+                                        className="object-contain grayscale"
+                                    />
+                                </div>
+                                <div>
+                                    <h2 className="text-lg font-boldonse text-white uppercase tracking-widest leading-none">Voice Interface</h2>
+                                    <p className="text-[10px] font-mono text-white/40 uppercase tracking-wider">Module: ECHO_01</p>
+                                </div>
                             </div>
-                            <button onClick={() => { stopConversation(); setIsCompanionOpen(false); }} className="p-2 rounded-full hover:bg-slate-700">
+                            <button 
+                               onClick={() => { stopConversation(); setIsCompanionOpen(false); }} 
+                               className="p-2 border border-white/10 hover:bg-white hover:text-black text-white transition-all"
+                            >
                                 <CloseIcon className="w-5 h-5" />
                             </button>
-                        </header>
-                        <main className="flex-grow p-4 overflow-y-auto">
-                            <div className="space-y-4">
-                                {!API_KEY && (
-                                    <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 text-left text-sm text-amber-200/90 space-y-2">
-                                        <p className="font-semibold">Voice needs an API key</p>
-                                        <p>In <code className="bg-slate-800 px-1 rounded">.env.local</code> add:</p>
-                                        <pre className="bg-slate-900 rounded p-2 text-xs overflow-x-auto">NEXT_PUBLIC_GEMINI_VOICE_KEY=your_key</pre>
-                                        <p className="text-slate-400 text-xs">Use the same key as GEMINI_API_KEY, then restart the dev server.</p>
-                                    </div>
-                                )}
-                                {connectionError && (
-                                    <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-left text-sm text-red-200">
-                                        <p className="font-semibold">Connection failed</p>
-                                        <p>{connectionError}</p>
-                                    </div>
-                                )}
-                                {transcript.length === 0 && !isSessionActive && API_KEY && !connectionError && (
-                                    <div className="text-center text-slate-400 pt-16">
-                                        <p>Hello! I'm Echo, your AI teammate.</p>
-                                        <p className="text-sm mt-2">Click the button below to start our conversation.</p>
-                                    </div>
-                                )}
-                                {transcript.map((entry, index) => (
-                                    <div key={index} className={`flex ${entry.speaker === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                        <div className={`max-w-[80%] p-3 rounded-xl ${entry.speaker === 'user' ? 'bg-indigo-600/30 text-white' : 'bg-slate-700/30 backdrop-blur-sm text-slate-200'}`}>
-                                            <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{entry.text}</p>
+                        </div>
+
+                        {/* Transcript Area */}
+                        <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-[url('/grid.svg')] bg-[length:20px_20px] bg-fixed">
+                            {!API_KEY && (
+                                <div className="border border-red-500/30 bg-red-500/5 p-4 text-center">
+                                    <p className="font-mono text-xs text-red-500 uppercase tracking-widest mb-2">CRITICAL ERROR: MISSING_API_KEY</p>
+                                    <p className="font-mono text-[10px] text-white/50">Configure .env.local with valid credentials.</p>
+                                </div>
+                            )}
+                            
+                            {connectionError && (
+                                <div className="border border-red-500/30 bg-red-500/5 p-4 text-center">
+                                    <p className="font-mono text-xs text-red-500 uppercase tracking-widest mb-2">CONNECTION FAILURE</p>
+                                    <p className="font-mono text-[10px] text-white/50">{connectionError}</p>
+                                </div>
+                            )}
+
+                            {transcript.length === 0 && !isSessionActive && API_KEY && !connectionError && (
+                                <div className="h-full flex flex-col items-center justify-center opacity-30 pointer-events-none">
+                                    <MicrophoneIcon className="w-24 h-24 mb-6 stroke-1" />
+                                    <p className="font-boldonse text-2xl uppercase tracking-widest text-center">System Ready</p>
+                                    <p className="font-mono text-xs uppercase tracking-wider mt-2">Initialize conversation sequence</p>
+                                </div>
+                            )}
+
+                            {transcript.map((entry, index) => (
+                                <div key={index} className={`flex ${entry.speaker === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-[85%] p-4 border ${entry.speaker === 'user' ? 'border-white bg-white text-black' : 'border-white/20 bg-black text-white'}`}>
+                                        <div className="flex items-center gap-2 mb-2 border-b border-black/10 pb-1">
+                                           <span className="font-mono text-[8px] uppercase tracking-widest opacity-50">
+                                              {entry.speaker === 'user' ? 'USER_INPUT' : 'ECHO_RESPONSE'}
+                                           </span>
                                         </div>
+                                        <p className="font-mono text-xs leading-relaxed uppercase tracking-wide whitespace-pre-wrap">{entry.text}</p>
                                     </div>
-                                ))}
-                                <div ref={transcriptEndRef} />
-                            </div>
-                        </main>
-                        <footer className="p-4 border-t border-slate-700 flex-shrink-0 flex flex-col items-center">
-                            <div className="flex items-center text-sm text-slate-400 mb-4">
+                                </div>
+                            ))}
+                            <div ref={transcriptEndRef} />
+                        </div>
+
+                        {/* Controls */}
+                        <div className="p-6 border-t border-white/10 bg-[#0d0d0d] flex flex-col items-center gap-6">
+                            <div className="w-full flex justify-center">
                                 {getStatusIndicator()}
                             </div>
+                            
                             {!isSessionActive ? (
                                 <button
                                     onClick={startConversation}
-                                    className="w-20 h-20 bg-green-500 text-white rounded-full flex items-center justify-center hover:bg-green-600 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-500/50"
+                                    className="w-full py-4 bg-white hover:bg-white/90 text-black border border-white font-mono text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all group"
                                 >
-                                    <Image
-                                        src="/brand.png"
-                                        alt="Brand Icon"
-                                        width={64}
-                                        height={64}
-                                        className="w-20 h-20"
-                                        quality={100}
-                                        priority
-                                    />
+                                    <span>Initialize</span>
+                                    <div className="w-2 h-2 bg-black group-hover:bg-green-500 transition-colors"></div>
                                 </button>
                             ) : (
                                 <button
                                     onClick={stopConversation}
-                                    className="w-20 h-20 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500/50"
+                                    className="w-full py-4 bg-red-600 hover:bg-red-500 text-white border border-red-600 font-mono text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all animate-pulse hover:animate-none"
                                 >
-                                    <StopIcon className="w-9 h-9" />
+                                    <span>Terminate Signal</span>
+                                    <div className="w-2 h-2 bg-white"></div>
                                 </button>
                             )}
-                        </footer>
+                        </div>
                     </div>
                 </div>
             )}

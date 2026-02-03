@@ -1,4 +1,4 @@
-// File: /Users/eshanshettennavar/Documents/From_ROG/the-boring-project 8.05.04 PM/app/projects/[id]/page.tsx
+// File: /Users/eshanshettennavar/Documents/From_ROG/the-boring-project/app/projects/[id]/page.tsx
 import * as entry from '../../../../../app/projects/[id]/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

@@ -104,159 +104,156 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ onClose }) => 
   };
 
   return (
-    <div className="min-h-screen bg-neutral-900 text-neutral-100 p-6">
+    <div className="flex flex-col h-[calc(100vh-5rem)] bg-black border border-white/10 overflow-hidden">
       {/* Success Banners */}
       {showPasswordSuccess && (
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -50 }}
-          className="fixed top-4 right-4 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2"
-        >
-          <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
-          <span className="font-medium">Password changed successfully!</span>
-        </motion.div>
+        <div className="fixed top-4 right-4 z-50 bg-green-500/10 border border-green-500 text-green-500 px-6 py-3 shadow-[0_0_20px_rgba(34,197,94,0.2)] flex items-center space-x-3 backdrop-blur-md">
+           <div className="w-2 h-2 bg-green-500 animate-pulse"></div>
+           <span className="font-mono text-xs uppercase tracking-widest">Password Changed</span>
+        </div>
       )}
       
       {showDeleteSuccess && (
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -50 }}
-          className="fixed top-4 right-4 z-50 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2"
-        >
-          <div className="w-2 h-2 bg-red-300 rounded-full animate-pulse"></div>
-          <span className="font-medium">Account deleted successfully! Redirecting...</span>
-        </motion.div>
+        <div className="fixed top-4 right-4 z-50 bg-red-500/10 border border-red-500 text-red-500 px-6 py-3 shadow-[0_0_20px_rgba(239,68,68,0.2)] flex items-center space-x-3 backdrop-blur-md">
+           <div className="w-2 h-2 bg-red-500 animate-pulse"></div>
+           <span className="font-mono text-xs uppercase tracking-widest">Account Deleted. Redirecting...</span>
+        </div>
       )}
       
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2 zalando-sans-semiexpanded-bold">
-            Profile Settings
+      {/* Header */}
+      <div className="p-6 border-b border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0d0d0d]">
+         <div>
+          <h1 className="text-3xl font-boldonse text-white uppercase tracking-widest mb-1">
+            Profile & Security
           </h1>
-          <p className="text-neutral-400 zalando-sans-semiexpanded-normal">
-            Manage your account settings and preferences
+          <p className="text-white/40 font-mono text-[10px] uppercase tracking-wider">
+            Manage your personal data and access credentials
           </p>
-        </div>
+         </div>
 
-        {/* Tabs */}
-        <div className="flex space-x-1 mb-8 p-1 rounded-lg">
+         {/* Tabs */}
+        <div className="flex border border-white/10 bg-black">
           <button
             onClick={() => setActiveTab('account')}
-            className={`flex items-center px-4 py-2 rounded-md transition-colors ${
+            className={`flex items-center gap-2 px-6 py-3 text-[10px] font-mono uppercase tracking-widest transition-all ${
               activeTab === 'account'
-                ? 'bg-indigo-600 text-white'
-                : 'text-neutral-400 hover:text-white hover:bg-neutral-700'
+                ? 'bg-white text-black'
+                : 'text-white/40 hover:text-white hover:bg-white/5'
             }`}
           >
-            <UserIcon className="w-5 h-5 mr-2" />
+            <UserIcon className="w-3 h-3" />
             Account
           </button>
+          <div className="w-px bg-white/10"></div>
           <button
             onClick={() => setActiveTab('password')}
-            className={`flex items-center px-4 py-2 rounded-md transition-colors ${
+            className={`flex items-center gap-2 px-6 py-3 text-[10px] font-mono uppercase tracking-widest transition-all ${
               activeTab === 'password'
-                ? 'bg-indigo-600 text-white'
-                : 'text-neutral-400 hover:text-white hover:bg-neutral-700'
+                ? 'bg-white text-black'
+                : 'text-white/40 hover:text-white hover:bg-white/5'
             }`}
           >
-            <KeyIcon className="w-5 h-5 mr-2" />
+            <KeyIcon className="w-3 h-3" />
             Password
           </button>
         </div>
+      </div>
 
-        {/* Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="flex-1 overflow-y-auto custom-scrollbar bg-black p-6 md:p-12">
+        <div className="max-w-4xl mx-auto space-y-12">
+        
           {/* Account Settings */}
           {activeTab === 'account' && (
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="space-y-6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="grid grid-cols-1 gap-12"
             >
-              {/* Account Information */}
-              <div className="bg-black/40 rounded-xl p-6">
-                <h2 className="text-xl font-semibold text-white mb-4 zalando-sans-semiexpanded-semibold">
-                  Account Information
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-2">
-                      Email
+              <div className="space-y-6">
+                <div className="flex items-center gap-4 text-white/50 mb-8 pb-4 border-b border-white/10">
+                   <span className="font-mono text-[10px] uppercase tracking-widest">01 / Personal Info</span>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="group">
+                    <label className="block text-[10px] font-mono uppercase text-white/30 mb-2 group-hover:text-white/70 transition-colors">
+                      Email Address
                     </label>
                     <input
                       type="email"
                       value={user?.email || ''}
                       disabled
-                      className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-neutral-300 cursor-not-allowed"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white font-mono text-sm focus:outline-none focus:border-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-2">
-                      User ID
+                   <div className="group">
+                    <label className="block text-[10px] font-mono uppercase text-white/30 mb-2 group-hover:text-white/70 transition-colors">
+                      Unique Identifier (UUID)
                     </label>
                     <input
                       type="text"
                       value={user?.id || ''}
                       disabled
-                      className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-neutral-300 cursor-not-allowed text-sm font-mono"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white/50 font-mono text-xs focus:outline-none focus:border-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-2">
-                      Member Since
+                   <div className="group">
+                    <label className="block text-[10px] font-mono uppercase text-white/30 mb-2 group-hover:text-white/70 transition-colors">
+                      Registration Date
                     </label>
                     <input
                       type="text"
                       value={user?.created_at ? new Date(user.created_at).toLocaleDateString() : ''}
                       disabled
-                      className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-neutral-300 cursor-not-allowed"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white font-mono text-sm focus:outline-none focus:border-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Danger Zone */}
-              <div className="bg-red-900/20 border border-red-500/30 rounded-xl p-6">
-                <h2 className="text-xl font-semibold text-red-400 mb-4 zalando-sans-semiexpanded-semibold">
-                  Danger Zone
-                </h2>
-                <p className="text-neutral-300 mb-6">
-                  Once you delete your account, there is no going back. Please be certain.
-                </p>
+              <div className="space-y-6">
+                 <div className="flex items-center gap-4 text-red-500/50 mb-8 pb-4 border-b border-red-500/20">
+                   <span className="font-mono text-[10px] uppercase tracking-widest">02 / Danger Zone</span>
+                </div>
                 
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-red-400 mb-2">
-                      Type "Delete" to confirm account deletion
-                    </label>
-                    <input
-                      type="text"
-                      value={deleteConfirm}
-                      onChange={handleDeleteInputChange}
-                      onKeyDown={handleDeleteKeyDown}
-                      onPaste={(e) => e.preventDefault()}
-                      placeholder="Type 'Delete' here"
-                      className="w-full px-4 py-3 bg-neutral-800 border border-red-500/50 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                    />
-                  </div>
+                <div className="border border-red-500/20 bg-red-500/5 p-8">
+                  <h2 className="text-xl font-boldonse text-red-500 uppercase tracking-widest mb-4">
+                    Delete Account
+                  </h2>
+                  <p className="text-white/50 font-mono text-xs mb-8 max-w-md">
+                    This action is <span className="text-red-400">irreversible</span>. All your data, projects, and settings will be permanently erased.
+                  </p>
                   
-                  {deleteError && (
-                    <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3">
-                      <p className="text-red-400 text-sm">{deleteError}</p>
+                  <div className="space-y-6 max-w-md">
+                    <div>
+                      <label className="block text-[10px] font-mono uppercase text-red-400/70 mb-2">
+                        Type "<span className="text-red-400 font-bold">Delete</span>" to confirm
+                      </label>
+                      <input
+                        type="text"
+                        value={deleteConfirm}
+                        onChange={handleDeleteInputChange}
+                        onKeyDown={handleDeleteKeyDown}
+                        onPaste={(e) => e.preventDefault()}
+                        placeholder=""
+                        className="w-full px-4 py-3 bg-black border border-red-500/30 text-white font-mono text-sm focus:outline-none focus:border-red-500 transition-colors placeholder-white/10"
+                      />
                     </div>
-                  )}
-                  
-                  <Button
-                    onClick={handleDeleteAccount}
-                    disabled={deleteConfirm !== 'Delete' || isDeleting}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {/* <TrashIcon className="w-5 h-5 mr-2" /> */}
-                    {isDeleting ? 'Deleting Account...' : 'Delete Account'}
-                  </Button>
+                    
+                    {deleteError && (
+                      <div className="px-3 py-2 bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-mono uppercase tracking-widest">
+                        {deleteError}
+                      </div>
+                    )}
+                    
+                    <button
+                      onClick={handleDeleteAccount}
+                      disabled={deleteConfirm !== 'Delete' || isDeleting}
+                      className="w-full bg-red-600 hover:bg-red-500 text-white text-xs font-mono uppercase tracking-widest py-4 px-4 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(220,38,38,0.4)]"
+                    >
+                      {isDeleting ? 'Erasing Data...' : 'Permanently Delete Account'}
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -265,77 +262,77 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ onClose }) => 
           {/* Password Settings */}
           {activeTab === 'password' && (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="space-y-6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-xl mx-auto"
             >
-              <div className="bg-black/40 rounded-xl p-6">
-                <h2 className="text-xl font-semibold text-white mb-4 zalando-sans-semiexpanded-semibold">
+              <div className="border border-white/10 bg-[#0a0a0a] p-8 md:p-12">
+                <h2 className="text-2xl font-boldonse text-white uppercase tracking-widest mb-2">
                   Change Password
                 </h2>
-                <p className="text-neutral-400 mb-6">
-                  Update your password to keep your account secure.
+                <p className="text-white/40 font-mono text-xs mb-10">
+                  Update your credentials. Ensure you use a strong password.
                 </p>
                 
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-2">
+                <div className="space-y-8">
+                  <div className="group">
+                    <label className="block text-[10px] font-mono uppercase text-white/30 mb-2 group-hover:text-white/70 transition-colors">
                       Current Password
                     </label>
                     <input
                       type="password"
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
-                      className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      placeholder="Enter your current password"
+                      className="w-full px-4 py-3 bg-black border border-white/10 text-white font-mono text-sm focus:outline-none focus:border-indigo-500 transition-colors placeholder-white/10"
+                      placeholder="••••••••••••"
                       required
                     />
                   </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-2">
+                  <div className="group">
+                    <label className="block text-[10px] font-mono uppercase text-white/30 mb-2 group-hover:text-white/70 transition-colors">
                       New Password
                     </label>
                     <input
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      placeholder="Enter your new password"
+                      className="w-full px-4 py-3 bg-black border border-white/10 text-white font-mono text-sm focus:outline-none focus:border-indigo-500 transition-colors placeholder-white/10"
+                      placeholder="••••••••••••"
                       required
                       minLength={6}
                     />
                   </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-300 mb-2">
+                  <div className="group">
+                    <label className="block text-[10px] font-mono uppercase text-white/30 mb-2 group-hover:text-white/70 transition-colors">
                       Confirm New Password
                     </label>
                     <input
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      placeholder="Confirm your new password"
+                      className="w-full px-4 py-3 bg-black border border-white/10 text-white font-mono text-sm focus:outline-none focus:border-indigo-500 transition-colors placeholder-white/10"
+                      placeholder="••••••••••••"
                       required
                       minLength={6}
                     />
                   </div>
                   
                   {passwordError && (
-                    <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3">
-                      <p className="text-red-400 text-sm">{passwordError}</p>
+                    <div className="px-3 py-2 bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-mono uppercase tracking-widest">
+                       ! {passwordError}
                     </div>
                   )}
                   
-                  <Button
+                  <button
                     onClick={handleChangePassword}
                     disabled={!currentPassword || !newPassword || !confirmPassword || isChangingPassword}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-white hover:bg-white/90 text-black text-xs font-mono uppercase tracking-widest py-4 px-4 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                   >
                     
-                    Change Password
-                  </Button>
+                    {isChangingPassword ? 'Updating...' : 'Update Password'}
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -345,3 +342,4 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ onClose }) => 
     </div>
   );
 };
+

@@ -1,4 +1,4 @@
-// File: /Users/eshanshettennavar/Documents/From_ROG/the-boring-project 8.05.04 PM/app/auth/page.tsx
+// File: /Users/eshanshettennavar/Documents/From_ROG/the-boring-project/app/auth/page.tsx
 import * as entry from '../../../../app/auth/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

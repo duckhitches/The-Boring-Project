@@ -6,65 +6,108 @@ import { motion } from "framer-motion";
 export default function FeatureShowcase() {
   const features = [
     {
-      title: "Dashboard, IK It's Boring",
-      desc: "Everything you need to manage your projects and share them with the world.",
+      title: "Dashboard",
+      subtitle: "Your Command Center",
+      desc: "Everything you need to manage your projects and share them with the world. Track progress, organize work, and stay productive.",
       img: "/images/features/dashboard.png",
     },
     {
-      title: "AI Companion, She ain't Boring",
-      desc: "Your personal AI Companion who will accompany you on your journey.",
+      title: "AI Companion",
+      subtitle: "Echo Interface",
+      desc: "Your personal AI companion who will accompany you on your coding journey. Voice-activated, always ready to help.",
       img: "/images/features/ai-companion.png",
     },
     {
-      title: "Notes, They are Boring",
-      desc: "Your personal notes to help you remember everything.",
+      title: "Notes System",
+      subtitle: "Capture Everything",
+      desc: "Your personal notes to help you remember everything. Auto-save, organize, and never lose an idea.",
       img: "/images/features/notes.png",
     },
     {
-      title: "Cards, Seems Boring? Nahh",
-      desc: "Your personal cards to share it with the world.",
+      title: "Project Cards",
+      subtitle: "Showcase Your Work",
+      desc: "Beautiful project cards to share with the world. Professional, customizable, ready to impress.",
       img: "/images/features/card.png",
     },
     {
-      title: "Card Features, Ain't Boring at all",
-      desc: "Your personal card features packed with AI to help you customize your experience.",
+      title: "Card Features",
+      subtitle: "AI-Powered Customization",
+      desc: "Advanced card features packed with AI to help you customize and enhance your project presentations.",
       img: "/images/features/card-features.png",
     },
   ];
 
   return (
-    <section id="features" className="w-full py-24 bg-black">
-      <h2 className="text-4xl md:text-5xl pb-4 font-bold text-center mb-20 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
-        Why Choose The Boring Project? 
-      </h2>
+    <section id="features" className="w-full py-24 bg-black border-t border-white/10">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto px-6 md:px-16 mb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-center"
+        >
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/40 mb-4">
+            Why Choose Us
+          </p>
+          <h2 className="text-4xl md:text-6xl font-boldonse uppercase text-white tracking-widest mb-4">
+            Features
+          </h2>
+          <div className="w-16 h-px bg-white/20 mx-auto" />
+        </motion.div>
+      </div>
 
-      <div className="flex flex-col gap-20 px-6 md:px-16 lg:px-32">
+      {/* Feature List */}
+      <div className="flex flex-col gap-0 border-t border-white/10">
         {features.map((feature, i) => (
           <motion.div
             key={i}
-            className={`flex flex-col md:flex-row items-center gap-10 ${
-              i % 2 === 1 ? "md:flex-row-reverse" : ""
-            }`}
+            className={`flex flex-col ${i % 2 === 1 ? "md:flex-row-reverse" : "md:flex-row"} border-b border-white/10`}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: true }}
           >
-            <div className="relative w-full md:w-1/2 h-64 md:h-96 overflow-hidden shadow-2xl bg-black">
+            {/* Image */}
+            <div className="relative w-full md:w-1/2 h-64 md:h-[450px] bg-[#0a0a0a] border-b md:border-b-0 border-white/5 overflow-hidden group">
+              <div className="absolute inset-0 bg-[url('/grid.svg')] bg-[length:30px_30px] opacity-10" />
               <Image
                 src={feature.img}
                 alt={feature.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain"
+                className="object-contain p-8 md:p-12 transition-transform duration-700 group-hover:scale-105"
               />
+              {/* Corner accent */}
+              <div className="absolute top-0 left-0 w-8 h-8 border-l border-t border-white/20" />
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-r border-b border-white/20" />
             </div>
 
-            <div className="md:w-1/2 space-y-4">
-              <h3 className="text-2xl font-semibold text-white">
+            {/* Content */}
+            <div className={`md:w-1/2 p-8 md:p-16 flex flex-col justify-center ${i % 2 === 1 ? "md:border-r" : "md:border-l"} border-white/5`}>
+              {/* Index Number */}
+              <span className="font-mono text-6xl md:text-8xl font-bold text-white/5 mb-4 leading-none">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              
+              {/* Subtitle */}
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-2">
+                {feature.subtitle}
+              </p>
+              
+              {/* Title */}
+              <h3 className="text-2xl md:text-3xl font-boldonse uppercase text-white tracking-widest mb-4">
                 {feature.title}
               </h3>
-              <p className="text-gray-400 leading-relaxed">{feature.desc}</p>
+              
+              {/* Description */}
+              <p className="font-mono text-sm text-white/50 leading-relaxed max-w-md">
+                {feature.desc}
+              </p>
+              
+              {/* Decorative line */}
+              <div className="w-12 h-px bg-white/20 mt-8" />
             </div>
           </motion.div>
         ))}

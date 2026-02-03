@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useCallback, useEffect } from 'react';
@@ -9,7 +8,6 @@ import type { Project } from '../types';
 import { generateSummary, explainCode, generateImage, detectLanguage } from '../services/geminiService';
 import { uploadImage } from '../services/supabaseService';
 import { CloseIcon, SparklesIcon, ChevronDownIcon, ChevronUpIcon, UploadCloudIcon, ExclamationTriangleIcon, TagIcon, FriendsIcon } from './IconComponents';
-import { LoadingSpinner } from './LoadingSpinner';
 import { LoaderOne } from './ui/loader';
 import { Button } from './ui/stateful-button';
 import Editor from 'react-simple-code-editor';
@@ -480,35 +478,35 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-green-500/20 backdrop-blur-md flex items-center justify-center z-[60]"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60]"
           >
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="bg-green-500 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-3"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="flex flex-col items-center gap-4 text-white"
             >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-6 h-6 border-2 border-white border-t-transparent rounded-full"
-              />
-              <span className="font-semibold">Please wait...</span>
+              <LoaderOne />
+              <span className="font-mono text-lg tracking-widest uppercase">Processing...</span>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
       
-      <div className="fixed inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-black/80 rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#050505] border border-white/10 w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl"
+        >
         {/* Cropper Modal */}
         {isCropping && localImageSrc && (
           <div className="fixed inset-0 z-[70] flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/70" />
-            <div className="relative bg-slate-900 rounded-2xl shadow-2xl w-full max-w-2xl h-[70vh] flex flex-col overflow-hidden border border-slate-700">
-              <div className="p-4 border-b border-slate-700 flex items-center justify-between">
-                <h3 className="text-white font-semibold">Crop Image</h3>
-                <button onClick={handleCancelCrop} className="text-slate-300 hover:text-white px-3 py-1 rounded-md hover:bg-slate-700">Cancel</button>
+            <div className="absolute inset-0 bg-black/90" />
+            <div className="relative bg-[#0d0d0d] border border-white/10 w-full max-w-2xl h-[70vh] flex flex-col overflow-hidden">
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <h3 className="text-white font-boldonse tracking-wide">Crop Image</h3>
+                <button onClick={handleCancelCrop} className="text-white/60 hover:text-white font-mono text-xs uppercase cursor-pointer">Cancel</button>
               </div>
               <div className="relative flex-1 bg-black">
                 <Cropper
@@ -521,75 +519,58 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                   onCropComplete={onCropComplete}
                 />
               </div>
-              <div className="p-4 border-t border-slate-700 flex items-center justify-between">
-                <div className="flex items-center gap-3 text-slate-300">
-                  <span className="text-sm">Zoom</span>
-                  <input type="range" min={1} max={3} step={0.1} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} />
+              <div className="p-4 border-t border-white/10 flex items-center justify-between bg-[#0d0d0d]">
+                <div className="flex items-center gap-3 text-white/60 font-mono text-xs">
+                  <span>ZOOM</span>
+                  <input type="range" min={1} max={3} step={0.1} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} className="accent-indigo-500" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={handleCancelCrop} className="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600">Cancel</button>
-                  <button onClick={handleConfirmCrop} className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Apply</button>
+                <div className="flex items-center gap-4">
+                  <button onClick={handleCancelCrop} className="text-white/60 hover:text-white font-mono text-xs uppercase transition-colors">Cancel</button>
+                  <button onClick={handleConfirmCrop} className="px-6 py-2 bg-white text-black font-mono text-xs uppercase tracking-widest hover:bg-white/90 transition-colors">Apply</button>
                 </div>
               </div>
             </div>
           </div>
         )}
-        <div className="flex justify-between items-center p-6 border-b border-slate-700">
-          <h2 className="text-2xl font-bold text-white">{isEditMode ? 'Update Project Card' : 'Create New Project Card'}</h2>
-          <button onClick={onClose} className="p-2 rounded-full hover:bg-slate-700">
-            <CloseIcon className="w-6 h-6 text-slate-400" />
+        <div className="flex justify-between items-center p-6 border-b border-white/10 bg-[#0d0d0d]">
+          <h2 className="text-2xl font-bold font-boldonse text-white tracking-tight">{isEditMode ? 'UPDATE PROJ.' : 'NEW PROJECT'}</h2>
+          <button onClick={onClose} className="p-2 hover:bg-white/5 transition-colors group">
+            <CloseIcon className="w-6 h-6 text-white/40 group-hover:text-white transition-colors" />
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="flex-grow overflow-y-auto p-6">
+        <form onSubmit={handleSubmit} className="flex-grow overflow-y-auto p-8 custom-scrollbar">
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            animate={isSubmitting ? {
-              filter: "blur(20px)",
-              opacity: 0.3,
-              scale: 0.95,
-              y: -20
-            } : {
-              filter: "blur(0px)",
-              opacity: 1,
-              scale: 1,
-              y: 0
-            }}
-            transition={{
-              duration: 0.6,
-              ease: "easeInOut"
-            }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            animate={isSubmitting ? { filter: "blur(5px)", opacity: 0.5 } : { filter: "blur(0px)", opacity: 1 }}
           >
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-300 mb-1">Project Name</label>
-              <input type="text" name="projectName" value={formData.projectName} onChange={handleChange} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" required />
+              <label className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-2">Project Name</label>
+              <input type="text" name="projectName" value={formData.projectName} onChange={handleChange} className="w-full bg-transparent border-b border-white/20 px-0 py-3 text-white font-boldonse text-xl focus:border-indigo-500 focus:outline-none transition-colors placeholder:text-white/10" placeholder="ENTER PROJECT NAME" required />
             </div>
             
             <div>
-              <label htmlFor="startDate" className="block text-sm font-medium text-slate-300 mb-1">Start Date</label>
-              <input type="date" id="startDate" name="startDate" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              <label htmlFor="startDate" className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-2">Start Date</label>
+              <input type="date" id="startDate" name="startDate" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full bg-[#0d0d0d] border border-white/10 px-4 py-3 text-white font-mono text-sm focus:border-indigo-500 focus:outline-none transition-colors" />
             </div>
              <div>
-              <label htmlFor="endDate" className="block text-sm font-medium text-slate-300 mb-1">End Date</label>
-              <input type="date" id="endDate" name="endDate" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              <label htmlFor="endDate" className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-2">End Date</label>
+              <input type="date" id="endDate" name="endDate" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full bg-[#0d0d0d] border border-white/10 px-4 py-3 text-white font-mono text-sm focus:border-indigo-500 focus:outline-none transition-colors" />
             </div>
 
             {(startDate && endDate) && (
                  <div className="md:col-span-2 -mt-4">
-                    <p className={`text-xs mt-1 ${isDateInvalid ? 'text-red-400 font-semibold' : 'text-slate-400'}`}>
-                        {isDateInvalid 
-                            ? 'End date cannot be before start date.' 
-                            : `Calculated Duration: `
-                        }
-                        {!isDateInvalid && formData.timeline && <span className="font-semibold text-indigo-400">{formData.timeline}</span>}
+                    <p className={`text-[10px] font-mono uppercase tracking-wide mt-1 ${isDateInvalid ? 'text-red-400' : 'text-white/40'}`}>
+                        {isDateInvalid ? 'End date cannot be before start date.' : `Duration: `}
+                        {!isDateInvalid && formData.timeline && <span className="text-white">{formData.timeline}</span>}
                     </p>
                 </div>
             )}
             
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-300 mb-1">Tags</label>
+              <label className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-2">Tags</label>
                 <div className="relative">
-                    <div className="relative flex items-center bg-slate-700 border border-slate-600 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500">
-                        <TagIcon className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"/>
+                    <div className="relative flex items-center bg-[#0d0d0d] border border-white/10 px-4 py-3 focus-within:border-indigo-500 transition-colors">
+                        <TagIcon className="w-4 h-4 text-white/30 mr-3"/>
                         <input 
                             type="text" 
                             value={tagInput}
@@ -597,18 +578,18 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                             onKeyDown={handleTagKeyDown}
                             onFocus={() => { if (tagInput) setIsSuggestionsVisible(true); }}
                             onBlur={handleTagInputBlur}
-                            placeholder="React, Next.js, UI/UX..."
-                            className="w-full bg-transparent pl-10 pr-3 py-2 focus:outline-none"
+                            placeholder="REACT, NEXT.JS..."
+                            className="w-full bg-transparent text-white font-mono text-sm placeholder:text-white/10 focus:outline-none uppercase"
                             autoComplete="off"
                         />
                     </div>
                     {isSuggestionsVisible && suggestions.length > 0 && (
-                        <ul className="absolute z-20 w-full bg-slate-600 border border-slate-500 rounded-lg mt-1 max-h-48 overflow-y-auto shadow-lg">
+                        <ul className="absolute z-20 w-full bg-black border border-white/10 mt-1 max-h-48 overflow-y-auto shadow-2xl">
                             {suggestions.map(tag => (
                                 <li 
                                 key={tag} 
                                 onMouseDown={() => addTag(tag)}
-                                className="px-4 py-2 text-sm text-slate-200 cursor-pointer hover:bg-indigo-600 hover:text-white"
+                                className="px-4 py-2 text-xs font-mono text-white/60 cursor-pointer hover:bg-white/5 hover:text-white uppercase"
                                 >
                                 {tag}
                                 </li>
@@ -617,11 +598,11 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                     )}
                  </div>
                  {formData.tags && formData.tags.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2">
+                    <div className="mt-3 flex flex-wrap gap-2">
                         {formData.tags.map(tag => (
-                            <div key={tag} className="flex items-center bg-indigo-500/20 text-indigo-300 text-xs font-medium px-2.5 py-1 rounded-full">
+                            <div key={tag} className="flex items-center border border-white/10 bg-white/5 text-white/80 text-[10px] font-mono px-3 py-1 uppercase tracking-wider">
                                 {tag}
-                                <button type="button" onClick={() => removeTag(tag)} className="ml-1.5 -mr-1 text-indigo-200 hover:text-white">
+                                <button type="button" onClick={() => removeTag(tag)} className="ml-2 text-white/30 hover:text-white transition-colors">
                                     <CloseIcon className="w-3 h-3"/>
                                 </button>
                             </div>
@@ -632,30 +613,38 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
 
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-300 mb-1">Contact Email</label>
-              <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleChange} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" required />
+              <label className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-2">Contact Email</label>
+              <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleChange} className="w-full bg-[#0d0d0d] border border-white/10 px-4 py-3 text-white font-mono text-sm focus:border-indigo-500 focus:outline-none transition-colors" required placeholder="DEV@EXAMPLE.COM" />
             </div>
 
             <div className="md:col-span-2 relative">
-                <div className="flex justify-end mb-2">
-                    <Button type="button" onClick={handleGenerateSummary} className="flex items-center px-3 py-1 bg-indigo-600 text-white rounded-md text-xs hover:bg-indigo-700">
-                       <FriendsIcon className="w-4 h-4 mr-1.5" />
-                       Summarize with AI
-                    </Button>
+                <div className="flex justify-between items-end mb-2">
+                    <label className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest">Description</label>
+                    <button type="button" onClick={handleGenerateSummary} disabled={loadingStates.summary} className="flex items-center text-[10px] font-mono text-indigo-300 hover:text-white uppercase tracking-wider transition-colors disabled:opacity-50">
+                       {loadingStates.summary ? (
+                         <span className="w-3 h-3 mr-1.5 border border-indigo-300 border-t-transparent rounded-full animate-spin" />
+                       ) : (
+                         <SparklesIcon className="w-3 h-3 mr-1.5" />
+                       )}
+                       {loadingStates.summary ? 'Generating...' : 'AI Summarize'}
+                    </button>
                 </div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">Description</label>
-                <textarea name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="A brief summary of your project..."></textarea>
+                <textarea name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full bg-[#0d0d0d] border border-white/10 px-4 py-3 text-white font-mono text-sm focus:border-indigo-500 focus:outline-none transition-colors leading-relaxed" placeholder="BRIEF PROJECT SUMMARY..."></textarea>
             </div>
-            <div className="md:col-span-2 code-editor-wrapper">
-                 <div className="flex justify-between items-center mb-1">
-                    <label className="block text-sm font-medium text-slate-300">Code Snippet</label>
-                    <Button type="button" onClick={handleExplainCode} className="flex items-center px-3 py-1 bg-sky-600 text-white rounded-md text-xs hover:bg-sky-700">
-                        <FriendsIcon className="w-4 h-4 mr-1.5" />
-                        Explain Code with AI
-                    </Button>
+            <div className="md:col-span-2">
+                 <div className="flex justify-between items-center mb-2">
+                    <label className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest">Code Snippet</label>
+                    <button type="button" onClick={handleExplainCode} disabled={loadingStates.codeExplanation} className="flex items-center text-[10px] font-mono text-indigo-300 hover:text-white uppercase tracking-wider transition-colors disabled:opacity-50">
+                        {loadingStates.codeExplanation ? (
+                          <span className="w-3 h-3 mr-1.5 border border-indigo-300 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <SparklesIcon className="w-3 h-3 mr-1.5" />
+                        )}
+                        {loadingStates.codeExplanation ? 'Analyzing...' : 'AI Explain'}
+                    </button>
                  </div>
-                <div className="flex items-center bg-slate-900 border border-slate-600 rounded-t-lg focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 focus-within:border-indigo-500">
-                    <select name="codeLanguage" value={formData.codeLanguage} onChange={handleChange} className="flex-grow bg-transparent pl-3 py-2 text-sm appearance-none focus:outline-none">
+                <div className="flex items-center bg-[#0d0d0d] border border-white/10 border-b-0 px-2 py-1">
+                    <select name="codeLanguage" value={formData.codeLanguage} onChange={handleChange} className="bg-transparent text-white/60 font-mono text-xs uppercase focus:outline-none cursor-pointer">
                         <option value="javascript">JavaScript</option>
                         <option value="python">Python</option>
                         <option value="html">HTML</option>
@@ -663,120 +652,76 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                         <option value="jsx">JSX</option>
                         <option value="typescript">TypeScript</option>
                     </select>
-                    {/* Auto-detection indicator */}
-                    {formData.codeSnippet && formData.codeSnippet.length >= 10 && (
-                      <div className="flex items-center px-2">
-                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" title="Auto-detecting language..."></div>
-                      </div>
-                    )}
-                     <div className="h-5 w-px bg-slate-700 mx-2"></div>
+                    <div className="h-4 w-px bg-white/10 mx-3"></div>
                      <button 
                         type="button" 
                         onClick={handleDetectLanguage} 
                         disabled={loadingStates.languageDetection || !formData.codeSnippet} 
-                        className="flex-shrink-0 flex items-center pr-3 py-1 text-slate-300 rounded-md text-xs hover:text-white disabled:text-slate-500 disabled:cursor-not-allowed"
+                        className="flex items-center text-[10px] font-mono text-white/40 hover:text-white uppercase disabled:opacity-50"
                      >
-                        {loadingStates.languageDetection 
-                            ? <LoaderOne /> 
-                            : <SparklesIcon className="w-4 h-4 text-purple-400 mr-1" />
-                        }
-                        Auto-detect
+                        {loadingStates.languageDetection ? "DETECTING..." : "AUTO-DETECT"}
                     </button>
                 </div>
-                <div className="relative bg-slate-900 font-mono text-sm border-x border-b border-slate-600 rounded-b-lg focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 focus-within:border-indigo-500">
+                <div className="relative bg-[#050505] font-mono text-sm border border-white/10 focus-within:border-indigo-500 transition-colors">
                     <Editor
                         value={formData.codeSnippet || ''}
                         onValueChange={code => setFormData(prev => ({ ...prev, codeSnippet: code }))}
-                        // FIX: Corrected the logic to be type-safe.
-                        // The previous cast `as keyof typeof Prism.languages` resulted in a `string | number` type,
-                        // causing a mismatch with Prism.highlight's `language` parameter.
-                        // This new implementation safely checks for the language and grammar's existence
-                        // and ensures a `string` is passed to `highlight`.
                         highlight={code => {
                             const lang = formData.codeLanguage;
                             if (lang && Prism.languages[lang]) {
                                 return Prism.highlight(code, Prism.languages[lang], lang);
                             }
-                            return code; // return original code if language not found
+                            return code; 
                         }}
-                        padding={12}
+                        padding={16}
                         style={{
-                            fontFamily: '"Fira Code", "Fira Mono", monospace',
-                            fontSize: 14,
-                            minHeight: '150px',
+                            fontFamily: '"Geist Mono", monospace',
+                            fontSize: 13,
+                            minHeight: '200px',
                         }}
-                        placeholder="<Showcase a cool piece of code />"
+                        textareaClassName="focus:outline-none"
                     />
                 </div>
                  {(loadingStates.codeExplanation || codeExplanation) && (
-                    <div className="mt-2 bg-slate-900/70 rounded-lg border border-slate-700 overflow-hidden">
+                    <div className="mt-4 bg-[#0d0d0d] border border-white/10 p-4">
                         {loadingStates.codeExplanation && !codeExplanation && (
-                            <div className="p-4 flex items-center justify-center">
+                            <div className="flex items-center justify-center py-4">
                                 <LoaderOne /> 
-                                <span className="ml-3 text-slate-400">Analyzing code...</span>
+                                <span className="ml-3 font-mono text-xs text-white/50 uppercase">ANALYZING...</span>
                             </div>
                         )}
                         {codeExplanation && (
-                            <>
-                                <button type="button" onClick={() => setIsExplanationVisible(!isExplanationVisible)} className="w-full flex justify-between items-center p-3 text-left hover:bg-slate-800/50">
-                                    <span className="font-semibold text-slate-200">AI Code Explanation</span>
-                                    {isExplanationVisible ? <ChevronUpIcon className="w-5 h-5 text-slate-400" /> : <ChevronDownIcon className="w-5 h-5 text-slate-400" />}
-                                </button>
-                                {isExplanationVisible && (
-                                    <div className="p-4 border-t border-slate-700 text-slate-300 text-sm prose prose-invert prose-sm max-w-none dark:prose-invert">
-                                        <ReactMarkdown 
-                                            rehypePlugins={[rehypeHighlight]}
-                                            components={{
-                                                code: ({ className, children, ...props }: any) => {
-                                                    const match = /language-(\w+)/.exec(className || '');
-                                                    const isBlockCode = match && className;
-                                                    return isBlockCode ? (
-                                                        <pre className="bg-slate-900 rounded-lg p-4 overflow-x-auto border border-slate-700 my-2">
-                                                            <code className={className} {...props}>
-                                                                {children}
-                                                            </code>
-                                                        </pre>
-                                                    ) : (
-                                                        <code className="bg-slate-800 px-1.5 py-0.5 rounded text-indigo-300" {...props}>
-                                                            {children}
-                                                        </code>
-                                                    );
-                                                }
-                                            }}
-                                        >
-                                            {codeExplanation}
-                                        </ReactMarkdown>
-                                    </div>
-                                )}
-                            </>
+                            <div className="font-mono text-xs text-white/70 leading-relaxed">
+                                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{codeExplanation}</ReactMarkdown>
+                            </div>
                         )}
                     </div>
                 )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">GitHub Link</label>
-              <input type="url" name="githubLink" value={formData.githubLink} onChange={handleChange} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              <label className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-2">GitHub Link</label>
+              <input type="url" name="githubLink" value={formData.githubLink} onChange={handleChange} className="w-full bg-[#0d0d0d] border border-white/10 px-4 py-3 text-white font-mono text-sm focus:border-indigo-500 focus:outline-none transition-colors" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Live/CodePen Link</label>
-              <input type="url" name="liveLink" value={formData.liveLink} onChange={handleChange} className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              <label className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-2">Live/Demo Link</label>
+              <input type="url" name="liveLink" value={formData.liveLink} onChange={handleChange} className="w-full bg-[#0d0d0d] border border-white/10 px-4 py-3 text-white font-mono text-sm focus:border-indigo-500 focus:outline-none transition-colors" />
             </div>
 
             <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-300 mb-1">Card Background</label>
+                <label className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest mb-2">Card Background</label>
                  {uploadError && (
-                    <div className="flex items-center p-3 mb-2 text-sm text-red-400 bg-red-900/30 border border-red-500/50 rounded-lg">
-                        <ExclamationTriangleIcon className="w-5 h-5 mr-2" />
+                    <div className="flex items-center p-3 mb-4 text-xs font-mono text-red-400 bg-red-900/10 border border-red-900/30">
+                        <ExclamationTriangleIcon className="w-4 h-4 mr-2" />
                         {uploadError}
                     </div>
                   )}
                 <div className="flex flex-col md:flex-row md:items-start gap-4">
                     <div className="flex-grow w-full md:w-auto">
                         {formData.backgroundImage ? (
-                            <div className="relative group w-full h-32 md:h-40">
-                                <Image src={formData.backgroundImage} alt="Background Preview" className="object-cover rounded-lg" fill sizes="(max-width: 768px) 100vw, 50vw"/>
-                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
-                                    <button type="button" onClick={() => setFormData(p => ({...p, backgroundImage: ''}))} className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">Remove</button>
+                            <div className="relative group w-full h-32 md:h-48 border border-white/10 bg-[#0d0d0d]">
+                                <Image src={formData.backgroundImage} alt="Background Preview" className="object-cover opacity-80" fill sizes="(max-width: 768px) 100vw, 50vw"/>
+                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button type="button" onClick={() => setFormData(p => ({...p, backgroundImage: ''}))} className="px-4 py-2 text-xs font-mono uppercase bg-red-500 text-white tracking-widest hover:bg-red-600">Remove</button>
                                 </div>
                             </div>
                         ) : (
@@ -784,58 +729,41 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                                 onDrop={handleDrop} 
                                 onDragOver={handleDragOver} 
                                 onDragLeave={handleDragLeave}
-                                className={`relative flex flex-col items-center justify-center w-full h-32 md:h-40 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700/50 transition-colors ${isDragging ? 'bg-slate-700/50 border-indigo-500' : ''}`}
+                                className={`relative flex flex-col items-center justify-center w-full h-32 md:h-48 border border-dashed border-white/20 hover:bg-white/5 transition-colors cursor-pointer ${isDragging ? 'bg-white/5 border-indigo-500' : ''}`}
                             >
+                                <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={(e) => handleFileSelected(e.target.files?.[0] || null)} accept="image/*" />
                                 {loadingStates.imageUpload ? (
                                     <>
                                         <LoaderOne />
-                                        <p className="mt-2 text-sm text-slate-400">Uploading...</p>
+                                        <p className="mt-2 text-xs font-mono text-white/50 uppercase">UPLOADING...</p>
                                     </>
                                 ) : (
                                     <>
-                                        <UploadCloudIcon className="w-8 h-8 text-slate-500 mb-2"/>
-                                        <p className="text-sm text-slate-400 text-center px-2"><span className="font-semibold text-indigo-400">Click to upload</span> or drag and drop</p>
-                                        <p className="text-xs text-slate-500 mt-1">PNG, JPG, GIF (Max 10MB)</p>
+                                        <UploadCloudIcon className="w-6 h-6 text-white/30 mb-3"/>
+                                        <p className="text-xs font-mono text-white/40 uppercase tracking-widest underline decoration-white/20 underline-offset-4">Upload Image</p>
                                     </>
                                 )}
-                                <input 
-                                    type="file" 
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
-                                    onChange={e => handleFileSelected(e.target.files ? e.target.files[0] : null)}
-                                    accept="image/*"
-                                    disabled={loadingStates.imageUpload}
-                                />
                             </div>
                         )}
                     </div>
-                    <div className="relative group flex flex-row md:flex-col items-center md:self-center gap-3 md:gap-2 w-full md:w-32 md:text-center">
-                        <span className="text-sm text-slate-500 whitespace-nowrap">OR</span>
-                        <Button type="button" onClick={handleGenerateBgImage} disabled={loadingStates.image || !formData.projectName} className="flex-1 md:w-full flex items-center justify-center px-4 py-2.5 bg-purple-600 text-white rounded-md text-sm hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <FriendsIcon className="w-4 h-4 mr-1.5" />
-                            <span className="hidden sm:inline">AI Generate</span>
-                            <span className="sm:hidden">Generate</span>
-                        </Button>
-                        { !formData.projectName && !formData.backgroundImage && (
-                            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-max px-3 py-1.5 bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none whitespace-nowrap hidden md:block">
-                                Enter a project name first
-                            </div>
-                        )}
-                    </div>
+                     <button type="button" onClick={handleGenerateBgImage} disabled={loadingStates.image || !formData.projectName} className="flex-shrink-0 flex items-center justify-center px-6 py-3 border border-white/10 hover:bg-white/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group h-full self-stretch">
+                         {loadingStates.image ? <LoaderOne /> : <SparklesIcon className="w-5 h-5 text-indigo-400 group-hover:text-indigo-300" />}
+                         <span className="ml-2 font-mono text-xs text-white/70 uppercase group-hover:text-white">AI Generate</span>
+                     </button>
                 </div>
             </div>
 
           </motion.div>
+        
         </form>
-        <div className="p-6 border-t border-slate-700 bg-slate-800/50 flex justify-end">
-            <button type="button" onClick={onClose} className="px-6 py-2.5 text-white bg-slate-700 rounded-lg mr-4 hover:bg-slate-600">Cancel</button>
-            <Button type="submit" onClick={handleSubmit} className="px-6 py-2.5 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700">
-              {isEditMode ? "Update Card" : "Create Card"}
-            </Button>
-        </div>
+         <div className="p-6 border-t border-white/10 bg-[#0d0d0d] flex justify-end gap-4">
+             <button onClick={onClose} className="px-6 py-3 text-xs font-mono uppercase text-white/60 hover:text-white transition-colors">Cancel</button>
+             <button onClick={handleSubmit} disabled={isSubmitting} className="px-8 py-3 bg-white text-black font-mono text-xs uppercase font-bold tracking-widest hover:bg-white/90 transition-colors disabled:opacity-50">
+                 {isSubmitting ? 'SAVING...' : isEditMode ? 'UPDATE PROJECT' : 'CREATE PROJECT'}
+             </button>
+         </div>
+         </motion.div>
       </div>
-    </div>
     </>
   );
 };
-
-export default CreateCardModal;

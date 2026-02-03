@@ -1,4 +1,4 @@
-// File: /Users/eshanshettennavar/Documents/From_ROG/the-boring-project 8.05.04 PM/app/api/projects/[id]/route.ts
+// File: /Users/eshanshettennavar/Documents/From_ROG/the-boring-project/app/api/projects/[id]/route.ts
 import * as entry from '../../../../../../app/api/projects/[id]/route.js'
 import type { NextRequest } from 'next/server.js'
 

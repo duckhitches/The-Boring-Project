@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { CloseIcon } from "./IconComponents";
+import { CloseIcon, ArrowRightIcon } from "./IconComponents";
 
 interface NewsItem {
   id: string;
@@ -22,15 +22,15 @@ interface NewsDropdownProps {
 const newsItems: NewsItem[] = [
   {
     id: '1',
-    title: 'AI Image Generator Currently Not Available',
-    content: 'Generate images with AI using Gemini API and NextJS is not available since its for billed users(Im still poor dawg). Just upload a prompt and let the AI generate images for you.',
+    title: 'AI Image Generator Status',
+    content: 'Generate images with AI using Gemini API and NextJS is not available (Billing Tier Restriction). Just upload a prompt and let the AI generate images for you.',
     date: '2025-11-07',
     type: 'feature',
     isNew: true
   },
   {
     id: '2',
-    title: 'New Search Functionality',
+    title: 'Global Search Protocol',
     content: 'Global search across projects and notes is now live! Find anything instantly.',
     date: '2025-10-24',
     type: 'feature',
@@ -38,7 +38,7 @@ const newsItems: NewsItem[] = [
   },
   {
     id: '3',
-    title: 'Mobile Sidebar Redesign',
+    title: 'Mobile Interface Update',
     content: 'Completely redesigned mobile navigation with better UX and animations.',
     date: '2025-10-22',
     type: 'update',
@@ -46,7 +46,7 @@ const newsItems: NewsItem[] = [
   },
   {
     id: '4',
-    title: 'Auto-save Notes Feature',
+    title: 'Auto-save Protocol',
     content: 'Notes now auto-save every minute with visual countdown indicator.',
     date: '2025-10-20',
     type: 'feature',
@@ -54,7 +54,7 @@ const newsItems: NewsItem[] = [
   },
   {
     id: '5',
-    title: 'Theme Engine Update',
+    title: 'Theme Engine v2',
     content: 'Added Light, Dark, and Image themes with real-time switching Coming Soon.',
     date: '2025-10-25',
     type: 'update',
@@ -62,7 +62,7 @@ const newsItems: NewsItem[] = [
   },
   {
     id: '6',
-    title: 'Supabase Integration Complete',
+    title: 'Supabase Matrix Active',
     content: 'Full authentication and database integration is now working perfectly.',
     date: '2025-10-18',
     type: 'announcement',
@@ -70,24 +70,18 @@ const newsItems: NewsItem[] = [
   }
 ];
 
-const getTypeColor = (type: NewsItem['type']) => {
+const getTypeStyles = (type: NewsItem['type']) => {
   switch (type) {
-    case 'feature': return 'text-green-400 bg-green-400/10';
-    case 'update': return 'text-blue-400 bg-blue-400/10';
-    case 'announcement': return 'text-purple-400 bg-purple-400/10';
-    case 'bugfix': return 'text-orange-400 bg-orange-400/10';
-    default: return 'text-gray-400 bg-gray-400/10';
+    case 'feature': return 'bg-green-600 text-black';
+    case 'update': return 'bg-blue-600 text-black';
+    case 'announcement': return 'bg-purple-600 text-black';
+    case 'bugfix': return 'bg-red-600 text-black';
+    default: return 'bg-white text-black';
   }
 };
 
 const getTypeLabel = (type: NewsItem['type']) => {
-  switch (type) {
-    case 'feature': return 'Feature';
-    case 'update': return 'Update';
-    case 'announcement': return 'Announcement';
-    case 'bugfix': return 'Bug Fix';
-    default: return 'News';
-  }
+  return type.toUpperCase();
 };
 
 export const NewsDropdown: React.FC<NewsDropdownProps> = ({ isOpen, onClose }) => {
@@ -102,70 +96,98 @@ export const NewsDropdown: React.FC<NewsDropdownProps> = ({ isOpen, onClose }) =
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-40"
             onClick={onClose}
           />
 
           {/* Dropdown */}
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            initial={{ opacity: 0, y: -20, scale: 1 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute right-0 top-12 w-96 bg-neutral-900 border border-neutral-800 rounded-xl shadow-xl z-50"
+            exit={{ opacity: 0, y: -20, scale: 1 }}
+            transition={{ duration: 0.1, ease: "linear" }}
+            className="fixed inset-x-4 top-20 mx-auto max-w-[400px] bg-black border border-white/20 z-[100] shadow-[0_0_30px_rgba(0,0,0,0.5)]"
           >
             {/* Header */}
-            <div className="px-4 py-3 border-b border-neutral-800">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-white">Updates from Developer-Eshan</h3>
-                <div className="flex items-center space-x-2">
-                  {newItemsCount > 0 && (
-                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                      {newItemsCount} new
-                    </span>
-                  )}
-                  <button
-                    onClick={onClose}
-                    className="p-1 rounded-full hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
-                  >
-                    <CloseIcon className="w-4 h-4" />
-                  </button>
-                </div>
+            <div className="px-6 py-4 border-b border-white/10 bg-[#0d0d0d] flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                 <h3 className="text-xs font-boldonse uppercase text-white tracking-widest">
+                   System Log
+                 </h3>
+                 <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider">
+                    // Updates
+                 </span>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                {newItemsCount > 0 && (
+                   <div className="flex items-center gap-1.5 animate-pulse">
+                      <div className="w-1.5 h-1.5 bg-red-500"></div>
+                      <span className="text-[10px] font-mono text-red-500 uppercase tracking-widest">
+                         {newItemsCount} NEW
+                      </span>
+                   </div>
+                )}
+                <button
+                  onClick={onClose}
+                  className="text-white/40 hover:text-white transition-colors"
+                >
+                  <CloseIcon className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
             {/* News Items */}
-            <div className="max-h-96 overflow-y-auto">
+            <div className="max-h-[500px] overflow-y-auto custom-scrollbar bg-black">
               {newsItems.map((item, index) => (
-                <motion.div
+                <div
                   key={item.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="p-4 hover:bg-neutral-800/50 transition-colors border-b border-neutral-800/50 last:border-b-0"
+                  className="group p-6 border-b border-white/10 hover:bg-white/5 transition-colors relative"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center space-x-2">
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${getTypeColor(item.type)}`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className={`px-2 py-0.5 text-[8px] font-mono font-bold uppercase tracking-widest ${getTypeStyles(item.type)}`}>
                         {getTypeLabel(item.type)}
                       </span>
                       {item.isNew && (
-                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <span className="text-[8px] font-mono text-red-500 uppercase tracking-widest border border-red-500/30 px-1">
+                           New Entry
+                        </span>
                       )}
                     </div>
-                    <span className="text-xs text-neutral-500">{item.date}</span>
+                    <span className="text-[10px] font-mono text-white/30 uppercase tracking-wider tabular-nums">
+                      {item.date}
+                    </span>
                   </div>
                   
-                  <h4 className="text-sm font-medium text-white mb-1">{item.title}</h4>
-                  <p className="text-xs text-neutral-400 leading-relaxed">{item.content}</p>
-                </motion.div>
+                  <h4 className="text-sm font-boldonse text-white uppercase tracking-wide mb-2 group-hover:text-white/90 transition-colors">
+                     {item.title}
+                  </h4>
+                  <p className="text-xs font-mono text-white/50 leading-relaxed uppercase tracking-wide max-w-[95%]">
+                     {item.content}
+                  </p>
+                  
+                  <div className="absolute top-1/2 right-4 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                     <ArrowRightIcon className="w-4 h-4 text-white/20" />
+                  </div>
+                </div>
               ))}
             </div>
 
             {/* Footer */}
-            <div className="px-4 py-3 border-t border-neutral-800">
-              <p className="text-xs text-neutral-400">Follow me on <a href="https://linkedin.com/in/eshan-shettennavar" className="text-indigo-400 hover:text-indigo-300 flex items-center gap-2 transition-colors">
-              <Image src="./images/linkedin.svg" alt="LinkedIn" width={16} height={16} /> for more updates</a></p>
+            <div className="px-6 py-3 border-t border-white/10 bg-[#0a0a0a] flex justify-between items-center">
+               <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest">
+                  End of Log
+               </span>
+              <a 
+                 href="https://linkedin.com/in/eshan-shettennavar"
+                 target="_blank"
+                 rel="noopener noreferrer" 
+                 className="flex items-center gap-2 text-[10px] font-mono text-white/40 hover:text-white uppercase tracking-widest transition-colors"
+                >
+                 <span>Follow</span>
+                 <ArrowRightIcon className="w-3 h-3" />
+              </a>
             </div>
           </motion.div>
         </>

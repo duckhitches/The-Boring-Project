@@ -7,6 +7,7 @@ import {
   ClockIcon,
   EnvelopeIcon,
   CreditCardIcon,
+  UserIcon,
 } from "./IconComponents";
 
 type Theme = "light" | "dark" | "boring-kitty";
@@ -75,201 +76,154 @@ const SettingsView: React.FC<SettingsProps> = ({ onThemeChange }) => {
     onThemeChange?.(theme);
   };
 
-  // Removed scenic image selection feature
-
   const handleContactSupport = () => {
     window.open("https://portfolio-eshan-2z6t.vercel.app/", "_blank");
   };
 
   const handleUpgradePlan = () => {
-    // In a real app, this would redirect to a payment page
     alert("Bruh, just enjoy the free plan for now!");
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
+    <div className="flex flex-col h-[calc(100vh-5rem)] bg-black border border-white/10 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center space-x-3 mb-8">
-        <SettingsIcon className="w-8 h-8 text-indigo-500" />
-        <h1 className="text-3xl font-bold text-white">Settings</h1>
+      <div className="p-6 border-b border-white/10 flex items-center gap-4 bg-[#0d0d0d]">
+        
+        <h1 className="text-3xl font-boldonse uppercase text-white tracking-widest">
+          System Settings
+        </h1>
+        <p className="text-white/40 font-mono text-[10px] uppercase tracking-wider">
+            Manage your boring tweaks here
+          </p>
       </div>
 
-      {/* Theme Selection */}
-      <div className="bg-black/40 rounded-xl p-6">
-        <h2 className="text-xl font-semibold text-white mb-4">Appearance</h2>
-        <p className="text-slate-400 mb-6">
-          Choose your preferred theme for the application.
-        </p>
-
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
-        {/* Light Theme */}
-        {/* <div
-            onClick={() => handleThemeChange('light')}
-            className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-              selectedTheme === 'light'
-                ? 'border-indigo-500 bg-indigo-500/10'
-                : 'border-slate-600 hover:border-slate-500'
-            }`}
-          >
-            <div className="flex items-center space-x-3 mb-3">
-              <SunIcon className="w-6 h-6 text-yellow-500" />
-              <h3 className="font-medium text-white">Light(Coming Soon)</h3>
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
+          
+          {/* Usage Statistics */}
+          <div className="p-6 border-b md:border-r border-white/10 bg-black hover:bg-white/5 transition-colors group min-h-[200px] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-mono text-xs uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">
+                  Session Duration
+                </h2>
+                <ClockIcon className="w-4 h-4 text-white/30 group-hover:text-indigo-400 transition-colors" />
+              </div>
+              <p className="text-4xl font-boldonse text-white tracking-tighter">
+                {sessionDuration}
+              </p>
             </div>
-            <p className="text-sm text-slate-400">Clean and bright interface</p>
-            <div className="mt-3 h-16 bg-white rounded border border-gray-200 flex items-center justify-center">
-              <span className="text-gray-600 text-sm">Light Preview</span>
-            </div>
-          </div> */}
-
-        {/* Dark Theme */}
-        {/* <div
-            onClick={() => handleThemeChange('dark')}
-            className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-              selectedTheme === 'dark'
-                ? 'border-indigo-500 bg-indigo-500/10'
-                : 'border-slate-600 hover:border-slate-500'
-            }`}
-          >
-            <div className="flex items-center space-x-3 mb-3">
-              <MoonIcon className="w-6 h-6 text-blue-400" />
-              <h3 className="font-medium text-white">Dark</h3>
-            </div>
-            <p className="text-sm text-slate-400">Easy on the eyes</p>
-            <div className="mt-3 h-16 bg-slate-800 rounded border border-slate-600 flex items-center justify-center">
-              <span className="text-slate-300 text-sm">Dark Preview</span>
-            </div>
-          </div> */}
-
-        {/* Boring Kitty Theme */}
-        {/* <div
-            onClick={() => handleThemeChange('boring-kitty')}
-            className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-              selectedTheme === 'boring-kitty'
-                ? 'border-indigo-500 bg-indigo-500/10'
-                : 'border-slate-600 hover:border-slate-500'
-            }`}
-          >
-            <div className="flex items-center space-x-3 mb-3">
-              <span className="inline-block w-6 h-6 rounded-full bg-gradient-to-r from-pink-400 to-yellow-300" />
-              <h3 className="font-medium text-white">Boring Kitty(Coming Soon)</h3>
-            </div>
-            <p className="text-sm text-slate-400">Applies a playful gradient background</p>
-            <div className="mt-3 h-16 rounded flex items-center justify-center" style={{ backgroundImage: "url('/bg-2.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-              <span className="text-white text-sm bg-black/40 px-2 py-0.5 rounded">Preview</span>
-            </div>
+            <p className="font-mono text-[10px] text-white/30 uppercase tracking-wider mt-4">
+              Active Session
+            </p>
           </div>
-        </div>
-      </div> */}
 
-        {/* Usage Statistics */}
-        <div className="bg-black/40 rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            Usage Statistics
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-indigo-500/20 rounded-lg flex items-center justify-center">
-                <ClockIcon className="w-6 h-6 text-indigo-400" />
+          {/* Account Status */}
+           <div className="p-6 border-b md:border-r border-white/10 bg-black hover:bg-white/5 transition-colors group min-h-[200px] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-mono text-xs uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">
+                  Account Status
+                </h2>
+                <UserIcon className="w-4 h-4 text-white/30 group-hover:text-green-400 transition-colors" />
               </div>
-              <div>
-                <h3 className="font-medium text-white">Time Spent Today</h3>
-                <p className="text-2xl font-bold text-indigo-400">
-                  {sessionDuration}
-                </p>
-                <p className="text-sm text-slate-400">Current session</p>
-              </div>
+              <p className="text-4xl font-boldonse text-white tracking-tighter uppercase text-green-500">
+                Active
+              </p>
             </div>
-
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <SettingsIcon className="w-6 h-6 text-green-400" />
-              </div>
-              <div>
-                <h3 className="font-medium text-white">Account Status</h3>
-                <p className="text-lg font-semibold text-green-400">Active</p>
-                <p className="text-sm text-slate-400">
-                  Since{" "}
-                  {user?.created_at
-                    ? new Date(user.created_at).toLocaleDateString()
-                    : "N/A"}
-                </p>
-              </div>
-            </div>
+            <p className="font-mono text-[10px] text-white/30 uppercase tracking-wider mt-4">
+              Member Since {user?.created_at ? new Date(user.created_at).toLocaleDateString() : "N/A"}
+            </p>
           </div>
-        </div>
 
-        {/* Contact & Support */}
-        <div className="bg-black/40 rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            Contact & Support
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                <EnvelopeIcon className="w-6 h-6 text-blue-400" />
+          {/* Contact Support */}
+          <div className="p-6 border-b border-white/10 bg-black hover:bg-white/5 transition-colors group min-h-[200px] flex flex-col justify-between">
+             <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-mono text-xs uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">
+                  Support
+                </h2>
+                <EnvelopeIcon className="w-4 h-4 text-white/30 group-hover:text-blue-400 transition-colors" />
               </div>
-              <div>
-                <h3 className="font-medium text-white">Get Help</h3>
-                <p className="text-slate-400 mb-2">
-                  Need assistance? We're here to help.
-                </p>
-                <button
-                  onClick={handleContactSupport}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                >
-                  Contact Support
-                </button>
-              </div>
+              <h3 className="text-xl font-boldonse text-white tracking-wide uppercase mb-2">
+                Need Help?
+              </h3>
+              <p className="font-mono text-xs text-white/50 mb-4 max-w-[200px]">
+                Reach out to us for any assistance or inquiries.
+              </p>
             </div>
+            <button
+               onClick={handleContactSupport}
+               className="self-start px-4 py-2 border border-white/10 hover:bg-white hover:text-black text-white text-[10px] font-mono uppercase tracking-widest transition-all"
+            >
+               Contact Support
+            </button>
+          </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <CreditCardIcon className="w-6 h-6 text-purple-400" />
+          {/* Plan Info */}
+          <div className="p-6 border-b md:border-r border-white/10 bg-black hover:bg-white/5 transition-colors group min-h-[200px] flex flex-col justify-between">
+             <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-mono text-xs uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">
+                   Subscription
+                </h2>
+                <CreditCardIcon className="w-4 h-4 text-white/30 group-hover:text-purple-400 transition-colors" />
               </div>
-              <div>
-                <h3 className="font-medium text-white">Current Plan</h3>
-                <p className="text-slate-400 mb-2">
-                  Free Plan - Limited features
-                </p>
-                <button
-                  onClick={handleUpgradePlan}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
-                >
-                  Upgrade Plan
-                </button>
+               <h3 className="text-2xl font-boldonse text-white tracking-wide uppercase mb-2">
+                Free Plan
+              </h3>
+              <p className="font-mono text-xs text-white/50 mb-4">
+                Limited features active.
+              </p>
+            </div>
+            <button
+               onClick={handleUpgradePlan}
+               className="self-start px-4 py-2 bg-white text-black hover:bg-white/90 text-[10px] font-mono uppercase tracking-widest transition-all"
+            >
+               Upgrade
+            </button>
+          </div>
+
+           {/* Account Details */}
+           <div className="p-6 border-b md:border-r border-white/10 bg-black hover:bg-white/5 transition-colors group md:col-span-2 min-h-[200px] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-mono text-xs uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">
+                  System Information
+                </h2>
+                <SettingsIcon className="w-4 h-4 text-white/30 group-hover:text-white transition-colors" />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                   <label className="font-mono text-[10px] text-white/30 uppercase block mb-1">Email Identifier</label>
+                   <p className="font-mono text-sm text-white">{user?.email || "N/A"}</p>
+                </div>
+                <div>
+                   <label className="font-mono text-[10px] text-white/30 uppercase block mb-1">User UUID</label>
+                   <p className="font-mono text-sm text-white/70 break-all">{user?.id || "N/A"}</p>
+                </div>
               </div>
             </div>
           </div>
+          
         </div>
 
-        {/* User Information */}
-        <div className="bg-black/40 rounded-xl p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            Account Information
-          </h2>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center py-2 border-b border-slate-700">
-              <span className="text-slate-400">Email</span>
-              <span className="text-white">{user?.email || "N/A"}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-slate-700">
-              <span className="text-slate-400">User ID</span>
-              <span className="text-white font-mono text-sm">
-                {user?.id || "N/A"}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="text-slate-400">Member Since</span>
-              <span className="text-white">
-                {user?.created_at
-                  ? new Date(user.created_at).toLocaleDateString()
-                  : "N/A"}
-              </span>
-            </div>
-          </div>
-        </div>
+        {/* Theme Section (Hidden/Commented in original, but recreating structure if needed later) */}
+         <div className="p-6 border-b border-white/10 bg-[#0a0a0a]">
+           <h2 className="font-mono text-xs uppercase tracking-widest text-white/50 mb-6">
+              Appearance Settings (Disabled)
+           </h2>
+           <div className="flex gap-4 opacity-50 pointer-events-none grayscale">
+              <div className="w-32 h-20 border border-white/10 bg-white/5 p-2 flex flex-col justify-between">
+                 <span className="font-mono text-[10px] text-white/50">LIGHT</span>
+              </div>
+               <div className="w-32 h-20 border border-white/10 bg-white/10 p-2 flex flex-col justify-between">
+                 <span className="font-mono text-[10px] text-white">DARK</span>
+              </div>
+           </div>
+         </div>
 
-        {/* Removed Scenic Image Selection section for Boring Kitty theme */}
       </div>
     </div>
   );
