@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2025 Eshan Vijay Shettennavar
+ * 
+ * This file is licensed under the MIT License.
+ * See LICENSE for full license terms.
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 

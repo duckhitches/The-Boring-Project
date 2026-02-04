@@ -99,4 +99,48 @@ The project is built with a focus on **performance**, **scalability**, and **dev
 
 ## 📄 License
 
-This project is private and proprietary.
+This project uses a **dual-licensing strategy** to protect core business logic while keeping UI components open-source for learning and reuse.
+
+### Open Source Components (MIT License)
+
+The following components are licensed under the **MIT License** and are free to use, modify, and distribute:
+
+- **UI Components** (`components/ui/`, `components/Header.tsx`, `components/ProjectCard.tsx`, `components/ProjectPreviewGrid.tsx`, etc.)
+- **Layout Components** (`app/layout.tsx`, `app/page.tsx`, `components/layout/`)
+- **Utility Libraries** (`lib/utils.ts`, `lib/seo.ts`)
+- **Type Definitions** (`types.ts`)
+- **Styling** (`app/globals.css`)
+- **SEO Utilities** (`app/sitemap.ts`, `app/opengraph-image.tsx`)
+
+These components are designed to be reusable and can be freely incorporated into other projects.
+
+### Proprietary Components (Business Source License 1.1)
+
+The following components are licensed under the **Business Source License 1.1** and are **restricted from commercial SaaS use** without explicit permission:
+
+- **Backend Services** (`services/supabaseService.ts`, `services/geminiService.ts`)
+- **API Routes** (`app/api/`)
+- **Core Application Logic** (`App.tsx`)
+- **Authentication Logic** (`components/AuthModal.tsx`, `components/AuthProvider.tsx`, `app/auth/`)
+- **Business Logic Components** (`components/CreateCardModal.tsx`, `components/ProfileSettings.tsx`, `components/NotesView.tsx`)
+- **AI/Automation Features** (`components/VoiceCompanion.tsx`, `utils/audioUtils.ts`)
+- **Database Schemas** (all `.sql` files)
+- **Project Data** (`project-data.ts`)
+
+**Important:** This repository is intended for **demonstration and evaluation purposes only**. Commercial use of this codebase as a competing SaaS product without explicit written permission from the copyright holder is prohibited.
+
+### License Files
+
+- `LICENSE` - MIT License (for open-source components)
+- `LICENSE-PROPRIETARY.md` - Business Source License 1.1 (for proprietary components)
+
+### For Recruiters & Evaluators
+
+This project demonstrates:
+- Full-stack development capabilities (Next.js, TypeScript, Supabase)
+- Modern UI/UX design with reusable component architecture
+- AI integration and automation features
+- Secure authentication and data management
+- SEO optimization and performance best practices
+
+The dual-licensing approach shows understanding of intellectual property protection while still contributing reusable UI components to the open-source community.

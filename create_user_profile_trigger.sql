@@ -1,3 +1,10 @@
+-- Copyright (c) 2025 Eshan Vijay Shettennavar
+-- 
+-- This file is licensed under the Business Source License 1.1.
+-- See LICENSE-PROPRIETARY.md for full license terms.
+-- 
+-- Commercial use of this codebase as a SaaS product without explicit permission is prohibited.
+
 -- Create a function to handle new user signup and create profile
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$

@@ -1,3 +1,10 @@
+-- Copyright (c) 2025 Eshan Vijay Shettennavar
+-- 
+-- This file is licensed under the Business Source License 1.1.
+-- See LICENSE-PROPRIETARY.md for full license terms.
+-- 
+-- Commercial use of this codebase as a SaaS product without explicit permission is prohibited.
+
 -- Quick test to check if your specific user has profile data
 -- This will help us debug the exact issue
 

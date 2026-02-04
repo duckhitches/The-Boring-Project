@@ -1,3 +1,10 @@
+-- Copyright (c) 2025 Eshan Vijay Shettennavar
+-- 
+-- This file is licensed under the Business Source License 1.1.
+-- See LICENSE-PROPRIETARY.md for full license terms.
+-- 
+-- Commercial use of this codebase as a SaaS product without explicit permission is prohibited.
+
 -- Test script to check specific user profile
 -- Replace 'USER_ID_HERE' with the actual user_id from the debug logs
 

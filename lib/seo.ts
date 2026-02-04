@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2025 Eshan Vijay Shettennavar
+ * 
+ * This file is licensed under the MIT License.
+ * See LICENSE for full license terms.
+ */
+
 import type { Project } from '../types';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://the-boring-project.vercel.app';

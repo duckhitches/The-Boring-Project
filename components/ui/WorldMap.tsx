@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2025 Eshan Vijay Shettennavar
+ * 
+ * This file is licensed under the MIT License.
+ * See LICENSE for full license terms.
+ */
+
 "use client";
 import WorldMap from "@/components/ui/world-map";
 import { motion } from "motion/react";

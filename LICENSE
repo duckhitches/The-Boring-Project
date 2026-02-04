@@ -2,6 +2,11 @@ MIT License
 
 Copyright (c) 2025 Eshan Vijay Shettennavar
 
+NOTICE: This project uses dual licensing. This MIT License applies ONLY to 
+open-source UI components and utilities. Core business logic, API routes, 
+services, and AI features are licensed under Business Source License 1.1.
+See LICENSE-PROPRIETARY.md for proprietary components and README.md for details.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
