@@ -13,21 +13,21 @@ import { motion } from "framer-motion";
 export default function ProjectPreviewGrid() {
   const projects = [
     {
-      title: "AI Interview Bot",
+      title: "The Boring Interview",
       desc: "Your personal AI interviewer using Gemini API and NextJS.",
-      img: "/images/projects/ai-interview-new.png",
+      img: "/images/projects/the-boring-interview.png",
       link: "https://project-ea.vercel.app/",
     },
     {
-      title: "Children's Rights Awareness",
-      desc: "A website for children's rights awareness using NextJS, Supabase and Marketjs.",
-      img: "/images/projects/childrens-rights-new.png",
-      link: "https://childrensrights-eshanvs-nu.vercel.app/",
+      title: "The Boring News",
+      desc: "A technology-only news aggregator built with NextJS and Gemini API.",
+      img: "/images/projects/the-boring-news.png",
+      link: "https://theboringnews.vercel.app/",
     },
     {
-      title: "Personal Portfolio",
+      title: "The Boring Dev",
       desc: "My personal portfolio website built with NextJS, TailwindCSS and Framer Motion.",
-      img: "/images/projects/personal-portfolio-new.png",
+      img: "/images/projects/portfolio.png",
       link: "https://portfolio-eshan-2z6t.vercel.app/",
     },
   ];

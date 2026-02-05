@@ -24,7 +24,7 @@ import { AuthProvider, useAuth } from "./components/AuthProvider";
 import { ThemeProvider } from "./components/ThemeProvider";
 import type { Project, Note } from "./types";
 import { PlusIcon } from "./components/IconComponents";
-import { ArrowRight, Axe, Code, Rocket, Sparkles } from "lucide-react";
+import { ArrowRight, Axe, Code, Link, Rocket, Sparkles } from "lucide-react";
 import Loading from "./components/ui/loader";
 import { supabaseService } from "./services/supabaseService";
 import { motion } from "framer-motion";
@@ -345,15 +345,14 @@ const AppContent: React.FC = () => {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
-                onClick={() => {
-                  const featuresSection = document.getElementById("features");
-                  if (featuresSection) {
-                    featuresSection.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
                 className="border border-white/20 hover:bg-white hover:text-black text-white px-8 md:px-10 py-4 font-mono text-sm uppercase tracking-[0.2em] transition-all"
               >
-                Learn More
+                <a 
+                    href="https://portfolio-eshan-2z6t.vercel.app/boring-projects/the-boring-project"
+                    className="flex items-center gap-2"
+                >
+                  Learn More
+                </a>
               </button>
             </div>
           </motion.div>
