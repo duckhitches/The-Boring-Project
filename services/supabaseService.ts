@@ -30,7 +30,7 @@ export const authService = {
     if (!supabase) {
       throw new Error('Supabase not configured');
     }
-    
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -42,7 +42,7 @@ export const authService = {
         } : undefined
       }
     });
-    
+
     return { user: data.user, error };
   },
 
@@ -51,12 +51,12 @@ export const authService = {
     if (!supabase) {
       throw new Error('Supabase not configured');
     }
-    
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    
+
     return { user: data.user, error };
   },
 
@@ -65,7 +65,7 @@ export const authService = {
     if (!supabase) {
       throw new Error('Supabase not configured');
     }
-    
+
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   },
@@ -75,7 +75,7 @@ export const authService = {
     if (!supabase) {
       throw new Error('Supabase not configured');
     }
-    
+
     const { data: { user }, error } = await supabase.auth.getUser();
     return { user, error };
   },
@@ -85,7 +85,7 @@ export const authService = {
     if (!supabase) {
       throw new Error('Supabase not configured');
     }
-    
+
     return supabase.auth.onAuthStateChange(callback);
   },
 
@@ -94,7 +94,7 @@ export const authService = {
     if (!supabase) {
       throw new Error('Supabase not configured');
     }
-    
+
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     return { error };
   },
@@ -111,7 +111,7 @@ export const supabaseService = {
   // Get all projects for the current user
   async getProjects(): Promise<Project[]> {
     if (!supabase) return [];
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
@@ -121,7 +121,7 @@ export const supabaseService = {
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      
+
       if (error) throw error;
 
       // Get current user's profile information
@@ -146,7 +146,7 @@ export const supabaseService = {
       };
 
       console.log('Final userInfo for dashboard:', userInfo);
-      
+
       // Map database columns to TypeScript interface
       return (data || []).map((row: any) => ({
         id: row.id,
@@ -174,14 +174,14 @@ export const supabaseService = {
   // Get a single project by ID (public access for sharing)
   async getProjectById(projectId: string): Promise<Project | null> {
     if (!supabase) return null;
-    
+
     try {
       const { data, error } = await supabase
         .from('projects')
         .select('*')
         .eq('id', projectId)
         .single();
-      
+
       if (error) throw error;
       if (!data) return null;
 
@@ -201,7 +201,7 @@ export const supabaseService = {
         lastName: 'User',
         email: `user-${data.user_id.slice(0, 8)}@example.com`
       };
-      
+
       // Map database columns to TypeScript interface
       return {
         id: data.id,
@@ -229,7 +229,7 @@ export const supabaseService = {
   // Create a new project
   async createProject(project: Omit<Project, 'id'>): Promise<Project | null> {
     if (!supabase) return null;
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
@@ -257,9 +257,9 @@ export const supabaseService = {
         .insert([dbProject])
         .select()
         .single();
-      
+
       if (error) throw error;
-      
+
       // Map database response back to TypeScript interface
       return {
         id: data.id,
@@ -286,7 +286,7 @@ export const supabaseService = {
   // Update an existing project
   async updateProject(id: string, updates: Partial<Project>): Promise<Project | null> {
     if (!supabase) return null;
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
@@ -314,9 +314,9 @@ export const supabaseService = {
         .eq('user_id', user.id) // Ensure user can only update their own projects
         .select()
         .single();
-      
+
       if (error) throw error;
-      
+
       // Map database response back to TypeScript interface
       return {
         id: data.id,
@@ -343,7 +343,7 @@ export const supabaseService = {
   // Delete a project
   async deleteProject(id: string): Promise<boolean> {
     if (!supabase) return false;
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
@@ -353,7 +353,7 @@ export const supabaseService = {
         .delete()
         .eq('id', id)
         .eq('user_id', user.id); // Ensure user can only delete their own projects
-      
+
       if (error) throw error;
       return true;
     } catch (error) {
@@ -366,7 +366,7 @@ export const supabaseService = {
   // Get all notes for the current user
   async getNotes(): Promise<Note[]> {
     if (!supabase) return [];
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
@@ -376,9 +376,9 @@ export const supabaseService = {
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      
+
       if (error) throw error;
-      
+
       return (data || []).map((row: any) => ({
         id: row.id,
         title: row.title,
@@ -396,7 +396,7 @@ export const supabaseService = {
   // Create a new note
   async createNote(note: Omit<Note, 'id' | 'created_at' | 'updated_at' | 'user_id'>): Promise<Note | null> {
     if (!supabase) return null;
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
@@ -410,9 +410,9 @@ export const supabaseService = {
         }])
         .select()
         .single();
-      
+
       if (error) throw error;
-      
+
       return {
         id: data.id,
         title: data.title,
@@ -430,7 +430,7 @@ export const supabaseService = {
   // Update an existing note
   async updateNote(id: string, updates: Partial<Omit<Note, 'id' | 'created_at' | 'updated_at' | 'user_id'>>): Promise<Note | null> {
     if (!supabase) return null;
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
@@ -442,9 +442,9 @@ export const supabaseService = {
         .eq('user_id', user.id) // Ensure user can only update their own notes
         .select()
         .single();
-      
+
       if (error) throw error;
-      
+
       return {
         id: data.id,
         title: data.title,
@@ -462,7 +462,7 @@ export const supabaseService = {
   // Delete a note
   async deleteNote(id: string): Promise<boolean> {
     if (!supabase) return false;
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
@@ -472,7 +472,7 @@ export const supabaseService = {
         .delete()
         .eq('id', id)
         .eq('user_id', user.id); // Ensure user can only delete their own notes
-      
+
       if (error) throw error;
       return true;
     } catch (error) {
@@ -487,31 +487,31 @@ export const supabaseService = {
       // Fallback to local URL for preview
       try {
         return URL.createObjectURL(file);
+      } catch (error) {
+        console.error("Error creating object URL for preview:", error);
+        return null;
+      }
+    }
+
+    try {
+      const filePath = `public/${Date.now()}-${file.name}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(BUCKET_NAME)
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage
+        .from(BUCKET_NAME)
+        .getPublicUrl(filePath);
+
+      return data.publicUrl;
     } catch (error) {
-      console.error("Error creating object URL for preview:", error);
+      console.error("Error uploading image to Supabase:", error);
       return null;
-    }
-  }
-
-  try {
-    const filePath = `public/${Date.now()}-${file.name}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from(BUCKET_NAME)
-      .upload(filePath, file);
-
-    if (uploadError) {
-      throw uploadError;
-    }
-
-    const { data } = supabase.storage
-      .from(BUCKET_NAME)
-      .getPublicUrl(filePath);
-
-    return data.publicUrl;
-  } catch (error) {
-    console.error("Error uploading image to Supabase:", error);
-    return null;
     }
   },
 
@@ -532,7 +532,7 @@ export const supabaseService = {
       // Fallback to user metadata if profile table doesn't exist
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError) throw userError;
-      
+
       return {
         id: userData.user?.id,
         email: userData.user?.email,
@@ -597,14 +597,14 @@ export const supabaseService = {
     }
 
     const { error } = await supabase.rpc('delete_user_account');
-    
+
     if (error) {
       throw error;
     }
-    
+
     // Sign out after successful deletion
     await supabase.auth.signOut();
-    
+
     return { error: null };
   },
 

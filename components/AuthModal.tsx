@@ -83,6 +83,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
         onClose={() => setShowVerificationBanner(false)}
         autoHide={true}
         duration={5000}
+        type="info"
       />
       
       {/* Modal Overlay */}

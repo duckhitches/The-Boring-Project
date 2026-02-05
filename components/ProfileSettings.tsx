@@ -15,6 +15,7 @@ import { Button } from "./ui/stateful-button";
 import { supabaseService } from "../services/supabaseService";
 import { useAuth } from "./AuthProvider";
 import { TrashIcon, KeyIcon, UserIcon } from "./IconComponents";
+import Banner from "./ui/Banner";
 
 interface ProfileSettingsProps {
   onClose?: () => void;
@@ -115,19 +116,20 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ onClose }) => 
   return (
     <div className="flex flex-col h-[calc(100vh-5rem)] bg-black border border-white/10 overflow-hidden">
       {/* Success Banners */}
-      {showPasswordSuccess && (
-        <div className="fixed top-4 right-4 z-50 bg-green-500/10 border border-green-500 text-green-500 px-6 py-3 shadow-[0_0_20px_rgba(34,197,94,0.2)] flex items-center space-x-3 backdrop-blur-md">
-           <div className="w-2 h-2 bg-green-500 animate-pulse"></div>
-           <span className="font-mono text-xs uppercase tracking-widest">Password Changed</span>
-        </div>
-      )}
+      <Banner 
+        show={showPasswordSuccess}
+        message="Password Changed Successfully"
+        type="success"
+        onClose={() => setShowPasswordSuccess(false)}
+      />
       
-      {showDeleteSuccess && (
-        <div className="fixed top-4 right-4 z-50 bg-red-500/10 border border-red-500 text-red-500 px-6 py-3 shadow-[0_0_20px_rgba(239,68,68,0.2)] flex items-center space-x-3 backdrop-blur-md">
-           <div className="w-2 h-2 bg-red-500 animate-pulse"></div>
-           <span className="font-mono text-xs uppercase tracking-widest">Account Deleted. Redirecting...</span>
-        </div>
-      )}
+      <Banner 
+        show={showDeleteSuccess}
+        message="Account Deleted. Redirecting..."
+        type="error"
+        onClose={() => setShowDeleteSuccess(false)}
+        autoHide={false}
+      />
       
       {/* Header */}
       <div className="p-6 border-b border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0d0d0d]">
