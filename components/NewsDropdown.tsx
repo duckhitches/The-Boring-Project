@@ -28,12 +28,31 @@ interface NewsDropdownProps {
 
 const newsItems: NewsItem[] = [
   {
+    id: '8',
+    title: 'Shareable Cards of Your Projects',
+    content:
+      'Shareable cards of your projects are now available for all users. Just click the share button and copy the link to share your project with the world.',
+    date: '2026-02-10',
+    type: 'feature',
+    isNew: true,
+  },
+  {
+    id: '7',
+    title: 'AI Career Roadmap (Pro)',
+    content:
+      'New AI-powered Career Roadmap that analyzes your projects and generates a personalized growth plan with a downloadable roadmap card. This feature is currently available only for paid users.',
+    date: '2026-02-04',
+    type: 'feature',
+    isNew: true,
+  },
+  {
     id: '1',
     title: 'AI Image Generator Status',
-    content: 'Generate images with AI using Gemini API and NextJS is not available (Billing Tier Restriction). Just upload a prompt and let the AI generate images for you.',
+    content:
+      'Generate images with AI using Gemini API and NextJS is not available (Billing Tier Restriction). Just upload a prompt and let the AI generate images for you.',
     date: '2025-11-07',
     type: 'feature',
-    isNew: true
+    isNew: true,
   },
   {
     id: '2',

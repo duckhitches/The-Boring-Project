@@ -164,6 +164,6 @@ Be encouraging but critical about gaps (e.g., if they only have frontend apps, s
     return text.trim();
   } catch (error) {
     console.error("Error generating career roadmap:", error);
-    return JSON.stringify({ error: "Failed to generate roadmap" });
+    throw error;
   }
 };

@@ -55,22 +55,22 @@ export const SocialCardModal: React.FC<SocialCardModalProps> = ({ project, onClo
       tagText: "text-neutral-600",
     },
     playful: {
-      bg: "bg-[#FFFAF0]",
-      text: "text-slate-800",
-      fontHead: "font-serif",
-      fontBody: "font-sans",
-      accent: "text-pink-500",
-      border: "border-pink-200",
-      gridColor: "rgba(236, 72, 153, 0.1)",
-      tagBg: "bg-pink-50",
-      tagBorder: "border-pink-200",
-      tagText: "text-pink-600",
+      bg: "bg-[#FFDE00]",
+      text: "text-black",
+      fontHead: "font-mono",
+      fontBody: "font-mono uppercase",
+      accent: "text-black",
+      border: "border-black border-2",
+      gridColor: "rgba(0,0,0,0.1)",
+      tagBg: "bg-white",
+      tagBorder: "border-black border-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+      tagText: "text-black font-bold",
     },
     enterprise: {
       bg: "bg-slate-900",
       text: "text-slate-100",
-      fontHead: "font-sans",
-      fontBody: "font-sans",
+      fontHead: "font-aptos",
+      fontBody: "font-aptos",
       accent: "text-blue-400",
       border: "border-slate-700",
       gridColor: "rgba(59, 130, 246, 0.1)",
@@ -166,11 +166,11 @@ export const SocialCardModal: React.FC<SocialCardModalProps> = ({ project, onClo
                         </div>
 
                         {/* Top Bar / System Status */}
-                        <div className={`relative z-10 w-full h-12 border-b ${currentTheme.border} ${theme === 'playful' ? 'bg-white/50' : 'bg-black/5'} flex items-center justify-between px-8 text-xs uppercase tracking-widest opacity-50`}>
+                        <div className={`relative z-10 w-full h-12 border-b ${currentTheme.border} ${theme === 'playful' ? 'bg-white border-black border-b-2' : 'bg-black/5'} flex items-center justify-between px-8 text-xs uppercase tracking-widest opacity-100`}>
                             <div className="flex items-center gap-4">
                                 <div className="flex items-center gap-2">
-                                    <div className={`w-2 h-2 rounded-full ${theme === 'playful' ? 'bg-pink-500' : 'bg-green-500'} animate-pulse`}></div>
-                                    <span>{theme === 'playful' ? 'Idea Ready' : 'System Online'}</span>
+                                    <div className={`w-3 h-3 ${theme === 'playful' ? 'bg-black border border-black' : 'rounded-full bg-green-500'} ${theme !== 'playful' && 'animate-pulse'}`}></div>
+                                    <span className="font-bold">{theme === 'playful' ? 'READY_TO_SHIP' : 'System Online'}</span>
                                 </div>
                                 <span>|</span>
                                 <span>Build: {Math.random().toString(36).substring(7).toUpperCase()}</span>
@@ -185,16 +185,16 @@ export const SocialCardModal: React.FC<SocialCardModalProps> = ({ project, onClo
                         <div className="relative z-10 flex-grow grid grid-cols-12 gap-0">
                             
                             {/* Left Panel: Project Data */}
-                            <div className={`col-span-7 border-r ${currentTheme.border} p-12 flex flex-col justify-between backdrop-blur-sm`}>
+                            <div className={`col-span-7 border-r ${currentTheme.border} p-12 flex flex-col justify-between backdrop-blur-sm ${theme === 'playful' ? 'bg-white/50' : ''}`}>
                                 <div>
-                                    <div className={`mb-2 ${currentTheme.accent} text-xs font-bold uppercase tracking-[0.2em]`}>Project Manifest</div>
-                                    <h1 className={`text-5xl md:text-6xl ${currentTheme.fontHead} font-bold tracking-tight leading-none mb-6 line-clamp-2 pr-4`}>
+                                    <div className={`mb-2 ${currentTheme.accent} text-xs font-bold uppercase tracking-[0.2em] ${theme === 'playful' ? 'bg-black text-white inline-block px-2 py-1' : ''}`}>Project Manifest</div>
+                                    <h1 className={`text-5xl md:text-6xl ${currentTheme.fontHead} font-bold tracking-tight leading-none mb-6 line-clamp-2 pr-4 ${theme === 'playful' ? 'drop-shadow-[3px_3px_0_rgba(0,0,0,1)]' : ''}`}>
                                         {project.projectName.toUpperCase()}
                                     </h1>
                                     
                                     <div className="mb-8">
-                                        <div className="text-[10px] opacity-40 uppercase tracking-widest mb-2 border-b pb-1 w-24" style={{ borderColor: currentTheme.gridColor }}>Description</div>
-                                        <p className="text-xl opacity-80 leading-relaxed max-w-2xl">
+                                        <div className="text-[10px] opacity-100 uppercase tracking-widest mb-2 border-b pb-1 w-24 font-bold" style={{ borderColor: theme === 'playful' ? '#000' : currentTheme.gridColor }}>Description</div>
+                                        <p className="text-xl opacity-100 leading-relaxed max-w-2xl font-medium">
                                             {project.description.split('\n')[0].replace(/\*\*/g, '')}
                                             {theme === 'terminal' && <span className="inline-block w-2.5 h-5 bg-indigo-500 ml-1 animate-pulse align-middle"></span>}
                                         </p>
@@ -202,11 +202,11 @@ export const SocialCardModal: React.FC<SocialCardModalProps> = ({ project, onClo
                                 </div>
 
                                 <div>
-                                    <div className="text-[10px] opacity-40 uppercase tracking-widest mb-3 border-b pb-1 w-24" style={{ borderColor: currentTheme.gridColor }}>Tech Stack</div>
+                                    <div className="text-[10px] opacity-100 uppercase tracking-widest mb-3 border-b pb-1 w-24 font-bold" style={{ borderColor: theme === 'playful' ? '#000' : currentTheme.gridColor }}>Tech Stack</div>
                                     <div className="flex flex-wrap gap-2">
                                         {project.tags?.slice(0, 8).map(tag => (
-                                            <span key={tag} className={`px-3 py-1.5 ${currentTheme.tagBg} border ${currentTheme.tagBorder} ${currentTheme.tagText} font-mono text-xs uppercase tracking-wider flex items-center gap-2 ${theme === 'playful' ? 'rounded-full' : ''}`}>
-                                                <span className={`w-1 h-1 rounded-full ${theme === 'playful' ? 'bg-pink-500' : 'bg-current'}`}></span>
+                                            <span key={tag} className={`px-3 py-1.5 ${currentTheme.tagBg} border ${currentTheme.tagBorder} ${currentTheme.tagText} font-mono text-xs uppercase tracking-wider flex items-center gap-2 ${theme === 'playful' ? 'shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all' : ''}`}>
+                                                <span className={`w-1.5 h-1.5 ${theme === 'playful' ? 'bg-black' : 'rounded-full bg-current'}`}></span>
                                                 {tag}
                                             </span>
                                         ))}
@@ -218,14 +218,14 @@ export const SocialCardModal: React.FC<SocialCardModalProps> = ({ project, onClo
                             <div className="col-span-5 flex flex-col">
                                 {/* Project Image Preview */}
                                 <div className={`flex-grow border-b ${currentTheme.border} relative overflow-hidden group bg-black/5`}>
-                                     <div className={`absolute top-0 right-0 z-20 p-2 text-[10px] opacity-50 uppercase backdrop-blur-md border-b border-l ${currentTheme.border}`}>PREVIEW_RENDER.PNG</div>
+                                     <div className={`absolute top-0 right-0 z-20 p-2 text-[10px] opacity-100 uppercase backdrop-blur-md border-b border-l ${currentTheme.border} ${theme === 'playful' ? 'bg-black text-white font-bold' : ''}`}>PREVIEW_RENDER.PNG</div>
                                      
                                      {project.backgroundImage ? (
-                                         <div className="absolute inset-0">
+                                         <div className="absolute inset-0 m-4 border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                                             <img 
                                                 src={project.backgroundImage} 
                                                 alt="Project Preview" 
-                                                className={`w-full h-full object-cover transition-all duration-700 ${theme === 'terminal' ? 'opacity-80 mix-blend-normal grayscale-[20%] contrast-110 group-hover:grayscale-0' : ''} ${theme === 'minimal' ? 'grayscale group-hover:grayscale-0' : ''}`}
+                                                className={`w-full h-full object-cover transition-all duration-700 ${theme === 'terminal' ? 'opacity-80 mix-blend-normal grayscale-[20%] contrast-110 group-hover:grayscale-0' : ''} ${theme === 'minimal' ? 'grayscale group-hover:grayscale-0' : ''} ${theme === 'playful' ? 'grayscale contrast-125 group-hover:grayscale-0' : ''}`}
                                             />
                                             {theme === 'terminal' && (
                                                 <>
@@ -246,13 +246,15 @@ export const SocialCardModal: React.FC<SocialCardModalProps> = ({ project, onClo
 
                                 {/* Stats Grid */}
                                 <div className="h-1/3 grid grid-cols-2">
-                                    <div className={`border-r ${currentTheme.border} ${theme === 'terminal' ? 'border-t border-white/10' : ''} p-6 flex flex-col justify-center`}>
-                                        <span className="text-[10px] opacity-40 uppercase tracking-widest mb-1">Performance</span>
-                                        <span className={`text-4xl ${currentTheme.fontHead} font-bold`}>98<span className="text-lg text-green-500">%</span></span>
+                                    <div className={`border-r ${currentTheme.border} ${theme === 'terminal' ? 'border-t border-white/10' : ''} p-6 flex flex-col justify-center ${theme === 'playful' ? 'bg-white' : ''} ${theme === 'enterprise' ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative overflow-hidden' : ''}`}>
+                                        {theme === 'enterprise' && <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>}
+                                        <span className={`text-[10px] uppercase tracking-widest mb-1 ${theme === 'enterprise' ? 'text-blue-100 opacity-80' : 'opacity-100 font-bold'}`}>Performance</span>
+                                        <span className={`text-4xl ${currentTheme.fontHead} font-bold`}>98<span className={`text-lg ${theme === 'enterprise' ? 'text-blue-200' : theme === 'playful' ? 'text-black' : 'text-green-500'}`}>%</span></span>
                                     </div>
-                                    <div className={`${theme === 'terminal' ? 'border-t border-white/10' : ''} p-6 flex flex-col justify-center`}>
-                                       <span className="text-[10px] opacity-40 uppercase tracking-widest mb-1">Accessibility</span>
-                                       <span className={`text-4xl ${currentTheme.fontHead} font-bold`}>100<span className="text-lg text-green-500">%</span></span>
+                                    <div className={`${theme === 'terminal' ? 'border-t border-white/10' : ''} p-6 flex flex-col justify-center ${theme === 'playful' ? 'bg-black text-white' : ''} ${theme === 'enterprise' ? 'bg-slate-800 relative overflow-hidden' : ''}`}>
+                                       {theme === 'enterprise' && <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>}
+                                       <span className={`text-[10px] uppercase tracking-widest mb-1 ${theme === 'enterprise' ? 'text-slate-400' : 'opacity-100 font-bold text-white/70'}`}>Accessibility</span>
+                                       <span className={`text-4xl ${currentTheme.fontHead} font-bold ${theme === 'enterprise' ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400' : ''}`}>100<span className={`text-lg ${theme === 'enterprise' ? 'text-slate-500' : theme === 'playful' ? 'text-white/50' : 'text-green-500'}`}>%</span></span>
                                     </div>
                                 </div>
                             </div>

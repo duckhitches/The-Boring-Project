@@ -12,6 +12,7 @@ module.exports = {
 		extend: {
 			fontFamily: {
 				'zalando': ['"Zalando Sans SemiExpanded"', 'sans-serif'],
+				'aptos': ['"Aptos"', '"Segoe UI"', 'system-ui', 'sans-serif'],
 			},
 			keyframes: {
 				'fade-in': {

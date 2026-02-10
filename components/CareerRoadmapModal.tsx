@@ -62,19 +62,31 @@ export const CareerRoadmapModal: React.FC<CareerRoadmapModalProps> = ({ projects
         return;
       }
 
-      const roadmapStr = await generateCareerRoadmap(projects);
       try {
-        const parsed = JSON.parse(roadmapStr);
-        setData(parsed);
+        const roadmapStr = await generateCareerRoadmap(projects);
+        try {
+          const parsed = JSON.parse(roadmapStr);
+          setData(parsed);
+        } catch (e) {
+          console.error("Failed to parse roadmap JSON", e);
+          setData({ 
+              currentLevel: "Unknown", 
+              strengths: [], 
+              gaps: [], 
+              recommendedProjects: [], 
+              achievementRoadmap: [],
+              error: `Failed to parse roadmap JSON: ${e instanceof Error ? e.message : String(e)}`
+          });
+        }
       } catch (e) {
-        console.error("Failed to parse roadmap JSON", e);
+        console.error("Failed to generate roadmap", e);
         setData({ 
             currentLevel: "Unknown", 
             strengths: [], 
             gaps: [], 
             recommendedProjects: [], 
             achievementRoadmap: [],
-            error: "Failed to generate roadmap. Please try again." 
+            error: `Failed to generate roadmap: ${e instanceof Error ? e.message : String(e)}`
         });
       } finally {
         setLoading(false);
@@ -127,7 +139,7 @@ export const CareerRoadmapModal: React.FC<CareerRoadmapModalProps> = ({ projects
                 </button>
             </div>
 
-            <div className="flex-grow overflow-y-auto bg-[#050505] p-8">
+            <div className="flex-grow overflow-y-auto bg-[#050505] p-4 md:p-8 overflow-x-hidden">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center h-96 gap-4">
                         <LoaderOne />
@@ -138,10 +150,10 @@ export const CareerRoadmapModal: React.FC<CareerRoadmapModalProps> = ({ projects
                         <p className="text-red-400 font-mono">{data.error}</p>
                     </div>
                 ) : (
-                    <div className="flex flex-col gap-8 items-center">
+                    <div className="flex flex-col gap-4 items-center w-full">
                         
                         {/* Downloadable Area */}
-                         <div className="relative overflow-hidden bg-[#050505] w-[1000px] flex-shrink-0 shadow-2xl scale-[0.4] sm:scale-[0.6] lg:scale-[0.8] origin-top transform-gpu border border-white/10 self-center">
+                         <div className="relative overflow-hidden bg-[#050505] w-[1000px] flex-shrink-0 shadow-2xl scale-[0.28] xs:scale-[0.32] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.8] origin-top transform-gpu border border-white/10 self-center my-4">
                             <div ref={cardRef} className="w-[1000px] min-h-[600px] bg-[#000000] relative overflow-hidden flex flex-col font-mono text-white p-12">
                                 {/* Background Grid */}
                                 <div className="absolute inset-0 z-0 opacity-20">
@@ -221,14 +233,14 @@ export const CareerRoadmapModal: React.FC<CareerRoadmapModalProps> = ({ projects
                          </div>
                         
                          {/* Controls */}
-                        <div className="w-full flex justify-between items-center max-w-4xl mt-[-450px] sm:mt-[-350px] lg:mt-[-100px] relative z-20">
-                             <p className="text-white/40 font-mono text-xs uppercase hidden md:block">
-                                * Download this roadmap to track your progress or share on generic social media.
+                        <div className="w-full flex flex-col md:flex-row justify-between items-center max-w-4xl mt-[-560px] xs:mt-[-520px] sm:mt-[-400px] md:mt-[-300px] lg:mt-[-120px] relative z-20 px-4 gap-4 pb-8">
+                             <p className="text-white/40 font-mono text-xs uppercase text-center md:text-left">
+                                * Download this roadmap to track your progress.<br className="hidden md:inline"/> Share on social media to highlight your growth.
                              </p>
                             <button 
                                 onClick={handleDownload} 
                                 disabled={isGeneratingImage}
-                                className="flex items-center gap-3 px-8 py-4 bg-white text-black font-mono font-bold uppercase tracking-widest hover:bg-white/90 transition-colors disabled:opacity-50 ml-auto shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                                className="flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 bg-white text-black font-mono font-bold uppercase tracking-widest hover:bg-white/90 transition-colors disabled:opacity-50 shadow-[0_0_30px_rgba(255,255,255,0.1)] whitespace-nowrap"
                             >
                                 {isGeneratingImage ? <LoaderOne /> : <DownloadIcon className="w-5 h-5" />}
                                 {isGeneratingImage ? 'GENERATING...' : 'DOWNLOAD ROADMAP'}
