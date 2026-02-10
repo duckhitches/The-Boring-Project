@@ -9,9 +9,11 @@
 
 import React, { useMemo, useState } from "react";
 import type { Note, Project } from "../types";
-import { PlusIcon, SearchIcon, ArrowRightIcon } from "./IconComponents";
+import { PlusIcon, SearchIcon, ArrowRightIcon, DocumentTextIcon } from "./IconComponents";
 import { ProjectCard } from "./ProjectCard";
 import { NewsDropdown } from "./NewsDropdown";
+import { SocialCardModal } from "./SocialCardModal";
+import { CareerRoadmapModal } from "./CareerRoadmapModal";
 
 type SortMode = "newest" | "oldest" | "name";
 
@@ -42,6 +44,8 @@ export default function DashboardView({
 }: DashboardViewProps) {
   const [sortMode, setSortMode] = useState<SortMode>("newest");
   const [isNewsOpen, setIsNewsOpen] = useState(false);
+  const [socialCardProject, setSocialCardProject] = useState<Project | null>(null);
+  const [isCareerRoadmapOpen, setIsCareerRoadmapOpen] = useState(false);
 
   const tagCount = useMemo(() => {
     const set = new Set<string>();
@@ -91,6 +95,13 @@ export default function DashboardView({
 
          <div className="flex flex-wrap gap-2">
              <button
+                onClick={() => setIsCareerRoadmapOpen(true)}
+                className="group flex items-center gap-2 px-6 py-3 border border-indigo-500/30 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 hover:text-indigo-200 text-xs font-mono uppercase tracking-widest transition-all"
+             >
+                <img src="/Brand Logo Icon.ico" alt="AI" className="w-4 h-4" />
+                <span>AI Career Advice</span>
+             </button>
+             <button
                 onClick={onCreateProject}
                 className="group flex items-center gap-2 px-6 py-3 bg-white hover:bg-white/90 text-black text-xs font-mono uppercase tracking-widest transition-all"
              >
@@ -101,10 +112,23 @@ export default function DashboardView({
                 onClick={() => onNavigate("notes")}
                 className="flex items-center gap-2 px-6 py-3 border border-white/10 hover:bg-white text-white hover:text-black text-xs font-mono uppercase tracking-widest transition-all"
              >
+                <DocumentTextIcon className="w-4 h-4" />
                 <span>Notes</span>
              </button>
          </div>
       </div>
+
+      <SocialCardModal 
+        project={socialCardProject} 
+        onClose={() => setSocialCardProject(null)} 
+      />
+
+      {isCareerRoadmapOpen && (
+          <CareerRoadmapModal 
+            projects={projects} 
+            onClose={() => setIsCareerRoadmapOpen(false)} 
+          />
+      )}
 
       <div className="flex-1 overflow-y-auto custom-scrollbar p-6 bg-black relative z-10">
          <div className="max-w-7xl mx-auto space-y-8 pb-20">
@@ -207,6 +231,7 @@ export default function DashboardView({
                            project={project}
                            onEdit={onEditProject}
                            onDelete={onDeleteProject}
+                           onShare={() => setSocialCardProject(project)}
                         />
                      ))}
                   </div>

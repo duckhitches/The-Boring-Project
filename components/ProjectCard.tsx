@@ -10,7 +10,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import type { Project } from '../types';
-import { GithubIcon, ExternalLinkIcon, MailIcon, TrashIcon, PencilIcon } from './IconComponents';
+import { GithubIcon, ExternalLinkIcon, MailIcon, TrashIcon, PencilIcon, ShareIcon } from './IconComponents';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -25,9 +25,10 @@ interface ProjectCardProps {
   project: Project;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
+  onShare?: () => void;
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = React.memo(({ project, onEdit, onDelete }) => {
+export const ProjectCard: React.FC<ProjectCardProps> = React.memo(({ project, onEdit, onDelete, onShare }) => {
   const [shareText, setShareText] = useState('Share');
   const [isHovered, setIsHovered] = useState(false);
 
@@ -188,15 +189,29 @@ export const ProjectCard: React.FC<ProjectCardProps> = React.memo(({ project, on
                 </motion.button>
             )}
           </div>
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleShareClick}
-            disabled={shareText === 'Copied!'}
-            className={`px-5 py-2 text-xs font-mono uppercase tracking-widest bg-white text-black border border-white hover:bg-transparent hover:text-white transition-all disabled:bg-pink-500 disabled:border-pink-500 disabled:text-white disabled:cursor-not-allowed`}
-          >
-            {shareText}
-          </motion.button>
+
+          <div className="flex items-center gap-2">
+            <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleShareClick}
+                disabled={shareText === 'Copied!'}
+                className={`px-3 py-2 text-[10px] font-mono uppercase tracking-widest bg-transparent text-white/40 border border-white/10 hover:border-white hover:text-white transition-all disabled:bg-green-500 disabled:border-green-500 disabled:text-black disabled:cursor-not-allowed`}
+            >
+                {shareText}
+            </motion.button>
+            {onShare && (
+                <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={onShare}
+                    className="p-2 border border-white/10 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all"
+                    title="Generate Social Card"
+                >
+                    <ShareIcon className="w-4 h-4" />
+                </motion.button>
+            )}
+          </div>
         </div>
     </motion.div>
   );

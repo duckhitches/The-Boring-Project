@@ -60,6 +60,22 @@ export const authService = {
     return { user: data.user, error };
   },
 
+  // Sign in with GitHub
+  async signInWithGithub() {
+    if (!supabase) {
+      throw new Error('Supabase not configured');
+    }
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/`,
+      },
+    });
+
+    return { data, error };
+  },
+
   // Sign out
   async signOut() {
     if (!supabase) {

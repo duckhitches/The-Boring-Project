@@ -10,6 +10,7 @@
 import React, { useState } from 'react';
 import { supabaseService } from '../services/supabaseService';
 import { Button } from './ui/stateful-button';
+import { GithubIcon } from './IconComponents';
 import Banner from './ui/Banner';
 
 interface AuthModalProps {
@@ -73,6 +74,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
     }
   };
 
+  const handleGithubLogin = async () => {
+    setLoading(true);
+    setError('');
+    
+    try {
+        const { error } = await supabaseService.signInWithGithub();
+        if (error) throw error;
+    } catch (error: any) {
+        console.error('GitHub login error:', error);
+        setError(error.message);
+    } finally {
+        setLoading(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -87,12 +103,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
       />
       
       {/* Modal Overlay */}
-      <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 pt-20 p-4">
         {/* Grid background */}
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-[length:30px_30px] opacity-10 pointer-events-none" />
         
         {/* Modal Container */}
-        <div className="relative bg-black border border-white/20 p-8 md:p-10 w-full max-w-md mx-4 shadow-[0_0_60px_rgba(0,0,0,0.8)]">
+        <div className="relative bg-black border border-white/20 p-8 md:p-10 w-full max-w-md mx-4 shadow-[0_0_60px_rgba(0,0,0,0.8)] mt-8 max-h-[85vh] overflow-y-auto">
           {/* Corner accents */}
           <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-white/30" />
           <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-white/30" />
@@ -117,6 +133,25 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
+          </div>
+
+          <div className="flex flex-col gap-4 mb-6">
+            <button
+                onClick={handleGithubLogin}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-3 bg-[#24292e] hover:bg-[#2f363d] text-white px-4 py-3 transition-colors border border-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                <GithubIcon className="w-5 h-5" />
+                <span className="font-mono text-sm uppercase tracking-wider">
+                    {loading ? 'Connecting...' : 'Continue with GitHub'}
+                </span>
+            </button>
+            
+            <div className="flex items-center gap-4">
+                <div className="flex-1 h-px bg-white/10" />
+                <span className="font-mono text-[10px] uppercase tracking-widest text-white/30">or email</span>
+                <div className="flex-1 h-px bg-white/10" />
+            </div>
           </div>
 
           <form onSubmit={(e) => e.preventDefault()} className="space-y-5">

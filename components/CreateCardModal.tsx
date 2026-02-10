@@ -14,9 +14,9 @@ import Image from 'next/image';
 import Cropper from 'react-easy-crop';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Project } from '../types';
-import { generateSummary, explainCode, generateImage, detectLanguage } from '../services/geminiService';
+import { generateSummary, explainCode, generateImage, detectLanguage, generateProjectBrief } from '../services/geminiService';
 import { uploadImage } from '../services/supabaseService';
-import { CloseIcon, SparklesIcon, ChevronDownIcon, ChevronUpIcon, UploadCloudIcon, ExclamationTriangleIcon, TagIcon, FriendsIcon } from './IconComponents';
+import { CloseIcon, ChevronDownIcon, ChevronUpIcon, UploadCloudIcon, ExclamationTriangleIcon, TagIcon, FriendsIcon } from './IconComponents';
 import { LoaderOne } from './ui/loader';
 import { Button } from './ui/stateful-button';
 import Editor from 'react-simple-code-editor';
@@ -148,6 +148,7 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
     imageUpload: false,
     submit: false,
     languageDetection: false,
+    briefGeneration: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [codeExplanation, setCodeExplanation] = useState<string | null>(null);
@@ -274,6 +275,20 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
     const summary = await generateSummary(prompt);
     setFormData(prev => ({ ...prev, description: summary }));
     setLoadingStates(prev => ({ ...prev, summary: false }));
+  };
+
+  const handleGenerateBrief = async () => {
+    const { description } = formData;
+    if (!description || description.trim().length < 10) {
+      alert("Please enter a few bullet points to generate a brief.");
+      return;
+    }
+    setLoadingStates(prev => ({ ...prev, briefGeneration: true }));
+    const brief = await generateProjectBrief(description);
+    if (brief) {
+        setFormData(prev => ({ ...prev, description: brief }));
+    }
+    setLoadingStates(prev => ({ ...prev, briefGeneration: false }));
   };
 
   const handleExplainCode = async () => {
@@ -502,11 +517,11 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
         )}
       </AnimatePresence>
       
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 pt-20">
         <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#050505] border border-white/10 w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl"
+            className="bg-[#050505] border border-white/10 w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl mt-8"
         >
         {/* Cropper Modal */}
         {isCropping && localImageSrc && (
@@ -627,16 +642,27 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
             </div>
 
             <div className="md:col-span-2 relative">
+
                 <div className="flex justify-between items-end mb-2">
                     <label className="block text-[10px] font-mono text-indigo-400 uppercase tracking-widest">Description</label>
-                    <button type="button" onClick={handleGenerateSummary} disabled={loadingStates.summary} className="flex items-center text-[10px] font-mono text-indigo-300 hover:text-white uppercase tracking-wider transition-colors disabled:opacity-50">
-                       {loadingStates.summary ? (
-                         <span className="w-3 h-3 mr-1.5 border border-indigo-300 border-t-transparent rounded-full animate-spin" />
-                       ) : (
-                         <SparklesIcon className="w-3 h-3 mr-1.5" />
-                       )}
-                       {loadingStates.summary ? 'Generating...' : 'AI Summarize'}
-                    </button>
+                    <div className="flex gap-3">
+                        <button type="button" onClick={handleGenerateSummary} disabled={loadingStates.summary || loadingStates.briefGeneration} className="flex items-center text-[10px] font-mono text-indigo-300 hover:text-white uppercase tracking-wider transition-colors disabled:opacity-50">
+                        {loadingStates.summary ? (
+                            <span className="w-3 h-3 mr-1.5 border border-indigo-300 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                            <img src="/Brand Logo Icon.ico" alt="AI" className="w-3 h-3 mr-1.5" />
+                        )}
+                        {loadingStates.summary ? 'Summarizing...' : 'AI Summarize'}
+                        </button>
+                        <button type="button" onClick={handleGenerateBrief} disabled={loadingStates.briefGeneration || loadingStates.summary} className="flex items-center text-[10px] font-mono text-indigo-300 hover:text-white uppercase tracking-wider transition-colors disabled:opacity-50">
+                        {loadingStates.briefGeneration ? (
+                            <span className="w-3 h-3 mr-1.5 border border-indigo-300 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                            <img src="/Brand Logo Icon.ico" alt="AI" className="w-3 h-3 mr-1.5" />
+                        )}
+                        {loadingStates.briefGeneration ? 'Drafting...' : 'AI Brief'}
+                        </button>
+                    </div>
                 </div>
                 <textarea name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full bg-[#0d0d0d] border border-white/10 px-4 py-3 text-white font-mono text-sm focus:border-indigo-500 focus:outline-none transition-colors leading-relaxed" placeholder="BRIEF PROJECT SUMMARY..."></textarea>
             </div>
@@ -647,7 +673,7 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                         {loadingStates.codeExplanation ? (
                           <span className="w-3 h-3 mr-1.5 border border-indigo-300 border-t-transparent rounded-full animate-spin" />
                         ) : (
-                          <SparklesIcon className="w-3 h-3 mr-1.5" />
+                          <img src="/Brand Logo Icon.ico" alt="AI" className="w-3 h-3 mr-1.5" />
                         )}
                         {loadingStates.codeExplanation ? 'Analyzing...' : 'AI Explain'}
                     </button>
@@ -756,7 +782,7 @@ export const CreateCardModal: React.FC<CreateCardModalProps> = ({ projectToEdit,
                         )}
                     </div>
                      <button type="button" onClick={handleGenerateBgImage} disabled={loadingStates.image || !formData.projectName} className="flex-shrink-0 flex items-center justify-center px-6 py-3 border border-white/10 hover:bg-white/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group h-full self-stretch">
-                         {loadingStates.image ? <LoaderOne /> : <SparklesIcon className="w-5 h-5 text-indigo-400 group-hover:text-indigo-300" />}
+                         {loadingStates.image ? <LoaderOne /> : <img src="/Brand Logo Icon.ico" alt="AI" className="w-5 h-5" />}
                          <span className="ml-2 font-mono text-xs text-white/70 uppercase group-hover:text-white">AI Generate</span>
                      </button>
                 </div>
