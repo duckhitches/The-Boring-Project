@@ -118,30 +118,40 @@ export const SocialCardModal: React.FC<SocialCardModalProps> = ({ project, onClo
             exit={{ opacity: 0, scale: 0.95 }}
             className="bg-[#050505] border border-white/10 w-full max-w-6xl flex flex-col shadow-2xl relative mt-8"
         >
-             <div className="flex justify-between items-center p-6 border-b border-white/10 bg-[#0d0d0d]">
-                <h2 className="text-xl font-bold font-boldonse text-white tracking-tight flex items-center gap-3">
-                    <ShareIcon className="w-5 h-5 text-indigo-400" />
-                    SHARE PROJECT SNAPSHOT
-                </h2>
-                <div className="flex gap-2 bg-[#050505] p-1 rounded-lg border border-white/10">
-                    {(Object.keys(themes) as Array<keyof typeof themes>).map((t) => (
-                        <button
-                            key={t}
-                            onClick={() => setTheme(t)}
-                            className={`px-3 py-1 text-xs uppercase font-mono rounded transition-colors ${theme === t ? 'bg-indigo-500 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
-                        >
-                            {t}
-                        </button>
-                    ))}
+            <div className="flex flex-col md:flex-row justify-between items-center p-4 md:p-6 border-b border-white/10 bg-[#0d0d0d] gap-4">
+                <div className="flex items-center justify-between w-full md:w-auto">
+                    <h2 className="text-lg md:text-xl font-bold font-boldonse text-white tracking-tight flex items-center gap-2 md:gap-3">
+                        <ShareIcon className="w-4 h-4 md:w-5 md:h-5 text-indigo-400" />
+                        <span className="hidden sm:inline">SHARE PROJECT SNAPSHOT</span>
+                        <span className="sm:hidden">SHARE PROJECT</span>
+                    </h2>
+                     <button onClick={onClose} className="md:hidden p-2 hover:bg-white/5 transition-colors group rounded-lg">
+                        <CloseIcon className="w-5 h-5 text-white/40 group-hover:text-white transition-colors" />
+                    </button>
                 </div>
-                <button onClick={onClose} className="p-2 hover:bg-white/5 transition-colors group">
+                
+                <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-end">
+                    <div className="flex gap-1 md:gap-2 bg-[#050505] p-1 rounded-lg border border-white/10 overflow-x-auto max-w-full">
+                        {(Object.keys(themes) as Array<keyof typeof themes>).map((t) => (
+                            <button
+                                key={t}
+                                onClick={() => setTheme(t)}
+                                className={`px-2 md:px-3 py-1 text-[10px] md:text-xs uppercase font-mono rounded transition-colors whitespace-nowrap ${theme === t ? 'bg-indigo-500 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                            >
+                                {t}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <button onClick={onClose} className="hidden md:block p-2 hover:bg-white/5 transition-colors group">
                     <CloseIcon className="w-6 h-6 text-white/40 group-hover:text-white transition-colors" />
                 </button>
             </div>
 
-            <div className="p-8 flex flex-col items-center gap-8 bg-[#050505]">
+            <div className="p-4 md:p-8 flex flex-col items-center gap-4 md:gap-8 bg-[#050505] overflow-hidden">
                 
-                <div className="relative overflow-hidden bg-[#050505] w-[1200px] h-[630px] flex-shrink-0 shadow-2xl scale-[0.25] sm:scale-[0.4] md:scale-[0.6] lg:scale-[0.7] origin-top transform-gpu border border-white/10">
+                <div className="relative overflow-hidden bg-[#050505] w-[1200px] h-[630px] flex-shrink-0 shadow-2xl scale-[0.22] xs:scale-[0.28] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.7] origin-top transform-gpu border border-white/10">
                     <div ref={cardRef} className={`w-[1200px] h-[630px] ${currentTheme.bg} relative overflow-hidden flex flex-col ${currentTheme.fontBody} ${currentTheme.text}`}>
                         
                         {/* Background Texture */}
@@ -178,7 +188,7 @@ export const SocialCardModal: React.FC<SocialCardModalProps> = ({ project, onClo
                             <div className={`col-span-7 border-r ${currentTheme.border} p-12 flex flex-col justify-between backdrop-blur-sm`}>
                                 <div>
                                     <div className={`mb-2 ${currentTheme.accent} text-xs font-bold uppercase tracking-[0.2em]`}>Project Manifest</div>
-                                    <h1 className={`text-6xl ${currentTheme.fontHead} font-bold tracking-tight leading-none mb-6`}>
+                                    <h1 className={`text-5xl md:text-6xl ${currentTheme.fontHead} font-bold tracking-tight leading-none mb-6 line-clamp-2 pr-4`}>
                                         {project.projectName.toUpperCase()}
                                     </h1>
                                     
@@ -263,7 +273,7 @@ export const SocialCardModal: React.FC<SocialCardModalProps> = ({ project, onClo
                 </div>
 
                  {/* Controls */}
-                <div className="w-full flex justify-between items-center max-w-4xl mt-[-450px] sm:mt-[-350px] md:mt-[-100px] lg:mt-[-50px] relative z-20">
+                <div className="w-full flex justify-between items-center max-w-4xl mt-[-480px] xs:mt-[-440px] sm:mt-[-360px] md:mt-[-300px] lg:mt-[-180px] relative z-20 px-4">
                      <p className="text-white/40 font-mono text-xs uppercase hidden md:block">
                         * Preview scaled to fit screen. Downloaded image will be 1200x630px.
                      </p>
