@@ -132,10 +132,10 @@ export const NewsDropdown: React.FC<NewsDropdownProps> = ({ isOpen, onClose }) =
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 1 }}
             transition={{ duration: 0.1, ease: "linear" }}
-            className="fixed inset-x-4 top-20 mx-auto max-w-[400px] bg-black border border-white/20 z-[100] shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+            className="fixed inset-x-4 top-[5.5rem] mx-auto max-w-[400px] bg-neutral-900 border border-white/20 z-50 shadow-[0_0_30px_rgba(0,0,0,0.5)]"
           >
             {/* Header */}
-            <div className="px-6 py-4 border-b border-white/10 bg-[#0d0d0d] flex items-center justify-between">
+            <div className="px-6 py-4 border-b border-white/10 bg-neutral-900 flex items-center justify-between">
               <div className="flex items-center gap-3">
                  <h3 className="text-xs font-boldonse uppercase text-white tracking-widest">
                    System Log
@@ -164,7 +164,7 @@ export const NewsDropdown: React.FC<NewsDropdownProps> = ({ isOpen, onClose }) =
             </div>
 
             {/* News Items */}
-            <div className="max-h-[500px] overflow-y-auto custom-scrollbar bg-black">
+            <div className="max-h-[calc(100vh-12rem)] overflow-y-auto custom-scrollbar bg-neutral-950">
               {newsItems.map((item, index) => (
                 <div
                   key={item.id}
@@ -201,7 +201,7 @@ export const NewsDropdown: React.FC<NewsDropdownProps> = ({ isOpen, onClose }) =
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-3 border-t border-white/10 bg-[#0a0a0a] flex justify-between items-center">
+            <div className="px-6 py-3 border-t border-white/10 bg-neutral-900 flex justify-between items-center">
                <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest">
                   End of Log
                </span>
