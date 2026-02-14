@@ -10,7 +10,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import type { Project } from '../types';
-import { GithubIcon, ExternalLinkIcon, MailIcon, TrashIcon, PencilIcon, ShareIcon } from './IconComponents';
+import { GithubIcon, ExternalLinkIcon, MailIcon, TrashIcon, PencilIcon, ShareIcon, DownloadIcon, CheckIcon } from './IconComponents';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -34,10 +34,15 @@ export const ProjectCard: React.FC<ProjectCardProps> = React.memo(({ project, on
 
   const handleShareClick = useCallback(async () => {
     const shareUrl = `${window.location.origin}/projects/${project.id}`;
+    if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
+      setShareText('Failed!');
+      setTimeout(() => setShareText('Share'), 2000);
+      return;
+    }
     try {
       await navigator.clipboard.writeText(shareUrl);
       setShareText('Copied!');
-      setTimeout(() => setShareText('Share'), 2000); 
+      setTimeout(() => setShareText('Share'), 2000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
       setShareText('Failed!');
@@ -192,12 +197,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = React.memo(({ project, on
 
           <div className="flex items-center gap-2">
             <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: shareText === 'Copied!' ? 1 : 1.05 }}
+                whileTap={{ scale: shareText === 'Copied!' ? 1 : 0.95 }}
                 onClick={handleShareClick}
                 disabled={shareText === 'Copied!'}
-                className={`px-3 py-2 text-[10px] font-mono uppercase tracking-widest bg-transparent text-white/40 border border-white/10 hover:border-white hover:text-white transition-all disabled:bg-green-500 disabled:border-green-500 disabled:text-black disabled:cursor-not-allowed`}
+                className={`flex items-center gap-2 px-3 py-2 text-[10px] font-mono uppercase tracking-widest bg-transparent text-white/40 border border-white/10 hover:border-white hover:text-white transition-all disabled:bg-green-500 disabled:border-green-500 disabled:text-black disabled:cursor-not-allowed`}
             >
+                {shareText === 'Copied!' && <CheckIcon className="w-3.5 h-3.5 shrink-0" />}
                 {shareText}
             </motion.button>
             {onShare && (
@@ -208,7 +214,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = React.memo(({ project, on
                     className="p-2 border border-white/10 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all"
                     title="Generate Social Card"
                 >
-                    <ShareIcon className="w-4 h-4" />
+                    <DownloadIcon className="w-4 h-4" />
                 </motion.button>
             )}
           </div>

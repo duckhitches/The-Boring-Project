@@ -9,7 +9,6 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { CloseIcon, ArrowRightIcon } from "./IconComponents";
 
 interface NewsItem {
@@ -132,10 +131,10 @@ export const NewsDropdown: React.FC<NewsDropdownProps> = ({ isOpen, onClose }) =
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 1 }}
             transition={{ duration: 0.1, ease: "linear" }}
-            className="fixed inset-x-4 top-[5.5rem] mx-auto max-w-[400px] bg-neutral-900 border border-white/20 z-50 shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+            className="fixed left-2 right-2 sm:inset-x-4 sm:left-auto sm:right-auto top-[5rem] sm:top-[5.5rem] mx-auto w-full max-w-[min(400px,calc(100vw-1rem))] bg-neutral-900 border border-white/20 z-50 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-lg overflow-hidden"
           >
             {/* Header */}
-            <div className="px-6 py-4 border-b border-white/10 bg-neutral-900 flex items-center justify-between">
+            <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-white/10 bg-neutral-900 flex items-center justify-between">
               <div className="flex items-center gap-3">
                  <h3 className="text-xs font-boldonse uppercase text-white tracking-widest">
                    System Log
@@ -164,44 +163,42 @@ export const NewsDropdown: React.FC<NewsDropdownProps> = ({ isOpen, onClose }) =
             </div>
 
             {/* News Items */}
-            <div className="max-h-[calc(100vh-12rem)] overflow-y-auto custom-scrollbar bg-neutral-950">
-              {newsItems.map((item, index) => (
+            <div className="max-h-[min(500px,calc(100vh-10rem))] sm:max-h-[calc(100vh-12rem)] overflow-y-auto custom-scrollbar bg-neutral-950">
+              {newsItems.map((item) => (
                 <div
                   key={item.id}
-                  className="group p-6 border-b border-white/10 hover:bg-white/5 transition-colors relative"
+                  className="group p-4 sm:p-5 border-b border-white/10 hover:bg-white/5 transition-colors relative"
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <span className={`px-2 py-0.5 text-[8px] font-mono font-bold uppercase tracking-widest ${getTypeStyles(item.type)}`}>
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2 flex-wrap min-w-0">
+                      <span className={`px-1.5 py-0.5 text-[8px] font-mono font-bold uppercase tracking-widest shrink-0 ${getTypeStyles(item.type)}`}>
                         {getTypeLabel(item.type)}
                       </span>
                       {item.isNew && (
-                        <span className="text-[8px] font-mono text-red-500 uppercase tracking-widest border border-red-500/30 px-1">
-                           New Entry
+                        <span className="text-[8px] font-mono text-red-500 uppercase tracking-widest border border-red-500/30 px-1 shrink-0">
+                          New
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] font-mono text-white/30 uppercase tracking-wider tabular-nums">
+                    <span className="text-[10px] font-mono text-white/30 tabular-nums shrink-0">
                       {item.date}
                     </span>
                   </div>
-                  
-                  <h4 className="text-sm font-boldonse text-white uppercase tracking-wide mb-2 group-hover:text-white/90 transition-colors">
-                     {item.title}
+                  <h4 className="text-sm font-boldonse text-white uppercase tracking-wide mb-1.5 group-hover:text-white/90 transition-colors leading-snug">
+                    {item.title}
                   </h4>
-                  <p className="text-xs font-mono text-white/50 leading-relaxed uppercase tracking-wide max-w-[95%]">
-                     {item.content}
+                  <p className="text-xs sm:text-[13px] font-mono text-white/60 leading-relaxed max-w-[95%]">
+                    {item.content}
                   </p>
-                  
-                  <div className="absolute top-1/2 right-4 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                     <ArrowRightIcon className="w-4 h-4 text-white/20" />
+                  <div className="absolute top-1/2 right-3 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <ArrowRightIcon className="w-4 h-4 text-white/20" />
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-3 border-t border-white/10 bg-neutral-900 flex justify-between items-center">
+            <div className="px-4 py-2.5 sm:px-6 sm:py-3 border-t border-white/10 bg-neutral-900 flex justify-between items-center">
                <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest">
                   End of Log
                </span>
