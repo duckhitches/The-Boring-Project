@@ -12,12 +12,25 @@ import React from "react";
 import Image from "next/image";
 
 
-export const Header = () => <header className="sticky max-w-7xl mb-6 mx-auto px-4 sm:px-6 py-3 flex items-center justify-end top-0 z-40 w-full h-20 bg-neutral-900/60 backdrop-blur-md border-b border-neutral-800 zalando-sans-semiexpanded-medium">
-    <div>
-      <h1 className="text-2xl font-bold">
-        <Link href="/">
-          <Image src="/images/brand-logo.png" alt="Logo" width={100} height={100} />
+export const Header = () => (
+  <header className="sticky top-0 z-40 w-full h-14 sm:h-16 md:h-20 mb-6 flex items-center border-b border-white/10 bg-neutral-900/90 backdrop-blur-md zalando-sans-semiexpanded-medium">
+    <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 flex items-center justify-between">
+      <h1 className="flex-shrink-0">
+        <Link
+          href="/"
+          className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 rounded"
+          aria-label="Home"
+        >
+          <Image
+            src="/images/brand-logo.png"
+            alt="The Boring Project"
+            width={120}
+            height={48}
+            className="h-8 w-auto sm:h-9 md:h-10 object-contain hover:opacity-90 transition-opacity"
+            priority
+          />
         </Link>
       </h1>
     </div>
-  </header>;
+  </header>
+);
