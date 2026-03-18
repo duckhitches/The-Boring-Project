@@ -8,7 +8,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import 'prismjs/themes/prism-tomorrow.css';
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
+import DevMessageBanner from '@/components/DevMessageBanner';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://the-boring-project.vercel.app';
 const siteName = 'The Boring Project';
@@ -124,7 +125,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-slate-900 text-slate-100 font-zalando">{children}<Analytics /></body>
+      <body className="bg-slate-900 text-slate-100 font-zalando">
+        {children}
+        <DevMessageBanner />
+        <Analytics />
+      </body>
     </html>
   )
 }
